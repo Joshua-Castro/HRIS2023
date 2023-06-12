@@ -50,7 +50,7 @@
                             <div class="col-sm-12 p-0 m-0">
                                 <div class="form-floating">
                                     <input type="text" name="gender" class="form-control" placeholder="Gender" x-model="current.gender">
-                                    <label for="gender">Gender</label>
+                                    <label for="gender">Gender Boy or Girl</label>
                                 </div>
                             </div>
                         </div>
