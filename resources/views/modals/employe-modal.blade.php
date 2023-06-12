@@ -27,7 +27,7 @@
                             <div class="col-sm-12 p-0 m-0">
                                 <div class="form-floating">
                                     <input type="text" name="first_name" class="form-control" placeholder="First Name" x-model="current.firstName" required>
-                                    <label for="first_name">First<span class="text-danger"> *</span></label>
+                                    <label for="first_name">First Name<span class="text-danger"> *</span></label>
                                     <div class="invalid-feedback">
                                         This field is required.
                                     </div>
