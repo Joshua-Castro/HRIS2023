@@ -82,6 +82,7 @@ class LeaveController extends Controller
                 ->select('*')
                 ->where('user_id', '=', $userId)
                 ->whereNull('deleted_at')
+                ->orderBy('created_at', 'desc')
                 ->get();
 
         $overAllCount = DB::table('leaves')
