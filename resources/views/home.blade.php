@@ -151,7 +151,7 @@
                             <tbody>
                                 <template x-if="(employeeData ?? []).length == 0">
                                     <tr class="text-center">
-                                        <td class="" colspan="6"><i class="fas fa-info-circle"></i> There is no employee's record.</td>
+                                        <td class="" colspan="6"><i class="fa fa-info-circle"></i> There is no employee's record.</td>
                                     </tr>
                                 </template>
                                 <template x-if="(employeeData ?? []).length > 0">
@@ -284,7 +284,7 @@
                             <tbody>
                                 <template x-if="(leaveData ?? []).length == 0">
                                     <tr class="text-center">
-                                        <td class="" colspan="5"><i class="fas fa-info-circle"></i> There Leave Request's record.</td>
+                                        <td class="" colspan="5"><i class="fa fa-info-circle"></i> There Leave Request's record.</td>
                                     </tr>
                                 </template>
                                 <template x-if="(leaveData ?? []).length > 0">

@@ -149,7 +149,7 @@ function adminDashboard() {
                 keyboard: false
                 });
             this.current    =  {
-                recordId                :   this.employeeData[index].id,
+                recordId                :   this.employeeData[index].employee_id,
                 lastName                :   this.employeeData[index].last_name,
                 firstName               :   this.employeeData[index].first_name,
                 middleName              :   this.employeeData[index].middle_name,
@@ -173,7 +173,6 @@ function adminDashboard() {
                 password                :   this.employeeData[index].password,
                 confirmPassword         :   this.employeeData[index].password,
                 userId                  :   this.employeeData[index].user_id,
-
             };
 
             // DISABLE FIELDS WHEN USER WANTS ONLY VIEW FUNCTIONALITIES

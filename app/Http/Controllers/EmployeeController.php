@@ -66,8 +66,6 @@ class EmployeeController extends Controller
                 'name'              =>      $request->name,
                 'email'             =>      $request->email,
                 'password'          =>      Hash::make($request->password),
-                'created_at'        =>      now(),
-                'updated_at'        =>      now(),
             ];
 
             $data = [
@@ -93,6 +91,7 @@ class EmployeeController extends Controller
 
             if (empty($id)) {
                     // CREATE OR STORE DATA
+                    $employeeAccount['created_at'] = now();
                     $userId = DB::table('users')->insertGetId($employeeAccount);
 
                     $data['created_by'] = Auth::id();
@@ -104,6 +103,7 @@ class EmployeeController extends Controller
                     return response()->json(['message' => 'Successfully Added'], 200);
             } else {
                 // UPDATE DATA
+                $employeeAccount['updated_at'] = now();
                 DB::table('users')->where('id','=', $request->userId)->update($employeeAccount);
 
                 $data['updated_by'] = Auth::id();
@@ -145,7 +145,33 @@ class EmployeeController extends Controller
         }
         $users = $usersQuery
                 ->join('users', 'employees.user_id', '=', 'users.id')
-                ->select('employees.*', 'users.*')
+                ->select(
+                    'employees.id as employee_id',
+                    'employees.last_name',
+                    'employees.first_name',
+                    'employees.middle_name',
+                    'employees.gender',
+                    'employees.maiden_name',
+                    'employees.position',
+                    'employees.last_promotion',
+                    'employees.station_code',
+                    'employees.control_no',
+                    'employees.employee_no',
+                    'employees.school_code',
+                    'employees.item_number',
+                    'employees.employment_status',
+                    'employees.salary_grade',
+                    'employees.date_hired',
+                    'employees.sss',
+                    'employees.pag_ibig',
+                    'employees.phil_health',
+
+                    'users.id as user_id',
+                    'users.name',
+                    'users.email',
+                    'users.password',
+                    'users.created_at',
+                    )
                 ->paginate($pagination);
 
         return response()->json(['users' => $users, 'count' => $count]);
