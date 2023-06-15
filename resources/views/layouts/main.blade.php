@@ -17,6 +17,7 @@
   <link rel="stylesheet" href="{{ asset('template/vendors/css/vendor.bundle.base.css') }}">
   <!-- endinject -->
   <!-- Plugin css for this page -->
+  <link rel="stylesheet" href="{{ asset('template/vendors/font-awesome/css/font-awesome.min.css') }}" />
   <link rel="stylesheet" href="{{ asset('template/vendors/datatables.net-bs4/dataTables.bootstrap4.css') }}">
   <link rel="stylesheet" type="text/css" href="{{ asset('template/js/select.dataTables.min.css') }}">
   <!-- End plugin css for this page -->
@@ -24,7 +25,7 @@
   <!-- inject:css -->
   <link rel="stylesheet" href="{{ asset('template/css/vertical-layout-light/style.css') }}">
   <!-- endinject -->
-  <link rel="shortcut icon" href="{{ asset('template/images/favicon.png') }}" />
+  <link rel="shortcut icon" href="{{ asset('template/images/auth/deped-logo.jpg') }}" />
   <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
   @routes
 </head>
@@ -44,7 +45,7 @@
           <a class="navbar-brand brand-logo-mini" href="/index.html">
             <img src="{{ asset('template/images/logo-mini.svg') }}" alt="logo" />
           </a> --}}
-          <h4 class="mt-2 navbar-brand brand-logo">TITLE HERE</h4>
+          <h4 class="mt-2 navbar-brand brand-logo">HRIS</h4>
         </div>
       </div>
       <div class="navbar-menu-wrapper d-flex align-items-top"> 
@@ -276,7 +277,7 @@
       <nav class="sidebar sidebar-offcanvas" id="sidebar">
         <ul class="nav">
             <li class="nav-item">
-                <a class="nav-link" data-bs-toggle="collapse" href="#dashboards" aria-expanded="false" aria-controls="dashboards">
+                <a class="nav-link" data-bs-toggle="collapse" href="#dashboards" aria-expanded="true" aria-controls="dashboards">
                 <i class="mdi mdi-grid-large menu-icon"></i>
                 <span class="menu-title">Dashboard</span>
                 <i class="menu-arrow"></i> 
@@ -285,10 +286,10 @@
             <div class="collapse" id="dashboards">
                 <ul class="nav flex-column sub-menu">
                     <li class="nav-item"> <a class="nav-link" href="{{ route('home') }}">Home</a></li>
-                    @if (auth()->user()->is_admin == 1)
+                    {{-- @if (auth()->user()->is_admin == 1)
                         <li class="nav-item"> <a class="nav-link" href="#">Employee</a></li>
                         <li class="nav-item"> <a class="nav-link" href="#">Department</a></li>
-                    @endif
+                    @endif --}}
                 </ul>
             </div>
                 @if (auth()->user()->is_admin == 1)
@@ -309,7 +310,7 @@
             </li>
             <div class="collapse" id="requests">
                 <ul class="nav flex-column sub-menu">
-                    <li class="nav-item"> <a class="nav-link" href="#">Leave</a></li>
+                    <li class="nav-item"> <a class="nav-link" href="{{ route('request') }}">Leave</a></li>
                 </ul>
             </div>
         </ul>
@@ -322,7 +323,7 @@
         <!-- partial:../../partials/_footer.html -->
         <footer class="footer">
           <div class="d-sm-flex justify-content-center justify-content-sm-between">
-            <span class="text-muted text-center text-sm-left d-block d-sm-inline-block">Premium <a href="https://www.bootstrapdash.com/" target="_blank">Bootstrap admin template</a> from BootstrapDash.</span>
+            <span class="text-muted text-center text-sm-left d-block d-sm-inline-block">Human Resource Information System <a href="{{ route('home') }}" target="_blank">(HRIS)</a></span>
             <span class="float-none float-sm-right d-block mt-1 mt-sm-0 text-center">Copyright © 2023. All rights reserved.</span>
           </div>
         </footer>
@@ -337,7 +338,6 @@
   <!-- plugins:js -->
   <script src="{{ asset('template/vendors/js/vendor.bundle.base.js') }}"></script>
   <script src="{{ asset('template/vendors/bootstrap-datepicker/bootstrap-datepicker.min.js') }}"></script>
-  {{-- <script src="{{ asset('template/vendors/chart.js/Chart.min.js') }}"></script> --}}
   <script src="{{ asset('template/vendors/progressbar.js/progressbar.min.js') }}"></script>
   <script src="{{ asset('template/js/off-canvas.js') }}"></script>
   <script src="{{ asset('template/js/hoverable-collapse.js') }}"></script>
@@ -346,11 +346,6 @@
   <script src="{{ asset('template/js/todolist.js') }}"></script>
   <script src="{{ asset('template/js/jquery.cookie.js') }}" type="text/javascript"></script>
   <script src="{{ asset('template/js/dashboard.js') }}"></script>
-  {{-- <script src="{{ asset('template/js/Chart.roundedBarCharts.js') }}"></script> --}}
-  {{-- <script src="{{ asset('template/vendors/sweetalert/sweetalert.min.js') }}"></script>
-  <script src="{{ asset('template/vendors/jquery.avgrund/jquery.avgrund.min.js') }}"></script>
-  <script src="{{ asset('template/js/alerts.js') }}"></script>
-  <script src="{{ asset('template/js/avgrund.js') }}"></script> --}}
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
   @stack('scripts')
   <!-- End js for this-->

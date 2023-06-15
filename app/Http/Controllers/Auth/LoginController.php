@@ -55,7 +55,7 @@ class LoginController extends Controller
         if (auth()->attempt(array('email' => $input['email'], 'password' => $input['password']))) {
             return redirect()->route('home');
         } else {
-            return redirect()->route('login')->with('error', 'These credentials do not match our records.');
+            return redirect()->route('login')->with('error', 'These credentials do not match our records. Please try again!');
         }
 
 

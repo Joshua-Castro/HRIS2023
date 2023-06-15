@@ -25,4 +25,14 @@ class HomeController extends Controller
     {
         return view('home');
     }
+
+    /**
+     * Show the request page.
+     *
+     * @return \Illuminate\Contracts\Support\Renderable
+     */
+    public function request()
+    {
+        return view('leave-request');
+    }
 }

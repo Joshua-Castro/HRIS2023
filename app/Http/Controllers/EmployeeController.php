@@ -6,6 +6,11 @@ use App\Models\Employee;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Database\QueryException;
+use Illuminate\Support\Facades\Validator;
+
+
 
 class EmployeeController extends Controller
 {
@@ -48,45 +53,69 @@ class EmployeeController extends Controller
             'philHealth'       =>  'required',
         ]);
 
-        $id = !empty($request->recordId) ? $request->recordId : 0;
-        $data = [
-            'last_name'             =>      !empty($request->lastName)             ?   $request->lastName             :  '',
-            'first_name'            =>      !empty($request->firstName)            ?   $request->firstName            :  '',
-            'middle_name'           =>      !empty($request->middleName)           ?   $request->middleName           :  '',
-            'gender'                =>      !empty($request->gender)               ?   $request->gender               :  '',
-            'maiden_name'           =>      !empty($request->maidenName)           ?   $request->maidenName           :  '',
-            'position'              =>      !empty($request->position)             ?   $request->position             :  '',
-            'last_promotion'        =>      !empty($request->lastPromotion)        ?   $request->lastPromotion        :  '',
-            'station_code'          =>      !empty($request->stationCode)          ?   $request->stationCode          :  '',
-            'control_no'            =>      !empty($request->controlNumber)        ?   $request->controlNumber        :  '',
-            'employee_no'           =>      !empty($request->employeeNumber)       ?   $request->employeeNumber       :  '',
-            'school_code'           =>      !empty($request->schoolCode)           ?   $request->schoolCode           :  '',
-            'item_number'           =>      !empty($request->itemNumber)           ?   $request->itemNumber           :  '',
-            'employment_status'     =>      !empty($request->employeeStatus)       ?   $request->employeeStatus       :  '',
-            'salary_grade'          =>      !empty($request->salaryGrade)          ?   $request->salaryGrade          :  '',
-            'date_hired'            =>      !empty($request->dateHired)            ?   $request->dateHired            :  '',
-            'sss'                   =>      !empty($request->sss)                  ?   $request->sss                  :  '',
-            'pag_ibig'              =>      !empty($request->pagIbig)              ?   $request->pagIbig              :  '',
-            'phil_health'           =>      !empty($request->philHealth)           ?   $request->philHealth           :  '',
-        ];
+        try {
+            Validator::make($request->all(), [
+                'name'      => ['required', 'string', 'max:255'],
+                'email'     => ['required', 'string', 'max:255', 'unique:users'],
+                'password'  => ['required', 'string', 'min:8', 'confirmed'],
+            ]);
 
-        if (empty($id)) {
-                // CREATE OR STORE DATA
-                $data['created_by'] = Auth::id();
-                $data['created_at'] = now();
-                DB::table('employees')->insert($data);
+            $id = !empty($request->recordId) ? $request->recordId : 0;
 
-                return response()->json(['message' => 'Successfully Added'], 200);
-        } else {
-            // UPDATE DATA
-            $data['updated_by'] = Auth::id();
-            $data['updated_at'] = now();
-            DB::table('employees')->where('id','=',$id)->update($data);
+            $employeeAccount    =   [
+                'name'              =>      $request->name,
+                'email'             =>      $request->email,
+                'password'          =>      Hash::make($request->password),
+                'created_at'        =>      now(),
+                'updated_at'        =>      now(),
+            ];
 
-            return response()->json(['message' => 'Successfully Updated'],200);
+            $data = [
+                'last_name'             =>      !empty($request->lastName)             ?   $request->lastName             :  '',
+                'first_name'            =>      !empty($request->firstName)            ?   $request->firstName            :  '',
+                'middle_name'           =>      !empty($request->middleName)           ?   $request->middleName           :  '',
+                'gender'                =>      !empty($request->gender)               ?   $request->gender               :  '',
+                'maiden_name'           =>      !empty($request->maidenName)           ?   $request->maidenName           :  '',
+                'position'              =>      !empty($request->position)             ?   $request->position             :  '',
+                'last_promotion'        =>      !empty($request->lastPromotion)        ?   $request->lastPromotion        :  '',
+                'station_code'          =>      !empty($request->stationCode)          ?   $request->stationCode          :  '',
+                'control_no'            =>      !empty($request->controlNumber)        ?   $request->controlNumber        :  '',
+                'employee_no'           =>      !empty($request->employeeNumber)       ?   $request->employeeNumber       :  '',
+                'school_code'           =>      !empty($request->schoolCode)           ?   $request->schoolCode           :  '',
+                'item_number'           =>      !empty($request->itemNumber)           ?   $request->itemNumber           :  '',
+                'employment_status'     =>      !empty($request->employeeStatus)       ?   $request->employeeStatus       :  '',
+                'salary_grade'          =>      !empty($request->salaryGrade)          ?   $request->salaryGrade          :  '',
+                'date_hired'            =>      !empty($request->dateHired)            ?   $request->dateHired            :  '',
+                'sss'                   =>      !empty($request->sss)                  ?   $request->sss                  :  '',
+                'pag_ibig'              =>      !empty($request->pagIbig)              ?   $request->pagIbig              :  '',
+                'phil_health'           =>      !empty($request->philHealth)           ?   $request->philHealth           :  '',
+            ];
+
+            if (empty($id)) {
+                    // CREATE OR STORE DATA
+                    $userId = DB::table('users')->insertGetId($employeeAccount);
+
+                    $data['created_by'] = Auth::id();
+                    $data['created_at'] = now();
+                    $data['user_id']    = $userId;
+
+                    DB::table('employees')->insert($data);
+
+                    return response()->json(['message' => 'Successfully Added'], 200);
+            } else {
+                // UPDATE DATA
+                DB::table('users')->where('id','=', $request->userId)->update($employeeAccount);
+
+                $data['updated_by'] = Auth::id();
+                $data['updated_at'] = now();
+                DB::table('employees')->where('id','=',$id)->update($data);
+
+                return response()->json(['message' => 'Successfully Updated'],200);
+            }
+        } catch (QueryException $e) {
+            $errorMessage = $e->getMessage();
+            return response()->json(['error' => $errorMessage], 500);
         }
-
-        
     }
 
     /**
@@ -94,39 +123,32 @@ class EmployeeController extends Controller
      */
     public function show(Employee $employee)
     {
-        $data = DB::table('employees')
-                ->select('*')
-                ->whereNull('deleted_at')
-                ->get();
-
         $count = DB::table('employees')
                 ->whereNull('deleted_at')
                 ->count();
 
-        // $status = request('status');
-        // $name = request('name');
-        // $pagination = request('pagination');
-        // $usersQuery = User::query();
+        $status = request('status');
+        $name = request('name');
+        $pagination = request('pagination');
+        $usersQuery = Employee::query();
 
-        // // Include the company name in the query using a join
-        // $usersQuery->join('companies', 'users.company_id', '=', 'companies.id')
-        //     ->select('users.*', 'companies.name as company_name');
+        if ($name) {
+            $usersQuery->where(function ($query) use ($name) {
+                $query->whereRaw("CONCAT(first_name,' ',COALESCE(middle_name, ''),' ',last_name) like ?", ["%{$name}%"])
+                    ->orWhereRaw("CONCAT(last_name,' ',COALESCE(middle_name, ''),' ',first_name) like ?", ["%{$name}%"])
+                    ->orWhereRaw("CONCAT(first_name,' ',last_name) like ?", ["%{$name}%"])
+                    ->orWhereRaw("CONCAT(last_name,' ',first_name) like ?", ["%{$name}%"]);
+            });
+        }
+        if ($status !== 'all') {
+            $usersQuery->where('employees.gender', $status);
+        }
+        $users = $usersQuery
+                ->join('users', 'employees.user_id', '=', 'users.id')
+                ->select('employees.*', 'users.*')
+                ->paginate($pagination);
 
-        // if ($name) {
-        //     $usersQuery->where(function ($query) use ($name) {
-        //         $query->whereRaw("CONCAT(firstname,' ',COALESCE(middlename, ''),' ',lastname) like ?", ["%{$name}%"])
-        //             ->orWhereRaw("CONCAT(lastname,' ',COALESCE(middlename, ''),' ',firstname) like ?", ["%{$name}%"])
-        //             ->orWhereRaw("CONCAT(firstname,' ',lastname) like ?", ["%{$name}%"])
-        //             ->orWhereRaw("CONCAT(lastname,' ',firstname) like ?", ["%{$name}%"]);
-        //     });
-        // }
-        // if ($status !== 'all') {
-        //     $usersQuery->where('users.status', $status);
-        // }
-        // $users = $usersQuery->paginate($pagination);
-        // return $users;
-        
-        return response()->json(['data' => $data, 'count' => $count]);
+        return response()->json(['users' => $users, 'count' => $count]);
     }
 
     /**
@@ -150,12 +172,22 @@ class EmployeeController extends Controller
      */
     public function destroy(Request $request)
     {
-        $data = DB::table('employees')->where('id','=',$request->id)
+        $data = DB::table('employees')
+            ->where('id','=', $request->id)
             ->update([
                 'deleted_by' => Auth::id(),
                 'deleted_at' => now(),
             ]);
+        
+        $user = DB::table('users')
+            ->where('id', '=', $request->userId)
+            ->delete();
 
         return response()->json(['message' => 'Successfully Deleted']);
+    }
+
+    public function employeeView()
+    {
+        return view('employee-home');
     }
 }

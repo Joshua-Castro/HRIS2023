@@ -49,9 +49,22 @@
                         <div class="form-group row p-1 m-0" >
                             <div class="col-sm-12 p-0 m-0">
                                 <div class="form-floating">
-                                    <input type="text" name="gender" class="form-control" placeholder="Gender" x-model="current.gender">
+                                    <select class="form-select" name="gender" x-model="current.gender">
+                                        <option value="">Select</option>
+                                        <option value="Male">Male</option>
+                                        <option value="Female">Female</option>
+                                    </select>
                                     <label for="gender">Gender</label>
                                 </div>
+                                {{-- <select class="form-control form-select form-select-lg form-control-lg" name="gender" x-model="current.gender" style="height: 57.5px; color: black;">
+                                    <option value="">Select</option>
+                                    <option value="Male">Male</option>
+                                    <option value="Female">Female</option>
+                                </select> --}}
+                                {{-- <div class="form-floating">
+                                    <input type="text" name="gender" class="form-control" placeholder="Gender" x-model="current.gender">
+                                    <label for="gender">Gender</label>
+                                </div> --}}
                             </div>
                         </div>
                     </div>
@@ -244,45 +257,74 @@
                     </div>
                 </div>
                 <h4 class="header-title mb-2">Account Information</h4>
-                <form method="POST" action="{{ route('register') }}" id="registerForm">
-                    @csrf
-                    <div class="row mt-1 mb-4">
-                        <div class="col-12 col-md-6">
-                            <div class="form-group row p-1 m-0" >
-                                <div class="col-sm-12 p-0 m-0">
-                                    <div class="form-floating">
-                                        <input type="text" name="email" class="form-control @error('email') is-invalid @enderror" value="{{ old('email') }}" placeholder="Username" required autocomplete="email">
-                                        <label for="email">Username<span class="text-danger"> *</span></label>
-                                        @error('email')
-                                            <span class="invalid-feedback" role="alert">
-                                                <strong>{{ $message }}</strong>
-                                            </span>
-                                        @enderror
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-12 col-md-6">
-                            <div class="form-group row p-1 m-0" >
-                                <div class="col-sm-12 p-0 m-0">
-                                    <div class="form-floating">
-                                        <input type="password" name="password" class="form-control @error('password') is-invalid @enderror" placeholder="Password" autocomplete="new-password" required>
-                                        <label for="password">Password<span class="text-danger"> *</span></label>
-                                        @error('password')
-                                            <span class="invalid-feedback" role="alert">
-                                                <strong>{{ $message }}</strong>
-                                            </span>
-                                        @enderror
-                                    </div>
+                <div class="row mt-1 mb-4">
+                    <div class="col-12 col-md-6">
+                        <div class="form-group row p-1 m-0" >
+                            <div class="col-sm-12 p-0 m-0">
+                                <div class="form-floating">
+                                    <input type="text" id="name" name="name" class="form-control @error('name') is-invalid @enderror" value="{{ old('name') }}" placeholder="Username" required autocomplete="name" x-model="current.name">
+                                    <label for="name">Name<span class="text-danger"> *</span></label>
+                                    @error('name')
+                                        <span class="invalid-feedback" role="alert">
+                                            <strong>{{ $message }}</strong>
+                                        </span>
+                                    @enderror
                                 </div>
                             </div>
                         </div>
                     </div>
-                </form>
+                    <div class="col-12 col-md-6">
+                        <div class="form-group row p-1 m-0" >
+                            <div class="col-sm-12 p-0 m-0">
+                                <div class="d-flex flex-row form-floating position-relative">
+                                    <input type="password" name="password" class="form-control @error('password') is-invalid @enderror real-password" placeholder="Password" autocomplete="new-password" required x-model="current.password">
+                                    <label for="password">Password<span class="text-danger"> *</span></label>
+                                    @error('password')
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                                    @enderror
+                                    <button type="button" class="btn btn-light eye-icon toggle-password" @click="seePassword('password')">
+                                        <i class="fa fa-eye-slash"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12 col-md-6">
+                        <div class="form-group row p-1 m-0" >
+                            <div class="col-sm-12 p-0 m-0">
+                                <div class="form-floating">
+                                    <input type="text" name="email" class="form-control @error('email') is-invalid @enderror" value="{{ old('email') }}" placeholder="Username" required autocomplete="email" x-model="current.email">
+                                    <label for="email">Username<span class="text-danger"> *</span></label>
+                                    @error('email')
+                                        <span class="invalid-feedback" role="alert">
+                                            <strong>{{ $message }}</strong>
+                                        </span>
+                                    @enderror
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12 col-md-6">
+                        <div class="form-group row p-1 m-0" >
+                            <div class="col-sm-12 p-0 m-0">
+                                <div class="d-flex flex-row form-floating position-relative">
+                                    <input type="password" id="password-confirm" name="password_confirmation" class="form-control confirm-password" placeholder="Confirm Password" autocomplete="new-password" required x-model="current.confirmPassword" :input="validatePasswordConfirmation">
+                                    <label for="password_confirmation">Confirm Password<span class="text-danger"> *</span></label>
+                                    <button type="button" class="btn btn-light eye-icon toggle-confirm-password" @click="seePassword('confirmPassword')">
+                                        <i class="fa fa-eye-slash"></i>
+                                    </button>
+                                </div>
+                                <span class="invalid-feedback" x-show="current.confirmPassword !== '' && current.password !== current.confirmPassword" x-ref="errorMessage">The passwords are not the same</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-sm btn-outline-danger" data-bs-dismiss="modal">Cancel</button>
-                <button type="button" class="btn btn-sm btn-outline-primary submit-btn" @click="submit">Submit</button>
+                <button type="button" class="btn btn-sm btn-outline-primary submit-btn" @click="submit" :disabled="isDisabled">Submit</button>
             </div>
         </form>
       </div>

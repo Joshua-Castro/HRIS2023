@@ -7,7 +7,7 @@
     <!-- CSRF Token -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <title>{{ config('app.name', 'Laravel') }}</title>
+    <title>HRIS</title>
 
     <!-- Fonts -->
     {{-- <link rel="dns-prefetch" href="//fonts.bunny.net"> --}}
@@ -32,7 +32,7 @@
     <!-- inject:css -->
     <link rel="stylesheet" href="{{ asset('template/css/vertical-layout-light/style.css') }}">
     <!-- endinject -->
-    <link rel="shortcut icon" href="{{ asset('template/images/favicon.png') }}" />
+    <link rel="shortcut icon" href="{{ asset('template/images/auth/deped-logo.jpg') }}" />
 </head>
 <body>
     <div id="app">
@@ -89,7 +89,6 @@
                 </div>
             </div>
         </nav> --}}
-
         <main class="py-4">
             @yield('content')
         </main>
@@ -98,7 +97,6 @@
     <script src="{{ asset('template/vendors/bootstrap-datepicker/bootstrap-datepicker.min.js') }}"></script>
     <!-- endinject -->
     <!-- Plugin js for this page -->
-    {{-- <script src="{{ asset('template/vendors/chart.js/Chart.min.js') }}"></script> --}}
     <script src="{{ asset('template/vendors/progressbar.js/progressbar.min.js') }}"></script>
     <!-- End plugin js for this page -->
     <!-- inject:js -->
