@@ -21,8 +21,8 @@
           </ul>
         </div>
         <div class="tab-content tab-content-basic">
-          <div class="tab-pane fade show active" id="overview" role="tabpanel" aria-labelledby="overview"> 
-            @if(auth()->user()->is_admin == 1) 
+          <div class="tab-pane fade show active" id="overview" role="tabpanel" aria-labelledby="overview">
+            @if(auth()->user()->is_admin == 1)
             <div class="row">
               <div class="col-sm-12">
                 <div class="statistics-details mb-0">
@@ -104,7 +104,7 @@
                                             <button id="users-search"
                                                 class="btn input-group-text btn-secondary border waves-effect py-0 px-2 form-control form-control-sm"
                                                 type="button" x-ref="usersSearchButton" @click="getEmployeeData">Search</button>
-                                        </div>
+                                        </div>;
                                     </div>
                                     <div class="col-md-4 mb-2 mb-lg-0" style="padding-top: 1px;">
                                         <select id="users-filter" class="form-select form-select-sm bg-soft-secondary fw-bold" x-model="filter" @change="getEmployeeData">
@@ -131,13 +131,13 @@
                         <div class="table-responsive mt-1">
                         <table class="table table-sm table-hover">
                         <thead>
-                            <tr>
-                            <th>Employee Name</th>
-                            <th>Employee Number</th>
-                            <th>Station Code</th>
-                            <th>Employment Status</th>
-                            <th>School Code</th>
-                            <th class="text-center">Action</th>
+                            <tr class="text-primary">
+                                <th>Employee Name</th>
+                                <th>Employee Number</th>
+                                <th>Station Code</th>
+                                <th>Employment Status</th>
+                                <th>School Code</th>
+                                <th class="text-center">Action</th>
                             </tr>
                         </thead>
                         <template x-if="isLoading">

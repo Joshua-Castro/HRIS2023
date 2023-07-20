@@ -55,7 +55,7 @@ class EmployeeController extends Controller
 
         try {
             Validator::make($request->all(), [
-                'name'      => ['required', 'string', 'max:255'],
+                // 'name'      => ['required', 'string', 'max:255'],
                 'email'     => ['required', 'string', 'max:255', 'unique:users'],
                 'password'  => ['required', 'string', 'min:8', 'confirmed'],
             ]);
@@ -204,7 +204,7 @@ class EmployeeController extends Controller
                 'deleted_by' => Auth::id(),
                 'deleted_at' => now(),
             ]);
-        
+
         $user = DB::table('users')
             ->where('id', '=', $request->userId)
             ->delete();

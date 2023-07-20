@@ -27,7 +27,6 @@ function leaveRequest() {
             }).then((response) => {
                 this.leaveData = response.data;
                 this.leaveRequestCount = response.count;
-                console.log(this.leaveData);
             }).catch((error) => {
 
             })
@@ -45,7 +44,7 @@ function leaveRequest() {
             $(this.viewLeaveDataModal).modal('show');
         },
 
-        // ACCEPT OR DELET THE LEAVE REQUEST
+        // ACCEPT OR DELETE THE LEAVE REQUEST
         updateRequest : function (index, type) {
             var text = '',
                 confirm = '';
@@ -53,7 +52,10 @@ function leaveRequest() {
                 text = 'Accept this leave? <b>' + this.leaveData[index].leave_type + '</b>';
                 confirm = 'Accept it!';
             } else if (type === 'Declined') {
-                text = 'Decline this leave? <b>' + this.leaveData[index].leave_type + '</b>';
+                text = 'Decline this leave? <b>' + this.leaveData[index].leave_type + '</b>'  + `<div class="form-floating mt-4">
+                <textarea name="reason-decline" id="swal-textarea" class="form-control" placeholder="REASON FOR DECLINING" required style="height: 100px;"></textarea>
+                <label for="reason-decline" class="text-small">REASON FOR DECLINING<span class="text-danger"> *</span></label>
+                </div>`;
                 confirm = 'Decline it!';
             }
 
@@ -67,28 +69,30 @@ function leaveRequest() {
                 confirmButtonText   :   "Yes, " + confirm,
                 customClass: {
                     icon: 'custom-swal-icon' // Apply custom class to the icon
-                  }
+                  },
               }).then(result => {
                   if(result.isConfirmed){
-                      $.ajax({
-                        type      :   "POST",
-                        url       :   route('leave.update'),
-                        data      :   {
-                            _token: this.leaveCsrfToken,
-                            id: this.leaveData[index].id,
-                            status:  type
-                        },
-                      }).then((data) => {
-                        Swal.fire({
-                                  title               : data.message,
-                                  icon                : 'success',
-                                  timer               : 1000,
-                                  showConfirmButton   : false,
-                              });
-                              this.fetchLeaveData();
-                      }).catch(err => {
-                        Swal.fire('Updating Failed. Please refresh the page and try again.','error');
-                    })
+                    const textareaValue = document.getElementById('swal-textarea').value;
+                    console.log(textareaValue);
+                    //   $.ajax({
+                    //     type      :   "POST",
+                    //     url       :   route('leave.update'),
+                    //     data      :   {
+                    //         _token: this.leaveCsrfToken,
+                    //         id: this.leaveData[index].id,
+                    //         status:  type
+                    //     },
+                    //   }).then((data) => {
+                    //     Swal.fire({
+                    //               title               : data.message,
+                    //               icon                : 'success',
+                    //               timer               : 1000,
+                    //               showConfirmButton   : false,
+                    //           });
+                    //           this.fetchLeaveData();
+                    //   }).catch(err => {
+                    //     Swal.fire('Updating Failed. Please refresh the page and try again.','error');
+                    // })
                   }
               });
 

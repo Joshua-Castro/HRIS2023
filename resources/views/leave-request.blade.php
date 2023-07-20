@@ -1,7 +1,7 @@
 @extends('layouts.main')
 
 @section('content')
-@if (auth()->user()->is_admin == 1)    
+@if (auth()->user()->is_admin == 1)
 <div class="row" x-data="leaveRequest()">
     <div class="col-sm-12">
       <div class="home-tab">
@@ -22,7 +22,7 @@
           </ul>
         </div>
         <div class="tab-content tab-content-basic">
-            <div class="tab-pane fade show active" id="overview" role="tabpanel" aria-labelledby="overview"> 
+            <div class="tab-pane fade show active" id="overview" role="tabpanel" aria-labelledby="overview">
                 {{-- <div class="row">
                     <div class="col-sm-12">
                     <div class="statistics-details mb-0">
@@ -95,6 +95,11 @@
                                             </tr>
                                         </thead>
                                         <tbody>
+                                            <template x-if="(leaveData ?? []).length == 0">
+                                                <tr class="text-center">
+                                                    <td class="" colspan="5"><i class="fa fa-info-circle"></i> There Leave Request's record.</td>
+                                                </tr>
+                                            </template>
                                             <template x-for="(rows, indexData) in leaveData">
                                                 <tr>
                                                     <td>
@@ -120,11 +125,18 @@
                                                         </template>
                                                         {{-- <p class="dark-text fs-14" x-text="rows.status"></p> --}}
                                                     </td>
-                                                    <td class="text-center" style="padding-top: 28px;">
-                                                        <button type="button" class="btn btn-sm action-btn btn-outline-primary" @click="viewRequest(indexData)">View</button>
-                                                        <button type="button" class="btn btn-sm action-btn btn-outline-info" @click="updateRequest(indexData, 'Accepted')">Accept</button>
-                                                        <button type="button" class="btn btn-sm action-btn btn-outline-danger" @click="updateRequest(indexData, 'Declined')">Decline</button>
-                                                    </td>
+                                                    <template x-if="rows.status === 'Pending'">
+                                                        <td class="text-center" style="padding-top: 28px;">
+                                                            <button type="button" class="btn btn-sm action-btn btn-outline-primary" @click="viewRequest(indexData)">View</button>
+                                                            <button type="button" class="btn btn-sm action-btn btn-outline-info" @click="updateRequest(indexData, 'Accepted')">Accept</button>
+                                                            <button type="button" class="btn btn-sm action-btn btn-outline-danger" @click="updateRequest(indexData, 'Declined')">Decline</button>
+                                                        </td>
+                                                    </template>
+                                                    <template x-if="rows.status != 'Pending'">
+                                                        <td class="text-center" style="padding-top: 28px;">
+                                                            <button type="button" class="btn btn-sm action-btn btn-outline-primary" @click="viewRequest(indexData)">View</button>
+                                                        </td>
+                                                    </template>
                                                 </tr>
                                             </template>
                                         </tbody>

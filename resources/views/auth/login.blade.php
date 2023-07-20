@@ -124,7 +124,7 @@
                                 @endif
                                 {{-- email --}}
                                 <div class="mb-2 px-2">
-                                    <label for="email" class="form-label">Email address</label>
+                                    <label for="email" class="form-label">Username</label>
                                     <input id="email" type="text" class="form-control @error('email') is-invalid @enderror" name="email" value="{{ old('email') }}" autocomplete="email" autofocus required>
 
                                     @error('email')
@@ -154,7 +154,7 @@
                             </form>
 
                             <div class="mt-2 mb-4 text-center">
-                                <p class="text-muted">Don't have an account? <a href="{{ route('register') }}" class="text-theme text-decoration-underline ms-1"><b>Register</b></a></p>
+                                <p class="text-muted">Don't have an account? <a href="javascript:void(0)" class="text-theme text-decoration-underline ms-1"><b>Contact your HR now!</b></a></p>
                             </div>
                             <!-- end row -->
                         </div> <!-- end col -->

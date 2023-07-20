@@ -72,8 +72,8 @@ function adminDashboard() {
         pagination              :   10,
         page                    :   1,
         employeeCount           :   0,
-        leaveCount              :   0,   
-        overAllLeaveCount       :   0,   
+        leaveCount              :   0,
+        overAllLeaveCount       :   0,
         leaveModal              :   '#request-leave-modal',
         modal                   :   '#employee-modal',
         leaveReqForm            :   '#leaveRequestForm',
@@ -84,7 +84,7 @@ function adminDashboard() {
         confirmTogglePassword   :   '.toggle-confirm-password',
         csrfToken               :   $('meta[name="csrf-token"]').attr('content'),
 
-        
+
 
         // METHODS
         init() {
@@ -129,7 +129,7 @@ function adminDashboard() {
                 $('input[name="' + field + '"]', this.modal).removeAttr('disabled');
                 $('select[name="' + field + '"]', this.modal).removeAttr('disabled');
             });
-    
+
             $('.submit-btn').removeAttr('hidden');
 
             $(this.passwordField).attr("type", "password");
@@ -181,14 +181,14 @@ function adminDashboard() {
                     $('input[name="' + field + '"]', this.modal).attr('disabled', true);
                     $('select[name="' + field + '"]', this.modal).attr('disabled', true);
                 });
-        
+
                 $('.submit-btn').attr('hidden', true);
             } else {
                 this.disableFields.forEach(function(field) {
                     $('input[name="' + field + '"]', this.modal).removeAttr('disabled');
                     $('select[name="' + field + '"]', this.modal).removeAttr('disabled');
                 });
-        
+
                 $('.submit-btn').removeAttr('hidden');
             };
 
@@ -221,7 +221,7 @@ function adminDashboard() {
                         url       :   route('employee.delete'),
                         data      :   {
                             _token: this.csrfToken,
-                            id: this.employeeData[index].id, 
+                            id: this.employeeData[index].id,
                             userId: this.employeeData[index].user_id
                         },
                       }).then((data) => {
@@ -231,7 +231,7 @@ function adminDashboard() {
                                   timer               : 1000,
                                   showConfirmButton   : false,
                               });
-                        
+
                         this.getEmployeeData();
                       }).catch(err => {
                         this.isLoading = false;
@@ -242,7 +242,7 @@ function adminDashboard() {
 
               $('.custom-swal-icon').css('margin-top', '20px');
         },
-        
+
         // FORM ON SUBMIT EITHER STORE | UPDATE EMPLOYEE DATA
         submit : function () {
             const employeeForm = $('#employeeForm', this.modal)[0];
@@ -296,7 +296,7 @@ function adminDashboard() {
             $('input[name="status"]'        ).val(this.filter);
             $('input[name="pagination"]'    ).val(this.pagination);
             $('input[name="page"]'          ).val(this.page);
-            
+
             $.ajax({
                 type        :   "GET",
                 url         :   route("employee.show"),
@@ -336,6 +336,7 @@ function adminDashboard() {
                 this.employeeData   = users;
                 this.employeeCount  = response.count;
             }).catch((error) => {
+
             })
         },
 
@@ -346,9 +347,9 @@ function adminDashboard() {
             $(document).on('click', '.pagination a', function (e) {
                 e.preventDefault();
                 var page = $(this).attr('href').split('page=')[1];
-            
+
                 component.page = page;
-            
+
                 // Call the getEmployeeData method using the component reference
                 component.getEmployeeData();
             });
@@ -382,7 +383,7 @@ function adminDashboard() {
                 }
         },
 
-        // TRIGGER SEARCH WHEN ON THE BUTTON WHEN CLICK ENTER
+        // TRIGGER SEARCH WHEN THE BUTTON WHEN CLICK ENTER
         triggerSearch: function() {
             this.$refs.usersSearchButton.click();
         },
@@ -411,7 +412,7 @@ function adminDashboard() {
                     $(this.confirmTogglePassword).html('<i class="fa fa-eye-slash"></i>');
                 }
             }
-            
+
         },
 
         // FOR DATE AND TIME SHOW (USER/EMPLOYEE VIEW)
@@ -451,7 +452,7 @@ function adminDashboard() {
                 dayType         :   this.leaveData[index].day_type,
                 reason          :   this.leaveData[index].reason,
             };
-            
+
             $(this.leaveReqForm, this.leaveModal).removeClass('was-validated');
             $(this.leaveModal).modal('show');
         },
@@ -477,7 +478,7 @@ function adminDashboard() {
                         url       :   route('leave.delete'),
                         data      :   {
                             _token: this.csrfToken,
-                            id: this.leaveData[index].id, 
+                            id: this.leaveData[index].id,
                         },
                       }).then((data) => {
                         Swal.fire({
@@ -486,7 +487,7 @@ function adminDashboard() {
                                   timer               : 1000,
                                   showConfirmButton   : false,
                               });
-                        
+
                         this.getLeaveRequest();
                       }).catch(err => {
                         this.isLoading = false;
@@ -542,7 +543,7 @@ function adminDashboard() {
         // GET EMPLOYEE LEAVE REQUEST
         getLeaveRequest : function() {
             this.leaveIsLoading = true;
-            
+
             $.ajax({
                 type        :   "GET",
                 url         :   route("leave.show"),
