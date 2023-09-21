@@ -1,5 +1,47 @@
 @extends('layouts.main')
 
+@push('styles')
+    <style>
+        /* STYLE FOR SELECT2 */
+        .select2-container--bootstrap-5 .select2-selection--single {
+            padding: 0.375rem 2.25rem 0.375rem 0.75rem;
+            background-repeat: no-repeat;
+            background-position: right 0.75rem center;
+            background-size: 16px 12px;
+            height: 59px;
+        }
+
+        span.select2-selection.select2-selection--single {
+            vertical-align: middle;
+            padding-top: 16px;
+        }
+
+        /* STYLE FOR PROFILE CARD IN ADD EMPLOYEE */
+        .profile-card {
+            text-align: center;
+            padding: 20px;
+            background-color: #fff;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
+            border-radius: 10px;
+            position: relative;
+            margin: 50px;
+            margin-top: 140px;
+            width: 500px;
+            height: 449px;
+        }
+
+        .circle {
+            width: 200px;
+            height: 200px;
+            background-color: #616c74;
+            border-radius: 50%;
+            position: absolute;
+            top: -100px;
+            left: calc(40% - 40px);
+        }
+    </style>
+@endpush
+
 @section('content')
 <div class="row" x-data="adminDashboard()">
     <div class="col-sm-12">
@@ -104,7 +146,7 @@
                                             <button id="users-search"
                                                 class="btn input-group-text btn-secondary border waves-effect py-0 px-2 form-control form-control-sm"
                                                 type="button" x-ref="usersSearchButton" @click="getEmployeeData">Search</button>
-                                        </div>;
+                                        </div>
                                     </div>
                                     <div class="col-md-4 mb-2 mb-lg-0" style="padding-top: 1px;">
                                         <select id="users-filter" class="form-select form-select-sm bg-soft-secondary fw-bold" x-model="filter" @change="getEmployeeData">
@@ -131,7 +173,7 @@
                         <div class="table-responsive mt-1">
                         <table class="table table-sm table-hover">
                         <thead>
-                            <tr class="text-primary">
+                            <tr>
                                 <th>Employee Name</th>
                                 <th>Employee Number</th>
                                 <th>Station Code</th>
@@ -306,8 +348,8 @@
                                                 {{-- <p class="dark-text fs-14" ></p> --}}
                                             </td>
                                             <td class="text-center" style="padding-top: 28px;">
-                                                <button type="button" class="btn btn-sm action-btn btn-outline-info" @click="editLeaveRequest(indexData)" title="Edit">Edit</button>
-                                                <button type="button" class="btn btn-sm action-btn btn-outline-danger" @click="removeLeaveRequest(indexData)">Delete</button>
+                                                <button type="button" class="btn btn-sm action-btn btn-outline-info" @click="editLeaveRequest(indexData)" :title="rows.status != 'Pending' ? 'View' : 'Edit'" x-text="rows.status != 'Pending' ? 'View' : 'Edit'"></button>
+                                                <button type="button" class="btn btn-sm action-btn btn-outline-danger" @click="removeLeaveRequest(indexData)" x-text="rows.status != 'Pending' ? 'Delete' : 'Cancel'"></button>
                                             </td>
                                         </tr>
                                     </template>

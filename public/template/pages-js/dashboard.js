@@ -27,6 +27,7 @@ function adminDashboard() {
             password                :   '',
             confirmPassword         :   '',
             userId                  :   '',
+            userImage               :   '',
         },
 
         disableFields       : [
@@ -47,7 +48,9 @@ function adminDashboard() {
             'date_hired',
             'sss_benefits',
             'pagibig_benefits',
-            'phil_health_benefits'
+            'phil_health_benefits',
+            'email',
+            'password'
         ],
 
         leaveData       :   [],
@@ -59,6 +62,7 @@ function adminDashboard() {
             reason          :   '',
         },
 
+        reasonDecline           :   '',
         leaveIsLoading          :   false,
         timeLoading             :   false,
         isDisabled              :   false,
@@ -67,6 +71,7 @@ function adminDashboard() {
         currentDate             :   '',
         currentTime             :   '',
         searchName              :   '',
+        imageUrl                :   '',
         filter                  :   'all',
         filterName              :   '',
         pagination              :   10,
@@ -87,7 +92,30 @@ function adminDashboard() {
 
 
         // METHODS
-        init() {
+        init () {
+            // INITIALIZE THE DATEPICKER WHEN THE MODAL IS SHOWN IN REQUEST LEAVE
+            $('#leave-date', this.leaveModal).datepicker({
+                format: "yyyy-mm-dd",
+                autoclose: true,
+                todayHighlight: true,
+                clearBtn: true,
+            }).attr("readonly", "readonly");
+
+            // INITIALIZE THE DATEPICKER WHEN THE MODAL IS SHOWN IN ADD EMPLOYEE
+            $('#date-hired', this.modal).datepicker({
+                format: "yyyy-mm-dd",
+                autoclose: true,
+                todayHighlight: true,
+                clearBtn: true,
+            }).attr("readonly", "readonly");
+
+            // INITIALIZE THE SELECT2 IN SALARY GRADE
+            $('#salary-grade').select2({
+                theme: "bootstrap-5",
+                width: $(this).data('width') ? $(this).data('width') : $(this).hasClass('w-100') ? '100%' : 'style',
+                dropdownParent: $('#salary-grade').closest('.form-floating') // Set the dropdown parent to the closest form-group container
+            });
+
             this.getEmployeeData();
             this.paginationPage();
             this.startClock();
@@ -100,6 +128,17 @@ function adminDashboard() {
                         backdrop: 'static',
                         keyboard: false
                         });
+
+            // Then, initialize Select2
+            // $('#salary-grade').select2({
+            //     theme: "bootstrap-5",
+            //     width: $(this).data('width') ? $(this).data('width') : $(this).hasClass('w-100') ? '100%' : 'style',
+            //     dropdownParent: $('#salary-grade').closest('.form-group')
+            // });
+
+            this.imageUrl = '';
+            this.$refs.fileInputHidden.value = '';
+
             this.current    =  {
                 recordId        :   0,
                 lastName        :   '',
@@ -125,12 +164,23 @@ function adminDashboard() {
                 password        :   '',
             };
 
+            // SET TIME OUT FOR SELECT2 AFTER INITIALIZING THE VALUE TO SHOW IT IN THE UI.
+            setTimeout(function() {
+                $('#salary-grade').select2({
+                    theme: "bootstrap-5",
+                    width: $(this).data('width') ? $(this).data('width') : $(this).hasClass('w-100') ? '100%' : 'style',
+                    dropdownParent: $('#salary-grade').closest('.form-group')
+                });
+            }, 100);
+
             this.disableFields.forEach(function(field) {
                 $('input[name="' + field + '"]', this.modal).removeAttr('disabled');
                 $('select[name="' + field + '"]', this.modal).removeAttr('disabled');
             });
 
             $('.submit-btn').removeAttr('hidden');
+            $('.account-information'    ,this.modal).removeAttr('hidden');
+            $('.account-information'    ,this.modal).removeAttr('disabled');
 
             $(this.passwordField).attr("type", "password");
             $(this.togglePassword).html('<i class="fa fa-eye-slash"></i>');
@@ -148,6 +198,7 @@ function adminDashboard() {
                 backdrop: 'static',
                 keyboard: false
                 });
+
             this.current    =  {
                 recordId                :   this.employeeData[index].employee_id,
                 lastName                :   this.employeeData[index].last_name,
@@ -173,22 +224,38 @@ function adminDashboard() {
                 password                :   this.employeeData[index].password,
                 confirmPassword         :   this.employeeData[index].password,
                 userId                  :   this.employeeData[index].user_id,
+                userImage               :   this.employeeData[index].image_filepath,
             };
+
+            // SET TIME OUT FOR SELECT2 AFTER INITIALIZING THE VALUE TO SHOW IT IN THE UI.
+            setTimeout( () => {
+                $('#salary-grade').select2({
+                    theme: "bootstrap-5",
+                    width: $(this).data('width') ? $(this).data('width') : $(this).hasClass('w-100') ? '100%' : 'style',
+                    dropdownParent: $('#salary-grade').closest('.form-group')
+                });
+            }, 100);
+
+            this.imageUrl = this.current.userImage;
+            console.log(this.imageUrl);
 
             // DISABLE FIELDS WHEN USER WANTS ONLY VIEW FUNCTIONALITIES
             if (type === 'view') {
                 this.disableFields.forEach(function(field) {
-                    $('input[name="' + field + '"]', this.modal).attr('disabled', true);
-                    $('select[name="' + field + '"]', this.modal).attr('disabled', true);
+                    $('input[name="' + field + '"]'     ,this.modal).attr('disabled', true);
+                    $('select[name="' + field + '"]'    ,this.modal).attr('disabled', true);
                 });
 
+                $('.account-information'    ,this.modal).removeAttr('hidden');
                 $('.submit-btn').attr('hidden', true);
             } else {
                 this.disableFields.forEach(function(field) {
-                    $('input[name="' + field + '"]', this.modal).removeAttr('disabled');
-                    $('select[name="' + field + '"]', this.modal).removeAttr('disabled');
+                    $('input[name="' + field + '"]'     ,this.modal).removeAttr('disabled');
+                    $('select[name="' + field + '"]'    ,this.modal).removeAttr('disabled');
                 });
 
+                $('.account-information'    ,this.modal).attr('hidden', true);
+                $('.account-information'    ,this.modal).removeAttr('required');
                 $('.submit-btn').removeAttr('hidden');
             };
 
@@ -221,8 +288,8 @@ function adminDashboard() {
                         url       :   route('employee.delete'),
                         data      :   {
                             _token: this.csrfToken,
-                            id: this.employeeData[index].id,
-                            userId: this.employeeData[index].user_id
+                            id      :   this.employeeData[index].employee_id,
+                            userId  :   this.employeeData[index].user_id
                         },
                       }).then((data) => {
                         Swal.fire({
@@ -243,14 +310,56 @@ function adminDashboard() {
               $('.custom-swal-icon').css('margin-top', '20px');
         },
 
+        // OPEN FILE PICKER WHEN BUTTON CLICK ON IMAGE
+        openFilePicker: function () {
+            this.$refs.fileInputHidden.click();
+        },
+
+        // PICK A FILE AND CALL THE FILE TO DATA URL TO GET THE SPECIFIC FILE AND GET THE URL
+        fileChosen: function (event) {
+            this.fileToDataUrl(event, src => this.imageUrl = src)
+        },
+
+        // GET THE DATA URL OF THE FILE
+        fileToDataUrl : function (event, callback) {
+            if (! event.target.files.length) return
+
+            let file = event.target.files[0],
+                reader = new FileReader()
+
+            reader.readAsDataURL(file)
+            reader.onload = e => callback(e.target.result)
+        },
+
+        // FUNCTION TO CLEAR UPLOADED IMAGE
+        clearImage: function () {
+            this.imageUrl = '';
+            this.$refs.fileInputHidden.value = '';
+        },
+
         // FORM ON SUBMIT EITHER STORE | UPDATE EMPLOYEE DATA
         submit : function () {
-            const employeeForm = $('#employeeForm', this.modal)[0];
+            // this.isDisabled             =   true;
+            const employeeForm          =   $('#employeeForm'  ,this.modal)[0];
+            this.current.salaryGrade    =   $('#salary-grade'  ,this.modal).val();
+            this.current.dateHired      =   $('#date-hired'    ,this.modal).val();
+            this.current.userImage      =   this.imageUrl;
+
+            // SHOW ERROR WHEN THERE IS NO IMAGE
+            if (this.current.userImage === '') {
+                Swal.fire({
+                    title:              'Image missing!',
+                    icon:               'error',
+                    timer:              1000,
+                    showConfirmButton:  false,
+                });
+            }
+
             $(employeeForm).removeClass('was-validated').addClass('was-validated');
 
             if (employeeForm.checkValidity()) {
-                this.isDisabled = true;
-                var email = this.current.email;
+                var email          =   this.current.email;
+                this.isDisabled    =   true;
 
                 $.ajax({
                     type: "POST",
@@ -266,7 +375,7 @@ function adminDashboard() {
                         timer: 1000,
                         showConfirmButton: false,
                     });
-                    this.isDisabled = true;
+                    this.isDisabled = false;
                     $(this.modal).modal('hide');
                     this.getEmployeeData();
                 }).catch((error) => {
@@ -290,6 +399,7 @@ function adminDashboard() {
         // FETCH DATA ON DATABASE AND DISPLAY ON TABLE EMPLOYEE DATA
         getEmployeeData : function () {
             this.isLoading    = true;
+            this.isDisabled   = true;
             $('ul.pagination').empty();
 
             $('input[name="name"]'          ).val(this.searchName);
@@ -303,8 +413,9 @@ function adminDashboard() {
                 data        :   $('#users-search-form').serializeArray(),
             }).then((response) => {
                 var data = response.users;
+                console.log(data);
                 var users = data['data'],
-					navlinks = data['links'];
+                    navlinks = data['links'];
 
                     if (data['total']) {
                         // pagination links
@@ -332,7 +443,8 @@ function adminDashboard() {
                     }
 
 
-                this.isLoading    = false;
+                this.isLoading      = false;
+                this.isDisabled     = false;
                 this.employeeData   = users;
                 this.employeeCount  = response.count;
             }).catch((error) => {
@@ -356,7 +468,7 @@ function adminDashboard() {
         },
 
         // FRONT END VALIDATION ON CONFIRM PASSWORD EMPLOYEE DATA
-        validatePasswordConfirmation : function() {
+        validatePasswordConfirmation : function () {
             if (this.current.confirmPassword !== '' && this.current.password !== this.current.confirmPassword) {
                 // Show the error message
                 this.$refs.errorMessage.style.display = 'block';
@@ -369,7 +481,7 @@ function adminDashboard() {
         },
 
         // SEARCH SPECIFIC NAME OF EMPLOYEE ON EMPLOYEE TABLE
-        inputSearch: function(event) {
+        inputSearch: function (event) {
             clearTimeout(this.inputTimer);
                 if (event.code === 'Enter') {
                     // this.disableInput();
@@ -384,12 +496,12 @@ function adminDashboard() {
         },
 
         // TRIGGER SEARCH WHEN THE BUTTON WHEN CLICK ENTER
-        triggerSearch: function() {
+        triggerSearch: function () {
             this.$refs.usersSearchButton.click();
         },
 
         // UPDATE NAME VALUE OF THE NAME
-        updateSearchInput: function() {
+        updateSearchInput: function () {
             this.$refs.nameInput.value = this.searchName;
         },
 
@@ -416,7 +528,7 @@ function adminDashboard() {
         },
 
         // FOR DATE AND TIME SHOW (USER/EMPLOYEE VIEW)
-        startClock: function() {
+        startClock: function () {
             this.timeLoading = true;
             setInterval(() => {
                 const now = new Date();
@@ -427,12 +539,14 @@ function adminDashboard() {
         },
 
         // CREATE LEAVE REQUEST (USER/EMPLOYEE VIEW)
-        createRequest : function() {
+        createRequest : function () {
             $(this.leaveModal).modal({
                 backdrop: 'static',
                 keyboard: false
                 });
 
+            $('.hr-note', this.leaveModal).attr('hidden', true);
+            $('.submit-btn', this.leaveModal).removeAttr('hidden');
             $(this.leaveReqForm)[0].reset();
             $(this.leaveReqForm, this.leaveModal).removeClass('was-validated');
             $(this.leaveModal).modal('show');
@@ -446,12 +560,26 @@ function adminDashboard() {
                 });
 
             this.currentLeave    =   {
-                leaveRecordId   :   this.leaveData[index].id,
-                leaveDate       :   this.leaveData[index].leave_date,
-                leaveType       :   this.leaveData[index].leave_type,
-                dayType         :   this.leaveData[index].day_type,
-                reason          :   this.leaveData[index].reason,
+                leaveRecordId   :   this.leaveData[index].id            ? this.leaveData[index].id              :   '',
+                leaveDate       :   this.leaveData[index].leave_date    ? this.leaveData[index].leave_date      :   '',
+                leaveType       :   this.leaveData[index].leave_type    ? this.leaveData[index].leave_type      :   '',
+                dayType         :   this.leaveData[index].day_type      ? this.leaveData[index].day_type        :   '',
+                reason          :   this.leaveData[index].reason        ? this.leaveData[index].reason          :   '',
             };
+
+            this.reasonDecline  =   this.leaveData[index].decline_reason ? this.leaveData[index].decline_reason : '';
+
+            if (!this.leaveData[index].decline_reason) {
+                $('.hr-note', this.leaveModal).attr('hidden', true);
+            } else {
+                $('.hr-note', this.leaveModal).removeAttr('hidden');
+            }
+
+            if (this.leaveData[index].status != 'Pending') {
+                $('.submit-btn', this.leaveModal).attr('hidden', true);
+            } else {
+                $('.submit-btn', this.leaveModal).removeAttr('hidden');
+            }
 
             $(this.leaveReqForm, this.leaveModal).removeClass('was-validated');
             $(this.leaveModal).modal('show');
@@ -459,14 +587,17 @@ function adminDashboard() {
 
         // REMOVE LEAVE REQUEST (USER/EMPLOYEE VIEW)
         removeLeaveRequest : function (index) {
+            const customMessage = this.leaveData[index].status != 'Pending' ? 'Delete ' : 'Cancel ';
+
             Swal.fire({
                 title               :   "Are you sure?",
-                html                :   "Delete this leave request : <b>" + this.leaveData[index].leave_type + "</b>",
+                html                :   customMessage + "this leave request : <b>" + this.leaveData[index].leave_type + "</b>",
                 icon                :   "warning",
                 showCancelButton    :   !0,
                 confirmButtonColor  :   "#28bb4b",
                 cancelButtonColor   :   "#f34e4e",
-                confirmButtonText   :   "Yes, delete it!",
+                confirmButtonText   :   "Yes, " + customMessage + "it!",
+                cancelButtonText    :   "Close",
                 customClass: {
                     icon: 'custom-swal-icon' // Apply custom class to the icon
                   }
@@ -500,9 +631,11 @@ function adminDashboard() {
         },
 
         // ON SUBMIT FORM LEAVE REQUEST (USER/EMPLOYEE VIEW)
-        submitRequest : function() {
+        submitRequest : function () {
             const leaveRequestForm = $('#leaveRequestForm', this.leaveModal)[0];
             $(leaveRequestForm).removeClass('was-validated').addClass('was-validated');
+            this.currentLeave.leaveDate = $('input[name="leave_date"]').val();
+            console.log("🚀 ~ file: dashboard.js:534 ~ adminDashboard ~ currentLeave:", this.currentLeave.leaveDate);
 
             if (leaveRequestForm.checkValidity()) {
 
@@ -521,27 +654,16 @@ function adminDashboard() {
                         showConfirmButton: false,
                     });
                     this.getLeaveRequest();
+                    $('#leave-date', this.leaveModal).datepicker("destroy");
                     $(this.leaveModal).modal('hide');
                 }).catch((error) => {
-                    // if (error.responseJSON && error.responseJSON.error) {
-                    //     // var errorMessage = error.responseJSON.error;
-                    //     Swal.fire({
-                    //         title: 'Saving Failed!',
-                    //         html: 'Username: <b>' + email + '</b> already exist.',
-                    //         icon: 'error',
-                    //         timer: 2000,
-                    //         showConfirmButton: false,
-                    //     });
-                    // } else {
-                    //     // Handle other error scenarios
-                    //     // ...
-                    // }
+
                 });
             }
         },
 
         // GET EMPLOYEE LEAVE REQUEST
-        getLeaveRequest : function() {
+        getLeaveRequest : function () {
             this.leaveIsLoading = true;
 
             $.ajax({
@@ -549,10 +671,10 @@ function adminDashboard() {
                 url         :   route("leave.show"),
                 data        :   $('#users-search-form').serializeArray(),
             }).then((response) => {
-                this.overAllLeaveCount = response.overAll;
-                this.leaveData = response.data;
-                this.leaveCount = response.count;
-                this.leaveIsLoading = false;
+                this.overAllLeaveCount      =   response.overAll;
+                this.leaveData              =   response.data;
+                this.leaveCount             =   response.count;
+                this.leaveIsLoading         =   false;
 
             }).catch((error) => {
 

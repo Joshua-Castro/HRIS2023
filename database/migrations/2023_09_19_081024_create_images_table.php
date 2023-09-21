@@ -11,16 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('leaves', function (Blueprint $table) {
+        Schema::create('images', function (Blueprint $table) {
             $table->id();
-
             $table->integer('user_id')->nullable();
-            $table->string('leave_date')->nullable();
-            $table->string('leave_type')->nullable();
-            $table->string('day_type')->nullable();
-            $table->string('status')->nullable();
-            $table->text('reason')->nullable();
-            $table->text('decline_reason')->nullable();
+            $table->string('file_name')->nullable();
+            $table->string('file_path')->nullable();
 
             $table->integer('created_by')->nullable();
             $table->integer('updated_by')->nullable();
@@ -35,6 +30,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('leaves');
+        Schema::dropIfExists('images');
     }
 };

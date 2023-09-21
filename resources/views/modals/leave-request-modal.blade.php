@@ -10,7 +10,7 @@
                         <div class="form-group row p-1 m-0" >
                             <div class="col-sm-12 p-0 m-0">
                                 <div class="form-floating">
-                                    <input type="text" name="leave_date" class="form-control" placeholder="Leave Date" x-model="currentLeave.leaveDate" required>
+                                    <input type="text" name="leave_date" class="form-control bg-white" id="leave-date" placeholder="Leave Date" x-model="currentLeave.leaveDate" required>
                                     <label for="last_name">Leave Date<span class="text-danger"> *</span></label>
                                     <div class="invalid-feedback">
                                         This field is required.
@@ -70,9 +70,15 @@
                         </div>
                     </div>
                 </div>
+                <div class="hr-note" hidden>
+                    <h4 class="header-title mb-2 mt-4">HR Note :</h4>
+                    <div class="row g-0 pt-2">
+                        <span class="text-center text-primary" x-text="reasonDecline"></span>
+                    </div>
+                </div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-sm btn-outline-danger" data-bs-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-sm btn-outline-danger" data-bs-dismiss="modal">Close</button>
                 <button type="button" class="btn btn-sm btn-outline-primary submit-btn" @click="submitRequest">Submit</button>
             </div>
         </form>

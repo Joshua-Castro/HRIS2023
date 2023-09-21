@@ -26,6 +26,14 @@
   <link rel="stylesheet" href="{{ asset('template/css/vertical-layout-light/style.css') }}">
   <!-- endinject -->
   <link rel="shortcut icon" href="{{ asset('template/images/auth/deped-logo.jpg') }}" />
+  <!-- Styles -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/select2-bootstrap-5-theme@1.3.0/dist/select2-bootstrap-5-theme.min.css" />
+  <!-- Or for RTL support -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/select2-bootstrap-5-theme@1.3.0/dist/select2-bootstrap-5-theme.rtl.min.css" />
+
+  @stack('styles')
+  <!-- Scripts -->
   <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
   @routes
 </head>
@@ -48,7 +56,7 @@
           <h4 class="mt-2 navbar-brand brand-logo">HRIS</h4>
         </div>
       </div>
-      <div class="navbar-menu-wrapper d-flex align-items-top"> 
+      <div class="navbar-menu-wrapper d-flex align-items-top">
         <ul class="navbar-nav">
           <li class="nav-item font-weight-semibold d-none d-lg-block ms-0">
             <h1 class="welcome-text">Good Day, <span class="text-black fw-bold">{{ Auth::user()->name }}</span></h1>
@@ -280,7 +288,7 @@
                 <a class="nav-link" data-bs-toggle="collapse" href="#dashboards" aria-expanded="true" aria-controls="dashboards">
                 <i class="mdi mdi-grid-large menu-icon"></i>
                 <span class="menu-title">Dashboard</span>
-                <i class="menu-arrow"></i> 
+                <i class="menu-arrow"></i>
                 </a>
             </li>
             <div class="collapse" id="dashboards">
@@ -300,19 +308,21 @@
                         </a>
                     </li>
                 @endif
-          
-            <li class="nav-item">
-                <a class="nav-link" data-bs-toggle="collapse" href="#requests" aria-expanded="false" aria-controls="requests">
-                <i class="mdi mdi-grid-large menu-icon"></i>
-                <span class="menu-title">Requests</span>
-                <i class="menu-arrow"></i> 
-                </a>
-            </li>
-            <div class="collapse" id="requests">
-                <ul class="nav flex-column sub-menu">
-                    <li class="nav-item"> <a class="nav-link" href="{{ route('request') }}">Leave</a></li>
-                </ul>
-            </div>
+
+            @if (auth()->user()->is_admin == 1)
+                <li class="nav-item">
+                    <a class="nav-link" data-bs-toggle="collapse" href="#requests" aria-expanded="false" aria-controls="requests">
+                    <i class="mdi mdi-grid-large menu-icon"></i>
+                    <span class="menu-title">Requests</span>
+                    <i class="menu-arrow"></i>
+                    </a>
+                </li>
+                <div class="collapse" id="requests">
+                    <ul class="nav flex-column sub-menu">
+                        <li class="nav-item"> <a class="nav-link" href="{{ route('request') }}">Leave</a></li>
+                    </ul>
+                </div>
+            @endif
         </ul>
       </nav>
       <div class="main-panel">
@@ -346,6 +356,7 @@
   <script src="{{ asset('template/js/todolist.js') }}"></script>
   <script src="{{ asset('template/js/jquery.cookie.js') }}" type="text/javascript"></script>
   <script src="{{ asset('template/js/dashboard.js') }}"></script>
+  <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
   @stack('scripts')
   <!-- End js for this-->

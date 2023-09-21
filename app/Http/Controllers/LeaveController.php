@@ -77,22 +77,28 @@ class LeaveController extends Controller
      */
     public function show(Leave $leave)
     {
-        $userId = Auth::id();
-        $data = DB::table('leaves')
-                ->select('*')
-                ->where('user_id', '=', $userId)
-                ->whereNull('deleted_at')
-                ->orderBy('created_at', 'desc')
-                ->get();
+        try {
+            $userId = Auth::id();
+            $data = DB::table('leaves')
+                    ->select('*')
+                    ->where('user_id', '=', $userId)
+                    ->whereNull('deleted_at')
+                    ->orderBy('created_at', 'desc')
+                    ->get();
 
-        $overAllCount = DB::table('leaves')
-                        ->select('*')
-                        ->whereNull('deleted_at')
-                        ->count();
-        
-        $count = $data->count();
+            $overAllCount = DB::table('leaves')
+                            ->select('*')
+                            ->whereNull('deleted_at')
+                            ->count();
 
-        return response()->json(['data' => $data, 'count' => $count, 'overAll' => $overAllCount]);
+            $count = $data->count();
+
+            return response()->json(['data' => $data, 'count' => $count, 'overAll' => $overAllCount]);
+        } catch (QueryException $e) {
+            $errorMessage = $e->getMessage();
+            return response()->json(['error' => $errorMessage], 500);
+        }
+
     }
 
     /**
@@ -108,17 +114,24 @@ class LeaveController extends Controller
      */
     public function update(Request $request, Leave $leave)
     {
-        $data = DB::table('leaves')
+        try {
+            $data = DB::table('leaves')
                 ->where('id', '=', $request->id)
                 ->update([
-                    'status' => $request->status
+                    'status'            =>  $request->status,
+                    'decline_reason'    =>  $request->reason
                 ]);
 
-        if ($request->status === 'Accepted') {
-            return response()->json(['message' => 'Successfully Accepted']);
-        } else if ($request->status === 'Declined') {
-            return response()->json(['message' => 'Successfully Declined']);
+            if ($request->status === 'Accepted') {
+                return response()->json(['message' => 'Successfully Accepted']);
+            } else if ($request->status === 'Declined') {
+                return response()->json(['message' => 'Successfully Declined']);
+            }
+        } catch (QueryException $e) {
+            $errorMessage = $e->getMessage();
+            return response()->json(['error' => $errorMessage], 500);
         }
+
     }
 
     /**
@@ -126,14 +139,20 @@ class LeaveController extends Controller
      */
     public function destroy(Request $request)
     {
-        $data = DB::table('leaves')
+        try {
+            $data = DB::table('leaves')
             ->where('id','=', $request->id)
             ->update([
                 'deleted_by' => Auth::id(),
                 'deleted_at' => now(),
             ]);
-        
-        return response()->json(['message' => 'Successfully Deleted']);
+
+            return response()->json(['message' => 'Successfully Deleted']);
+        } catch (QueryException $e) {
+            $errorMessage = $e->getMessage();
+            return response()->json(['error' => $errorMessage], 500);
+        }
+
     }
 
     /**
@@ -142,7 +161,8 @@ class LeaveController extends Controller
      */
     public function showAll(Request $request)
     {
-        $data = DB::table('leaves as l')
+        try {
+            $data = DB::table('leaves as l')
                     ->select(
                         'l.id',
                         'l.user_id',
@@ -158,15 +178,23 @@ class LeaveController extends Controller
                         'e.gender',
                         'e.position',
                         'e.employee_no',
+                        'e.deleted_at',
+                        'e.deleted_by',
+                        'e.salary_grade',
                         )
                     ->leftJoin('employees as e', 'e.user_id', '=', 'l.user_id')
                     ->whereNull('l.deleted_at')
+                    ->whereNull('e.deleted_at')
                     ->orderBy('l.created_at', 'desc')
                     ->get();
-        
-        $count = $data->count();
-        
-        
-        return response()->json(['data' => $data, 'count' => $count]);
+
+            $count = $data->count();
+
+            return response()->json(['data' => $data, 'count' => $count]);
+        } catch (QueryException $e) {
+            $errorMessage = $e->getMessage();
+            return response()->json(['error' => $errorMessage], 500);
+        }
+
     }
 }

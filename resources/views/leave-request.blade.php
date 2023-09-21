@@ -1,7 +1,6 @@
 @extends('layouts.main')
 
 @section('content')
-@if (auth()->user()->is_admin == 1)
 <div class="row" x-data="leaveRequest()">
     <div class="col-sm-12">
       <div class="home-tab">
@@ -97,7 +96,7 @@
                                         <tbody>
                                             <template x-if="(leaveData ?? []).length == 0">
                                                 <tr class="text-center">
-                                                    <td class="" colspan="5"><i class="fa fa-info-circle"></i> There Leave Request's record.</td>
+                                                    <td class="" colspan="6"><i class="fa fa-info-circle"></i> There Leave Request's record.</td>
                                                 </tr>
                                             </template>
                                             <template x-for="(rows, indexData) in leaveData">
@@ -154,7 +153,6 @@
     </div>
     @include('modals.view-employee-request-modal')
 </div>
-@endif
 @endsection
 @push('scripts')
     <script src="{{ asset('template/pages-js/leave-request.js') }}"></script>
