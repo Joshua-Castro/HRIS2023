@@ -27,14 +27,14 @@
   <!-- endinject -->
   <link rel="shortcut icon" href="{{ asset('template/images/auth/deped-logo.jpg') }}" />
   <!-- Styles -->
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" />
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/select2-bootstrap-5-theme@1.3.0/dist/select2-bootstrap-5-theme.min.css" />
-  <!-- Or for RTL support -->
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/select2-bootstrap-5-theme@1.3.0/dist/select2-bootstrap-5-theme.rtl.min.css" />
+  <link rel="stylesheet" href="{{ asset('template/css/select2.min.css') }}" />
+  <link rel="stylesheet" href="{{ asset('template/css/select2-bootstrap-5-theme.min.css') }}" />
+  <link rel="stylesheet" href="{{ asset('template/css/select2-bootstrap-5-theme.rtl.min.css') }}" />
+  <link rel="stylesheet" href="{{ asset('template/css/slick.css') }}"/>
 
   @stack('styles')
   <!-- Scripts -->
-  <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+  <script defer src="{{ asset('template/js/alpinejs@3.min.js') }}"></script>
   @routes
 </head>
 <body class="with-welcome-text">
@@ -285,29 +285,11 @@
       <nav class="sidebar sidebar-offcanvas" id="sidebar">
         <ul class="nav">
             <li class="nav-item">
-                <a class="nav-link" data-bs-toggle="collapse" href="#dashboards" aria-expanded="true" aria-controls="dashboards">
-                <i class="mdi mdi-grid-large menu-icon"></i>
-                <span class="menu-title">Dashboard</span>
-                <i class="menu-arrow"></i>
+                <a class="nav-link" href="{{ route('home') }}">
+                    <i class="mdi mdi-book menu-icon"></i>
+                    <span class="menu-title">Dashboard</span>
                 </a>
             </li>
-            <div class="collapse" id="dashboards">
-                <ul class="nav flex-column sub-menu">
-                    <li class="nav-item"> <a class="nav-link" href="{{ route('home') }}">Home</a></li>
-                    {{-- @if (auth()->user()->is_admin == 1)
-                        <li class="nav-item"> <a class="nav-link" href="#">Employee</a></li>
-                        <li class="nav-item"> <a class="nav-link" href="#">Department</a></li>
-                    @endif --}}
-                </ul>
-            </div>
-                @if (auth()->user()->is_admin == 1)
-                    <li class="nav-item">
-                        <a class="nav-link" href="#">
-                            <i class="mdi mdi-book menu-icon"></i>
-                            <span class="menu-title">Employees</span>
-                        </a>
-                    </li>
-                @endif
 
             @if (auth()->user()->is_admin == 1)
                 <li class="nav-item">
@@ -356,8 +338,13 @@
   <script src="{{ asset('template/js/todolist.js') }}"></script>
   <script src="{{ asset('template/js/jquery.cookie.js') }}" type="text/javascript"></script>
   <script src="{{ asset('template/js/dashboard.js') }}"></script>
-  <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+  <script src="{{ asset('template/js/select2.min.js') }}"></script>
+  <script src="{{ asset('template/js/slick.min.js') }}"></script>
+  <script src="{{ asset('template/vendors/chart.js/Chart.min.js') }}"></script>
+  <script src="{{ asset('template/js/Chart.roundedBarCharts.js') }}"></script>
+  {{-- <script type="text/javascript" src="//cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.min.js"></script> --}}
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  {{-- <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script> --}}
   @stack('scripts')
   <!-- End js for this-->
 </body>

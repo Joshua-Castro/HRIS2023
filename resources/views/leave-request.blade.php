@@ -96,7 +96,7 @@
                                                     <tbody>
                                                         <template x-if="(leaveData ?? []).length == 0">
                                                             <tr class="text-center">
-                                                                <td class="" colspan="6"><i class="fa fa-info-circle"></i> There Leave Request's record.</td>
+                                                                <td class="" colspan="6"><i class="fa fa-info-circle"></i> There is no leave request's record.</td>
                                                             </tr>
                                                         </template>
                                                         <template x-for="(rows, indexData) in leaveData">

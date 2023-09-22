@@ -1,0 +1,206 @@
+@if(auth()->user()->is_admin == 1)
+<div class="row">
+    <div class="col-sm-12">
+        <div class="statistics-details mb-0">
+            <div class="row details-count">
+                <div class="mx-2 py-4">
+                    <div class="card">
+                        <div class="card-body">
+                            <div>
+                                <p class="card-title card-title-dash font-weight-medium">Total employees</p>
+                                <h3 class="rate-percentage d-flex justify-content-between" x-text="employeeCount"></h3>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="mx-2 py-4">
+                    <a href="{{ route('request') }}" style="text-decoration: none !important; color: inherit;">
+                    <div class="card">
+                        <div class="card-body">
+                        <div>
+                            <p class="card-title card-title-dash font-weight-medium">Leave Requests</p>
+                            <h3 class="rate-percentage d-flex justify-content-between align-items-center" x-text="overAllLeaveCount"></h3>
+                        </div>
+                        </div>
+                    </div>
+                    </a>
+                </div>
+                <div class="mx-2 py-4">
+                    <div class="card">
+                    <div class="card-body">
+                        <div>
+                        <p class="card-title card-title-dash font-weight-medium">New employees</p>
+                        <h3 class="rate-percentage d-flex justify-content-between">SOON</h3>
+                        </div>
+                    </div>
+                    </div>
+                </div>
+                <div class="mx-2 py-4">
+                    <div class="card">
+                    <div class="card-body">
+                        <div>
+                        <p class="card-title card-title-dash font-weight-medium">Overtime Requests</p>
+                        <h3 class="rate-percentage  d-flex justify-content-between">SOON</h3>
+                        </div>
+                    </div>
+                    </div>
+                </div>
+                <div class="mx-2 py-4">
+                    <div class="card">
+                    <div class="card-body">
+                        <div>
+                        <p class="card-title card-title-dash font-weight-medium">Others</p>
+                        <h3 class="rate-percentage d-flex justify-content-between">SOON</h3>
+                        </div>
+                    </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {{-- <div class="col-sm-12"> --}}
+    <div class="col-lg-4 d-flex flex-column">
+        <div class="row flex-grow">
+            <div class="col-12 col-lg-4 col-lg-12 grid-margin stretch-card">
+                <div class="card" style="height: 460px;">
+                    <div class="card-body d-flex flex-column justify-content-center align-items-center" style="margin-top: -100px;">
+                        <h3 class="card-title card-title-dash text-center">Employee Overview</h3>
+                        <p class="text-small modern-color-999 text-center">Information about your People</p>
+                        <div id="customerOverviewEcommerce-legend" class="text-center mb-2 rectangle-legend"></div>
+                        <div class="chartjs-wrapper doughnut-height-ecommerce mt-2 position-relative text-center">
+                            <canvas class="my-auto" id="customerOverviewEcommerce" style="height: 250px; width: 250px;"></canvas>
+                            <div class="chartjs-inner-text" style="margin-top: -150px">
+                                <h4 x-text="employeeCount"></h4>
+                                <p>Total Employee</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@else
+<div class="row">
+    <div class="col-sm-12">
+        <div class="statistics-details mb-0">
+        <div class="row">
+            <div class="col-sm-3 grid-margin">
+                <div class="card">
+                    <div class="card-body">
+                        <p class="card-title card-title-dash font-weight-medium">Current Time</p>
+                        <template x-if="timeLoading">
+                            <div class="spinner-border"></div>
+                        </template>
+                        <h3 class="rate-percentage d-flex justify-content-between text-primary" x-text="currentTime"></h3>
+                        {{-- <span class="text-danger text-medium d-flex align-items-center" x-text="currentTime"></span> --}}
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-3 grid-margin">
+            <div class="card">
+                <div class="card-body">
+                <div>
+                    <p class="card-title card-title-dash font-weight-medium">Leave Requests</p>
+                    <h3 class="rate-percentage d-flex justify-content-between" x-text="leaveCount"></h3>
+                </div>
+                </div>
+            </div>
+            </div>
+            <div class="col-sm-3 grid-margin">
+                <div class="card">
+                <div class="card-body">
+                    <div>
+                    <p class="card-title card-title-dash font-weight-medium">WFH Requests</p>
+                    <h3 class="rate-percentage d-flex justify-content-between align-items-center">SOON<span class="text-danger text-medium d-flex align-items-center"><i class="mdi mdi-trending-down me-2 icon-md"></i></span></h3>
+                    </div>
+                </div>
+                </div>
+            </div>
+            <div class="col-sm-3 grid-margin">
+                <div class="card">
+                <div class="card-body">
+                    <div>
+                    <p class="card-title card-title-dash font-weight-medium">Overtime Requests</p>
+                    <h3 class="rate-percentage d-flex justify-content-between">SOON<span class="text-success text-medium d-flex align-items-center"><i class="mdi mdi-trending-up me-2 icon-md"></i></span></h3>
+                    </div>
+                </div>
+                </div>
+            </div>
+        </div>
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-xl-12 col-lg-12 d-flex flex-column">
+        <div class="row flex-grow">
+        <div class="col-12 grid-margin stretch-card">
+            <div class="card card-rounded">
+            <div class="card-body">
+            <div class="align-items-start">
+                <div class="d-flex justify-content-between">
+                    <h4 class="card-title card-title-dash">Leave Requests</h4>
+                    <button class="btn btn-sm btn-outline-primary employee-btn" @click="createRequest">Request</button>
+                </div>
+            </div>
+            <div class="table-responsive mt-1">
+            <table class="table table-sm table-hover">
+            <thead>
+                    <tr class="text-center">
+                    <th>Leave Date</th>
+                    <th>Leave Type</th>
+                    <th>Day Type</th>
+                    <th>Status</th>
+                    <th class="text-center">Action</th>
+                    </tr>
+            </thead>
+            <template x-if="leaveIsLoading">
+                <tbody>
+                    <tr>
+                        <td class="text-center" colspan="5"><div class="spinner-border"></div></td>
+                    </tr>
+                </tbody>
+            </template>
+            <template x-if="!leaveIsLoading">
+                <tbody>
+                    <template x-if="(leaveData ?? []).length == 0">
+                        <tr class="text-center">
+                            <td class="" colspan="5"><i class="fa fa-info-circle"></i> There Leave Request's record.</td>
+                        </tr>
+                    </template>
+                    <template x-if="(leaveData ?? []).length > 0">
+                        <template x-for="(rows, indexData) in leaveData">
+                            <tr class="text-center">
+                                <td><p class="dark-text fs-14" x-text="rows.leave_date"></p></td>
+                                <td><p class="dark-text fs-14" x-text="rows.leave_type"></p></td>
+                                <td><p class="dark-text fs-14" x-text="rows.day_type"></p></td>
+                                <td>
+                                    <template x-if="rows.status == 'Pending'">
+                                        <div class="badge badge-warning" x-text="rows.status"></div>
+                                    </template>
+                                    <template x-if="rows.status == 'Accepted'">
+                                        <div class="badge badge-success" x-text="rows.status"></div>
+                                    </template>
+                                    <template x-if="rows.status == 'Declined'">
+                                        <div class="badge badge-danger" x-text="rows.status"></div>
+                                    </template>
+                                    {{-- <p class="dark-text fs-14" ></p> --}}
+                                </td>
+                                <td class="text-center" style="padding-top: 28px;">
+                                    <button type="button" class="btn btn-sm action-btn btn-outline-info" @click="editLeaveRequest(indexData)" :title="rows.status != 'Pending' ? 'View' : 'Edit'" x-text="rows.status != 'Pending' ? 'View' : 'Edit'"></button>
+                                    <button type="button" class="btn btn-sm action-btn btn-outline-danger" @click="removeLeaveRequest(indexData)" x-text="rows.status != 'Pending' ? 'Delete' : 'Cancel'"></button>
+                                </td>
+                            </tr>
+                        </template>
+                    </template>
+                </tbody>
+            </template>
+                </table>
+                </div>
+            </div>
+            </div>
+        </div>
+        </div>
+    </div>
+    </div>
+@endif

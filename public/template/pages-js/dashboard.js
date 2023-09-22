@@ -116,6 +116,129 @@ function adminDashboard() {
                 dropdownParent: $('#salary-grade').closest('.form-floating') // Set the dropdown parent to the closest form-group container
             });
 
+            // INITIALIZE SLICK JS IN DASHBOARD
+            $('.details-count').slick({
+                dots                :   false,
+                arrows              :   false,
+                infinite            :   true,
+                autoplay            :   true,
+                autoplaySpeed       :   2000,
+                speed               :   300,
+                slidesToShow        :   4,
+                slidesToScroll      :   1,
+                responsive: [
+                  {
+                    breakpoint      : 1024,
+                    settings        : {
+                      slidesToShow      :   3,
+                      slidesToScroll    :   3,
+                      infinite          :   true,
+                      dots              :   false,
+                    }
+                  },
+                  {
+                    breakpoint      : 600,
+                    settings        : {
+                      slidesToShow      :   2,
+                      slidesToScroll    :   2,
+                      dots              :   false,
+                    }
+                  },
+                  {
+                    breakpoint      : 480,
+                    settings        : {
+                      slidesToShow      :   1,
+                      slidesToScroll    :   1,
+                      dots              :   false,
+                    }
+                  }
+                ]
+            });
+
+            // DONUT CHART
+            if ($("#customerOverviewEcommerce").length) {
+                var customerOverviewEcommerceCanvas = $("#customerOverviewEcommerce").get(0).getContext("2d");
+                var customerOverviewEcommerceData = {
+                  datasets: [{
+                    data: [250, 50, 700],
+                    backgroundColor: [
+                      "#1E3BB3",
+                      "#00CDFF",
+                      "#00AAB7",
+                    ],
+                    borderColor: [
+                      "#fff",
+                      "#fff",
+                      "#fff",
+                    ],
+                  }],
+
+                  // These labels appear in the legend and in the tooltips when hovering different arcs
+                  labels: [
+                    'Resigned Employee',
+                    'New Employee',
+                    'OJT',
+                  ]
+                };
+                var customerOverviewEcommerceOptions = {
+                  cutoutPercentage          :   60,
+                  animationEasing           :   "easeOutBounce",
+                  animateRotate             :   true,
+                  animateScale              :   true,
+                  responsive                :   false,
+                  maintainAspectRatio       :   true,
+                  showScale                 :   true,
+                  legend                    :   false,
+                  legendCallback    : function (chart) {
+                    var text = [];
+                    text.push('<div class="chartjs-legend"><ul>');
+                    for (var i = 0; i < chart.data.datasets[0].data.length; i++) {
+                      text.push('<li><span style="background-color:' + chart.data.datasets[0].backgroundColor[i] + '">');
+                      text.push('</span>');
+
+                      if (chart.data.labels[i]) {
+                        text.push(chart.data.labels[i]);
+                      }
+                      text.push('</li>');
+                    }
+                    text.push('</div></ul>');
+                    return text.join("");
+                  },
+
+                  layout: {
+                    padding : {
+                      left      :   0,
+                      right     :   0,
+                      top       :   0,
+                      bottom    :   0
+                    }
+                  },
+                  tooltips: {
+                    callbacks: {
+                      title: function(tooltipItem, data) {
+                        return data['labels'][tooltipItem[0]['index']];
+                      },
+                      label: function(tooltipItem, data) {
+                        return data['datasets'][0]['data'][tooltipItem['index']];
+                      }
+                    },
+
+                    backgroundColor     :   '#fff',
+                    titleFontSize       :   14,
+                    titleFontColor      :   '#0B0F32',
+                    bodyFontColor       :   '#737F8B',
+                    bodyFontSize        :   11,
+                    displayColors       :   false
+                  }
+                };
+                var customerOverviewEcommerce = new Chart(customerOverviewEcommerceCanvas, {
+                    type          :   'doughnut',
+                    data          :   customerOverviewEcommerceData,
+                    options       :   customerOverviewEcommerceOptions
+                });
+                document.getElementById('customerOverviewEcommerce-legend').innerHTML = customerOverviewEcommerce.generateLegend();
+            }
+
             this.getEmployeeData();
             this.paginationPage();
             this.startClock();
@@ -128,13 +251,6 @@ function adminDashboard() {
                         backdrop: 'static',
                         keyboard: false
                         });
-
-            // Then, initialize Select2
-            // $('#salary-grade').select2({
-            //     theme: "bootstrap-5",
-            //     width: $(this).data('width') ? $(this).data('width') : $(this).hasClass('w-100') ? '100%' : 'style',
-            //     dropdownParent: $('#salary-grade').closest('.form-group')
-            // });
 
             this.imageUrl = '';
             this.$refs.fileInputHidden.value = '';

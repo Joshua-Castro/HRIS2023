@@ -320,9 +320,15 @@ class EmployeeController extends Controller
     public function show(Employee $employee)
     {
         try {
-            $count = DB::table('employees')
+            $totalEmployeesCount = DB::table('employees')
                 ->whereNull('deleted_at')
                 ->count();
+
+            $thirtyDaysAgo = now()->subDays(30);
+            $newEmployees = DB::table('employees')
+                            ->where('date_hired', '>=', $thirtyDaysAgo)
+                            ->whereNull('deleted_at')
+                            ->count();
 
             $status         =   request('status');
             $name           =   request('name');
@@ -375,12 +381,15 @@ class EmployeeController extends Controller
                         )
                     ->paginate($pagination);
 
-            return response()->json(['users' => $users, 'count' => $count]);
+            return response()->json([
+                'users'             =>  $users,
+                'count'             =>  $totalEmployeesCount,
+                'newEmployees'      =>  $newEmployees
+            ]);
         } catch (QueryException $e) {
             $errorMessage = $e->getMessage();
             return response()->json(['error' => $errorMessage], 500);
         }
-
     }
 
     /**
