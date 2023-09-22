@@ -90,9 +90,16 @@
                                             <td><p class="dark-text fs-14" x-text="rows.employment_status"></p></td>
                                             <td><p class="dark-text fs-14" x-text="rows.school_code"></p></td>
                                             <td class="text-center">
-                                                <button type="button" class="btn btn-sm action-btn btn-outline-info" @click="edit(indexData, 'edit')" title="Edit">Edit</button>
-                                                <button type="button" class="btn btn-sm action-btn btn-outline-primary" @click="edit(indexData, 'view')">View</button>
-                                                <button type="button" class="btn btn-sm action-btn btn-outline-danger" @click="remove(indexData)">Delete</button>
+                                                <a href="javascript:void(0);" id="dropdownMenuSplitButton1" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                    <i class="fa fa-lg fa-ellipsis-v"></i>
+                                                </a>
+                                                <div class="dropdown-menu" aria-labelledby="dropdownMenuSplitButton1">
+                                                    <a class="dropdown-item" href="javascript:void(0);" @click="edit(indexData, 'edit')">Edit</a>
+                                                    <div class="dropdown-divider"></div>
+                                                    <a class="dropdown-item" href="javascript:void(0);" @click="edit(indexData, 'view')">View</a>
+                                                    <div class="dropdown-divider"></div>
+                                                    <a class="dropdown-item" href="javascript:void(0);" @click="remove(indexData)">Delete</a>
+                                                </div>
                                             </td>
                                         </tr>
                                     </template>
