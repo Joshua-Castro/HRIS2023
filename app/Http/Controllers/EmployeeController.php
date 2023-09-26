@@ -171,12 +171,11 @@ class EmployeeController extends Controller
 
         try {
             Validator::make($request->all(), [
-                // 'name'      => ['required', 'string', 'max:255'],
                 'email'     => ['required', 'string', 'max:255', 'unique:users'],
                 'password'  => ['required', 'string', 'min:8', 'confirmed'],
             ]);
 
-            $id = $request->input('recordId', 0); // USE NULL COALESCING OPERATOR FOR DEFAULT VALUE
+            $id = $request->input('recordId');
 
             $employeeAccount    =   $this->prepareEmployeeAccount($request);
             $employeeData       =   $this->prepareEmployeeData($request, $imageData);
@@ -430,7 +429,6 @@ class EmployeeController extends Controller
             $errorMessage = $e->getMessage();
             return response()->json(['error' => $errorMessage], 500);
         }
-
     }
 
     public function employeeView()

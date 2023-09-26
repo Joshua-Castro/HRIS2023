@@ -1,4 +1,11 @@
 @if(auth()->user()->is_admin == 1)
+@push('styles')
+    <style>
+        .filepond--credits {
+            display: none;
+        }
+    </style>
+@endpush
 <div class="row">
     <div class="col-xl-12 col-lg-12 d-flex flex-column">
         <div class="row flex-grow">
@@ -94,11 +101,25 @@
                                                     <i class="fa fa-lg fa-ellipsis-v"></i>
                                                 </a>
                                                 <div class="dropdown-menu" aria-labelledby="dropdownMenuSplitButton1">
-                                                    <a class="dropdown-item" href="javascript:void(0);" @click="edit(indexData, 'edit')">Edit</a>
+                                                    <a class="dropdown-item align-items-center" href="javascript:void(0);" @click="edit(indexData, 'edit')">
+                                                        <i class="ti-pencil btn-icon-prepend me-2"></i>
+                                                        Edit
+                                                    </a>
                                                     <div class="dropdown-divider"></div>
-                                                    <a class="dropdown-item" href="javascript:void(0);" @click="edit(indexData, 'view')">View</a>
+                                                    <a class="dropdown-item" href="javascript:void(0);" @click="edit(indexData, 'view')">
+                                                        <i class="ti-eye btn-icon-prepend me-2"></i>
+                                                        View
+                                                    </a>
                                                     <div class="dropdown-divider"></div>
-                                                    <a class="dropdown-item" href="javascript:void(0);" @click="remove(indexData)">Delete</a>
+                                                    <a class="dropdown-item" href="javascript:void(0);" @click="remove(indexData)">
+                                                        <i class="ti-trash btn-icon-prepend me-2"></i>
+                                                        Delete
+                                                    </a>
+                                                    <div class="dropdown-divider"></div>
+                                                    <a class="dropdown-item" href="javascript:void(0);" @click="uploadFile(rows.employee_id)">
+                                                        <i class="ti-cloud-up btn-icon-prepend me-2"></i>
+                                                        Upload
+                                                    </a>
                                                 </div>
                                             </td>
                                         </tr>
@@ -113,7 +134,7 @@
                                 </div>
                                 <div class="col-md-6">
                                     <nav>
-                                        <ul class="pagination pagination-rounded float-md-end mb-0">
+                                        <ul class="pagination pagination-rounded float-md-end mt-2 mb-0">
                                             {{-- pagination --}}
                                         </ul>
                                     </nav>
@@ -126,4 +147,5 @@
         </div>
     </div>
 </div>
+@include('modals.employee-file-upload')
 @endif

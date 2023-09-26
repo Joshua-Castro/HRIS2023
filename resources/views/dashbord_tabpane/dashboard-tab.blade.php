@@ -58,7 +58,6 @@
             </div>
         </div>
     </div>
-    {{-- <div class="col-sm-12"> --}}
     <div class="col-lg-4 d-flex flex-column">
         <div class="row flex-grow">
             <div class="col-12 col-lg-4 col-lg-12 grid-margin stretch-card">
@@ -89,10 +88,20 @@
                 <div class="card">
                     <div class="card-body">
                         <p class="card-title card-title-dash font-weight-medium">Current Time</p>
-                        <template x-if="timeLoading">
-                            <div class="spinner-border"></div>
-                        </template>
-                        <h3 class="rate-percentage d-flex justify-content-between text-primary" x-text="currentTime"></h3>
+                        <div class="row">
+                            <div class="col-lg-6 col-md-12">
+                                <template x-if="timeLoading">
+                                    <div class="spinner-border"></div>
+                                </template>
+                                <h3 class="rate-percentage text-primary" x-text="currentTime"></h3>
+                            </div>
+                            <div class="col-lg-6 col-md-12 d-flex justify-content-end">
+                                <button type="button" class="btn btn-info btn-icon-text">
+                                    <i class="ti-alarm-clock btn-icon-prepend"></i>
+                                    Clock In
+                                </button>
+                            </div>
+                        </div>
                         {{-- <span class="text-danger text-medium d-flex align-items-center" x-text="currentTime"></span> --}}
                     </div>
                 </div>
@@ -145,7 +154,7 @@
             </div>
             <div class="table-responsive mt-1">
             <table class="table table-sm table-hover">
-            <thead>
+                <thead>
                     <tr class="text-center">
                     <th>Leave Date</th>
                     <th>Leave Type</th>
@@ -153,7 +162,7 @@
                     <th>Status</th>
                     <th class="text-center">Action</th>
                     </tr>
-            </thead>
+                </thead>
             <template x-if="leaveIsLoading">
                 <tbody>
                     <tr>
@@ -202,5 +211,5 @@
         </div>
         </div>
     </div>
-    </div>
+</div>
 @endif

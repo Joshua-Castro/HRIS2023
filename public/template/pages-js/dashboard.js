@@ -81,6 +81,7 @@ function adminDashboard() {
         overAllLeaveCount       :   0,
         leaveModal              :   '#request-leave-modal',
         modal                   :   '#employee-modal',
+        fileUploadModal         :   '#employee-file-upload-modal',
         leaveReqForm            :   '#leaveRequestForm',
         employeeForm            :   '#employeeForm',
         passwordField           :   '.real-password',
@@ -427,12 +428,12 @@ function adminDashboard() {
         },
 
         // OPEN FILE PICKER WHEN BUTTON CLICK ON IMAGE
-        openFilePicker: function () {
+        openFilePicker : function () {
             this.$refs.fileInputHidden.click();
         },
 
         // PICK A FILE AND CALL THE FILE TO DATA URL TO GET THE SPECIFIC FILE AND GET THE URL
-        fileChosen: function (event) {
+        fileChosen : function (event) {
             this.fileToDataUrl(event, src => this.imageUrl = src)
         },
 
@@ -597,7 +598,7 @@ function adminDashboard() {
         },
 
         // SEARCH SPECIFIC NAME OF EMPLOYEE ON EMPLOYEE TABLE
-        inputSearch: function (event) {
+        inputSearch : function (event) {
             clearTimeout(this.inputTimer);
                 if (event.code === 'Enter') {
                     // this.disableInput();
@@ -611,13 +612,48 @@ function adminDashboard() {
                 }
         },
 
+        // UPLOAD FILE FOR EACH EMPLOYEE
+        uploadFile : function (employeeId) {
+            $(this.fileUploadModal).modal({
+                backdrop: 'static',
+                keyboard: false
+            });
+
+            const inputElement = document.querySelector('input[type="file"]');
+            const pond = FilePond.create(inputElement, {
+                allowMultiple: true,
+                server: {
+                    process: {
+                        url: route("file.store", { employeeId: employeeId }),
+                        method: "POST",
+                        withCredentials: false,
+                        headers: {
+                            'X-CSRF-TOKEN' : this.csrfToken
+                        },
+                        timeout: 7000,
+                        onload: (response) => {
+                            // Handle a successful upload
+                        },
+                        onerror: (response) => {
+                            // Handle an error during upload
+                        },
+                    },
+                },
+            });
+
+            // FilePond.setOptions({
+            //     server: './',
+            // });
+            $(this.fileUploadModal).modal('show');
+        },
+
         // TRIGGER SEARCH WHEN THE BUTTON WHEN CLICK ENTER
-        triggerSearch: function () {
+        triggerSearch : function () {
             this.$refs.usersSearchButton.click();
         },
 
         // UPDATE NAME VALUE OF THE NAME
-        updateSearchInput: function () {
+        updateSearchInput : function () {
             this.$refs.nameInput.value = this.searchName;
         },
 
@@ -644,7 +680,7 @@ function adminDashboard() {
         },
 
         // FOR DATE AND TIME SHOW (USER/EMPLOYEE VIEW)
-        startClock: function () {
+        startClock : function () {
             this.timeLoading = true;
             setInterval(() => {
                 const now = new Date();
