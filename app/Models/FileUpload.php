@@ -10,6 +10,7 @@ class FileUpload extends Model
     use HasFactory, SoftDeletes;
     protected $fillable = [
         'file_path',
-        'file_name'
+        'file_name',
+        'file_unique_id'
     ];
 }

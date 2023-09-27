@@ -16,6 +16,7 @@ return new class extends Migration
             $table->integer('employee_id')->nullable();
             $table->string('file_path')->nullable();
             $table->string('file_name')->nullable();
+            $table->string('file_unique_id')->nullable();
 
             $table->integer('created_by')->nullable();
             $table->integer('updated_by')->nullable();

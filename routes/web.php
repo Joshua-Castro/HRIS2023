@@ -39,8 +39,9 @@ Route::prefix('employee')->as('employee.')->group(function () {
 
 // FILE UPLOAD CONTROLLER ROUTES
 Route::prefix('file-upload')->as('file.')->group(function () {
-    Route::post('/store/{employeeId}'    ,[FileUploadController::class, 'store'           ])->name('store');
-    Route::post('/upload'                ,[FileUploadController::class, 'uploadFiles'     ])->name('upload');
+    Route::post('/store'                        ,[FileUploadController::class, 'store'           ])->name('store');
+    Route::post('/upload'                       ,[FileUploadController::class, 'upload'          ])->name('upload');
+    Route::delete('/revert'                     ,[FileUploadController::class, 'revert'          ])->name('revert');
 });
 
 // LEAVE CONTROLLER ROUTES

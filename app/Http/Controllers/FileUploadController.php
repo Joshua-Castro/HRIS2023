@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Models\FileUpload;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Database\QueryException;
 
 class FileUploadController extends Controller
@@ -26,41 +28,27 @@ class FileUploadController extends Controller
     }
 
     /**
-     * Store a newly created resource in storage.
+     * Store the files to the public storage path
      */
-    public function store(Request $request, $employeeId)
+    public function store(Request $request)
     {
         try {
-            // Validate the uploaded files
+            // VALIDATE THE UPLOADED FIELS
             $request->validate([
                 'filepond' => 'required|array',
             ]);
 
             $uploadedFiles = $request->file('filepond');
 
-            $filePaths  = [];
+            // $filePaths  = [];
             $fileData   = [];
 
             foreach ($uploadedFiles as $file) {
                 // STORE THE FILE IN THE "UPLOADS" DIRECTORY WITHIN THE "PUBLIC" DISK
-                $fileName   =   $file->getClientOriginalName() . $employeeId . now();
-                $path       =   $file->storeAs('uploads/tmp', uniqid() . '_' . $file->getClientOriginalName(), 'public');
-
-                // SAVE THE FILE PATH FOR FUTURE USE (e.g., database storage)
-                $filePaths[] = $path;
-                // PREPARE DATA FOR BATCH INSERT
-                $fileData[] = [
-                    'employee_id'   =>  $employeeId,
-                    'file_path'     =>  $path,
-                    'file_name'     =>  $fileName,
-                    'created_at'    =>  now(),
-                ];
+                $fileName   =   $file->getClientOriginalName();
+                $path       =   $file->storeAs('uploads/tmp', $file->getClientOriginalName(), 'public');
             }
 
-            // PERFORM BATCH INSERT TO AVOID LOOP QUERY
-            DB::table('file_uploads')->insert($fileData);
-
-            // You can return the file paths if needed for further processing
             return response()->json(['message' => 'Files uploaded successfully']);
         } catch (QueryException $e) {
             $errorMessage = $e->getMessage();
@@ -68,42 +56,92 @@ class FileUploadController extends Controller
         }
     }
 
-    public function uploadFiles(Request $request)
+    /**
+     * Store the files to the database 'file_uploads'
+     */
+    public function upload(Request $request)
     {
         try {
+            // VALIDATE THE UPLOADED FIELS
             $request->validate([
                 'filepond' => 'required|array',
-                'filepond.*' => 'mimes:jpeg,png,pdf', // Adjust allowed file types.
             ]);
 
-            if ($request->hasFile('filepond')) {
-                $uploadedFiles = $request->file('filepond');
-                $fileData = [];
+            $files      = $request->file('filepond');
+            $fileData   = [];
+            foreach ($files as $file) {
+                $fileName   =   $file->getClientOriginalName();
+                $fileId     =   $request->input('file_id') ? $request->input('file_id') : '';
+                $path       =   $fileName ? 'uploads/tmp/' . $fileName : '';
 
-                foreach ($uploadedFiles as $file) {
-                    $fileName = $file->getClientOriginalName();
-                    $filePath = $file->store('uploads', 'public');
-
-                    $fileData[] = [
-                        'employee_id'   =>  $request->employee_id,
-                        'file_name'     =>  $fileName,
-                        'file_path'     =>  $filePath,
-                        'created_at'    =>  now(),
-                    ];
-                }
-
-                // Insert all uploaded files into the database in a single query to optimize performance.
-                DB::table('file_uploads')->insert($fileData);
-
-                return redirect()->back()->with('success', 'Files uploaded successfully');
-            } else {
-                dd('error');
+                $fileData[] = [
+                    'employee_id'       =>  $request->input('employee_id'),
+                    'file_path'         =>  $path,
+                    'file_name'         =>  $fileName,
+                    'file_unique_id'    =>  $fileId,
+                    'created_at'        =>  now(),
+                    'created_by'        =>  Auth::id(),
+                ];
             }
-        } catch (Exception $e) {
-            return redirect()->back()->with('error', 'File upload failed: ' . $e->getMessage());
+
+            // PERFORM BATCH INSERT TO AVOID LOOP QUERY
+            DB::table('file_uploads')->insert($fileData);
+
+            return response()->json(['message' => 'Files uploaded successfully']);
+        } catch (QueryException $e) {
+            $errorMessage = $e->getMessage();
+            return response()->json(['error' => $errorMessage], 500);
         }
+
     }
 
+    /**
+     * Remove the file from the database as well
+     * as on the Database. Base on the employee id and
+     * file unique id
+     */
+    public function revert(Request $request)
+    {
+        try {
+            $fileId         =   $request->input('file_id');
+            $employeeId     =   $request->input('employee_id');
+
+            $file = DB::table('file_uploads')
+                ->select(
+                    'file_path',
+                    'file_unique_id',
+                    'employee_id'
+                    )
+                ->where('file_unique_id', $fileId)
+                ->where('employee_id', $employeeId)
+                ->first();
+            dd($file);
+
+            if ($file === null) {
+                return response()->json(['error' => 'File not found'], 404);
+            }
+
+            // Delete the file from storage
+            if (Storage::disk('public')->exists($file->file_path)) {
+                Storage::disk('public')->delete($file->file_path);
+            }
+
+
+            // // Delete the file from storage
+            // Storage::disk('public')->delete($file->file_path);
+
+            // Delete the record from the database
+            DB::table('file_uploads')
+                ->where('file_unique_id', $fileId)
+                ->where('employee_id', $employeeId)
+                ->delete();
+
+            return response()->json(['message' => 'Successfully Removed!']);
+        } catch (QueryException $e) {
+            $errorMessage = $e->getMessage();
+            return response()->json(['error' => $errorMessage], 500);
+        }
+    }
 
     /**
      * Display the specified resource.
