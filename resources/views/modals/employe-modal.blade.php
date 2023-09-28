@@ -61,7 +61,7 @@
                     <div class="modal-body">
                         <h4 class="header-title mb-2 mt-4">Employee Information</h4>
                         <div class="row mt-1">
-                            <div class="col-md-12">
+                            <div class="col-12 col-md-7">
                                 <div class="form-group row p-1 m-0" >
                                     <div class="col-sm-12 p-0 m-0">
                                         <div class="form-floating">
@@ -71,6 +71,26 @@
                                     </div>
                                 </div>
                             </div>
+
+                            <div class="col-12 col-md-5">
+                                <div class="form-group row p-1 m-0" >
+                                    <div class="col-sm-12 p-0 m-0">
+                                        <div class="form-floating">
+                                            <select class="form-select" name="gender" x-model="current.gender" required>
+                                                <option value="">Select</option>
+                                                <option value="Male">Male</option>
+                                                <option value="Female">Female</option>
+                                            </select>
+                                            <label for="gender">Gender</label>
+                                            <div class="invalid-feedback">
+                                                This field is required.
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+
                         </div>
                         <div class="row mt-1">
                             <div class="col-12 col-md-4">

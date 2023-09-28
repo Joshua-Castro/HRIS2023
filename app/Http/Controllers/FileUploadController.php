@@ -92,11 +92,27 @@ class FileUploadController extends Controller
             $errorMessage = $e->getMessage();
             return response()->json(['error' => $errorMessage], 500);
         }
-
     }
 
     /**
-     * Remove the file from the database as well
+     * Processing the revert or delete file
+     */
+    public function delete(Request $request)
+    {
+        try {
+            if(!$request->file('filepond')) {
+                return response()->json(['message' => 'Removing File...']);
+            } else {
+                return response()->json(['message' => 'Something went wrong.']);
+            }
+        } catch (QueryException $e) {
+            $errorMessage = $e->getMessage();
+            return response()->json(['error' => $errorMessage], 500);
+        }
+    }
+
+    /**
+     * Remove the file from the Directory as well
      * as on the Database. Base on the employee id and
      * file unique id
      */
@@ -115,20 +131,13 @@ class FileUploadController extends Controller
                 ->where('file_unique_id', $fileId)
                 ->where('employee_id', $employeeId)
                 ->first();
-            dd($file);
 
             if ($file === null) {
                 return response()->json(['error' => 'File not found'], 404);
             }
 
             // Delete the file from storage
-            if (Storage::disk('public')->exists($file->file_path)) {
-                Storage::disk('public')->delete($file->file_path);
-            }
-
-
-            // // Delete the file from storage
-            // Storage::disk('public')->delete($file->file_path);
+            Storage::disk('public')->delete($file->file_path);
 
             // Delete the record from the database
             DB::table('file_uploads')

@@ -7,7 +7,7 @@
                 </div>
                 <div class="row mt-4">
                     <div class="d-flex justify-content-end align-items-center">
-                        <button type="button" class="btn btn-outline-danger" data-bs-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-outline-danger" @click="closeFileUploadModal">Close</button>
                     </div>
                 </div>
             </div>

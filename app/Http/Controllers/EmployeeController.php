@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Database\QueryException;
 use Illuminate\Support\Facades\Validator;
 
@@ -204,12 +205,11 @@ class EmployeeController extends Controller
     {
         $decodedImage   =   base64_decode(preg_replace('#^data:image/\w+;base64,#i', '', $base64Image));
         $fileName       =   time() . '_' . uniqid() . '.png';
-        $filePath       =   public_path('images/' . $fileName);
-        file_put_contents($filePath, $decodedImage);
-
+        // Save the image to the storage directory
+        Storage::disk('public')->put('uploads/images/' . $fileName, $decodedImage);
         return [
             'file_name'     =>  $fileName,
-            'file_path'     =>  '/images/' . $fileName,
+            'file_path'     =>  'uploads/images/' . $fileName,
         ];
     }
 
