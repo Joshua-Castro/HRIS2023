@@ -42,7 +42,8 @@ Route::prefix('file-upload')->as('file.')->group(function () {
     Route::post('/store'                        ,[FileUploadController::class, 'store'           ])->name('store');
     Route::post('/upload'                       ,[FileUploadController::class, 'upload'          ])->name('upload');
     Route::delete('/delete'                     ,[FileUploadController::class, 'delete'          ])->name('delete');
-    Route::post('/revert'                     ,[FileUploadController::class, 'revert'          ])->name('revert');
+    Route::post('/revert'                       ,[FileUploadController::class, 'revert'          ])->name('revert');
+    Route::get('/show'                          ,[FileUploadController::class, 'getAll'          ])->name('show');
 });
 
 // LEAVE CONTROLLER ROUTES

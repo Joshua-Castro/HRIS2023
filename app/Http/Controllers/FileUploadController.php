@@ -177,6 +177,25 @@ class FileUploadController extends Controller
     }
 
     /**
+     * file unique id
+     */
+    public function getAll (Request $request)
+    {
+        try {
+            $files = DB::table('file_uploads')
+                ->select('*')
+                ->where('employee_id', '=', $request->employeeId)
+                ->whereNull('deleted_at')
+                ->get();
+
+            return response()->json(['files' => $files]);
+        } catch (QueryException $e) {
+            $errorMessage = $e->getMessage();
+            return response()->json(['error' => $errorMessage], 500);
+        }
+    }
+
+    /**
      * Remove the specified resource from storage.
      */
     public function destroy(FileUpload $fileUpload)

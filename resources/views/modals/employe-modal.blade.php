@@ -51,9 +51,9 @@
                             </div>
                         </div>
                         <div class="d-flex justify-content-between">
-                            <button type="button" @click="clearImage" class="btn btn-danger btn-sm mt-4" :disabled="!imageUrl">Remove Uploaded Picture</button>
+                            <button type="button" @click="clearImage" class="btn btn-danger btn-sm mt-4 upload-picture-btn" :disabled="!imageUrl">Remove Uploaded Picture</button>
                             <input type="file" id="fileInput" x-ref="fileInputHidden" style="display: none;" accept="image/*" @change="fileChosen($event)" />
-                            <button type="button" @click="openFilePicker" class="btn btn-success btn-sm mt-4">Upload Profile Picture</button>
+                            <button type="button" @click="openFilePicker" class="btn btn-success btn-sm mt-4 upload-picture-btn">Upload Profile Picture</button>
                         </div>
                     </div>
                 </div>
@@ -219,6 +219,21 @@
                                                 <option value="Grade13">Grade 13</option>
                                                 <option value="Grade14">Grade 14</option>
                                                 <option value="Grade15">Grade 15</option>
+                                                <option value="Grade16">Grade 16</option>
+                                                <option value="Grade17">Grade 17</option>
+                                                <option value="Grade18">Grade 18</option>
+                                                <option value="Grade19">Grade 19</option>
+                                                <option value="Grade20">Grade 20</option>
+                                                <option value="Grade21">Grade 21</option>
+                                                <option value="Grade22">Grade 22</option>
+                                                <option value="Grade23">Grade 23</option>
+                                                <option value="Grade24">Grade 24</option>
+                                                <option value="Grade25">Grade 25</option>
+                                                <option value="Grade26">Grade 26</option>
+                                                <option value="Grade27">Grade 27</option>
+                                                <option value="Grade28">Grade 28</option>
+                                                <option value="Grade29">Grade 29</option>
+                                                <option value="Grade30">Grade 30</option>
                                             </select>
                                             <label for="salary_grade">Salary Grade/Step<span class="text-danger"> *</span></label>
                                             <div class="invalid-feedback">
@@ -286,21 +301,6 @@
                         </div>
                         <h4 class="header-title mb-2 account-information">Account Information</h4>
                         <div class="row mt-1 mb-4 account-information">
-                            {{-- <div class="col-12 col-md-6">
-                                <div class="form-group row p-1 m-0" >
-                                    <div class="col-sm-12 p-0 m-0">
-                                        <div class="form-floating">
-                                            <input type="text" id="name" name="name" class="form-control @error('name') is-invalid @enderror" value="{{ old('name') }}" placeholder="Username" required autocomplete="name" x-model="current.name">
-                                            <label for="name">Name<span class="text-danger"> *</span></label>
-                                            @error('name')
-                                                <span class="invalid-feedback" role="alert">
-                                                    <strong>{{ $message }}</strong>
-                                                </span>
-                                            @enderror
-                                        </div>
-                                    </div>
-                                </div>
-                            </div> --}}
                             <div class="col-12 col-md-6">
                                 <div class="form-group row p-1 m-0" >
                                     <div class="col-sm-12 p-0 m-0">
@@ -334,20 +334,6 @@
                                     </div>
                                 </div>
                             </div>
-                            {{-- <div class="col-12 col-md-6">
-                                <div class="form-group row p-1 m-0" >
-                                    <div class="col-sm-12 p-0 m-0">
-                                        <div class="d-flex flex-row form-floating position-relative">
-                                            <input type="password" id="password-confirm" name="password_confirmation" class="form-control confirm-password" placeholder="Confirm Password" autocomplete="new-password" required x-model="current.confirmPassword" :input="validatePasswordConfirmation">
-                                            <label for="password_confirmation">Confirm Password<span class="text-danger"> *</span></label>
-                                            <button type="button" class="btn btn-light eye-icon toggle-confirm-password" @click="seePassword('confirmPassword')">
-                                                <i class="fa fa-eye-slash"></i>
-                                            </button>
-                                        </div>
-                                        <span class="invalid-feedback" x-show="current.confirmPassword !== '' && current.password !== current.confirmPassword" x-ref="errorMessage">The passwords are not the same</span>
-                                    </div>
-                                </div>
-                            </div> --}}
                         </div>
                     </div>
                 </div>

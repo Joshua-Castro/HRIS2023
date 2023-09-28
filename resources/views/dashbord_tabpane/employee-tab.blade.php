@@ -97,28 +97,33 @@
                                             <td><p class="dark-text fs-14" x-text="rows.employment_status"></p></td>
                                             <td><p class="dark-text fs-14" x-text="rows.school_code"></p></td>
                                             <td class="text-center">
-                                                <a href="javascript:void(0);" id="dropdownMenuSplitButton1" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                <a href="javascript:void(0);" class="text-reset text-decoration-none" id="dropdownMenuSplitButton1" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                                     <i class="fa fa-lg fa-ellipsis-v"></i>
                                                 </a>
                                                 <div class="dropdown-menu" aria-labelledby="dropdownMenuSplitButton1">
-                                                    <a class="dropdown-item align-items-center" href="javascript:void(0);" @click="edit(indexData, 'edit')">
+                                                    <a class="dropdown-item align-items-center text-reset text-decoration-none" href="javascript:void(0);" @click="edit(indexData, 'edit')">
                                                         <i class="ti-pencil btn-icon-prepend me-2"></i>
                                                         Edit
                                                     </a>
                                                     <div class="dropdown-divider"></div>
-                                                    <a class="dropdown-item" href="javascript:void(0);" @click="edit(indexData, 'view')">
+                                                    <a class="dropdown-item text-reset text-decoration-none" href="javascript:void(0);" @click="edit(indexData, 'view')">
                                                         <i class="ti-eye btn-icon-prepend me-2"></i>
                                                         View
                                                     </a>
                                                     <div class="dropdown-divider"></div>
-                                                    <a class="dropdown-item" href="javascript:void(0);" @click="remove(indexData)">
+                                                    <a class="dropdown-item text-reset text-decoration-none" href="javascript:void(0);" @click="remove(indexData)">
                                                         <i class="ti-trash btn-icon-prepend me-2"></i>
                                                         Delete
                                                     </a>
                                                     <div class="dropdown-divider"></div>
-                                                    <a class="dropdown-item" href="javascript:void(0);" @click="uploadFile(rows.employee_id)">
+                                                    <a class="dropdown-item text-reset text-decoration-none" href="javascript:void(0);" @click="uploadFile(rows.employee_id)">
                                                         <i class="ti-cloud-up btn-icon-prepend me-2"></i>
                                                         Upload
+                                                    </a>
+                                                    <div class="dropdown-divider"></div>
+                                                    <a class="dropdown-item text-reset text-decoration-none" href="javascript:void(0);" @click="viewFiles(rows.employee_id)">
+                                                        <i class="ti-files btn-icon-prepend me-2"></i>
+                                                        Files
                                                     </a>
                                                 </div>
                                             </td>
@@ -148,4 +153,5 @@
     </div>
 </div>
 @include('modals.employee-file-upload')
+@include('modals.view-employee-uploaded-files')
 @endif

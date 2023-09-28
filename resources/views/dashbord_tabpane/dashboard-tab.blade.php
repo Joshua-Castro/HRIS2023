@@ -83,132 +83,193 @@
 <div class="row">
     <div class="col-sm-12">
         <div class="statistics-details mb-0">
-        <div class="row">
-            <div class="col-sm-3 grid-margin">
-                <div class="card">
-                    <div class="card-body">
-                        <p class="card-title card-title-dash font-weight-medium">Current Time</p>
-                        <div class="row">
-                            <div class="col-lg-6 col-md-12">
-                                <template x-if="timeLoading">
-                                    <div class="spinner-border"></div>
-                                </template>
-                                <h3 class="rate-percentage text-primary" x-text="currentTime"></h3>
-                            </div>
-                            <div class="col-lg-6 col-md-12 d-flex justify-content-end">
-                                <button type="button" class="btn btn-info btn-icon-text">
-                                    <i class="ti-alarm-clock btn-icon-prepend"></i>
-                                    Clock In
-                                </button>
+            <div class="row">
+                <div class="col-sm-3 grid-margin">
+                    <div class="card">
+                        <div class="card-body">
+                            <p class="card-title card-title-dash font-weight-medium">Current Time</p>
+                            <div class="row">
+                                <div class="col-lg-6 col-md-12">
+                                    <template x-if="timeLoading">
+                                        <div class="spinner-border"></div>
+                                    </template>
+                                    <h3 class="rate-percentage text-primary" x-text="currentTime"></h3>
+                                </div>
+                                <div class="col-lg-6 col-md-12 d-flex justify-content-end">
+                                    <button type="button" class="btn btn-success btn-icon-text clock-in" @click="webBundyFunction({{ auth()->user()->id }}, 'clock-in')">
+                                        <i class="ti-alarm-clock btn-icon-prepend"></i>
+                                        Clock In
+                                    </button>
+                                    <button type="button" class="btn btn-danger btn-icon-text clock-out d-none" @click="webBundyFunction({{ auth()->user()->id }}, 'clock-out')">
+                                        <i class="ti-home btn-icon-prepend"></i>
+                                        Clock Out
+                                    </button>
+                                    <button type="button" class="btn btn-danger btn-icon-text break-out d-none" @click="webBundyFunction({{ auth()->user()->id }}, 'break-out')">
+                                        <i class="ti-bell btn-icon-prepend"></i>
+                                        Break Out
+                                    </button>
+                                    <button type="button" class="btn btn-success btn-icon-text break-in d-none" @click="webBundyFunction({{ auth()->user()->id }}, 'break-in')">
+                                        <i class="ti-pencil-alt btn-icon-prepend"></i>
+                                        Break In
+                                    </button>
+                                </div>
                             </div>
                         </div>
-                        {{-- <span class="text-danger text-medium d-flex align-items-center" x-text="currentTime"></span> --}}
+                    </div>
+                </div>
+                <div class="col-sm-3 grid-margin">
+                    <div class="card">
+                        <div class="card-body">
+                        <div>
+                            <p class="card-title card-title-dash font-weight-medium">Leave Requests</p>
+                            <h3 class="rate-percentage d-flex justify-content-between" x-text="leaveCount"></h3>
+                        </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-3 grid-margin">
+                    <div class="card">
+                    <div class="card-body">
+                        <div>
+                        <p class="card-title card-title-dash font-weight-medium">WFH Requests</p>
+                        <h3 class="rate-percentage d-flex justify-content-between align-items-center">SOON<span class="text-danger text-medium d-flex align-items-center"><i class="mdi mdi-trending-down me-2 icon-md"></i></span></h3>
+                        </div>
+                    </div>
+                    </div>
+                </div>
+                <div class="col-sm-3 grid-margin">
+                    <div class="card">
+                        <div class="card-body">
+                            <div>
+                            <p class="card-title card-title-dash font-weight-medium">Overtime Requests</p>
+                            <h3 class="rate-percentage d-flex justify-content-between">SOON<span class="text-success text-medium d-flex align-items-center"><i class="mdi mdi-trending-up me-2 icon-md"></i></span></h3>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
-            <div class="col-sm-3 grid-margin">
-            <div class="card">
-                <div class="card-body">
-                <div>
-                    <p class="card-title card-title-dash font-weight-medium">Leave Requests</p>
-                    <h3 class="rate-percentage d-flex justify-content-between" x-text="leaveCount"></h3>
-                </div>
-                </div>
-            </div>
-            </div>
-            <div class="col-sm-3 grid-margin">
-                <div class="card">
-                <div class="card-body">
-                    <div>
-                    <p class="card-title card-title-dash font-weight-medium">WFH Requests</p>
-                    <h3 class="rate-percentage d-flex justify-content-between align-items-center">SOON<span class="text-danger text-medium d-flex align-items-center"><i class="mdi mdi-trending-down me-2 icon-md"></i></span></h3>
-                    </div>
-                </div>
-                </div>
-            </div>
-            <div class="col-sm-3 grid-margin">
-                <div class="card">
-                <div class="card-body">
-                    <div>
-                    <p class="card-title card-title-dash font-weight-medium">Overtime Requests</p>
-                    <h3 class="rate-percentage d-flex justify-content-between">SOON<span class="text-success text-medium d-flex align-items-center"><i class="mdi mdi-trending-up me-2 icon-md"></i></span></h3>
-                    </div>
-                </div>
-                </div>
-            </div>
-        </div>
         </div>
     </div>
 </div>
 <div class="row">
-    <div class="col-xl-12 col-lg-12 d-flex flex-column">
+    <div class="col-lg-6 d-flex flex-column">
         <div class="row flex-grow">
-        <div class="col-12 grid-margin stretch-card">
-            <div class="card card-rounded">
-            <div class="card-body">
-            <div class="align-items-start">
-                <div class="d-flex justify-content-between">
-                    <h4 class="card-title card-title-dash">Leave Requests</h4>
-                    <button class="btn btn-sm btn-outline-primary employee-btn" @click="createRequest">Request</button>
+            <div class="col-12 col-lg-4 col-lg-12 grid-margin stretch-card">
+                <div class="card">
+                    <div class="card-body">
+                        {{-- <div class="d-flex justify-content-between align-items-start">
+                            <div>
+                                <h4 class="modern-user-intro">Hello John Doe,</h4>
+                                <h6 class="mdern-welcome-text">Welcome back</h6>
+                            </div>
+                        </div> --}}
+                        <div class="row">
+                            <div class="align-items-start">
+                                <div class="d-flex justify-content-between">
+                                    <h4 class="card-title card-title-dash">Leave Requests</h4>
+                                    <button class="btn btn-sm btn-outline-primary employee-btn" @click="createRequest">Request</button>
+                                </div>
+                            </div>
+                            <div class="table-responsive mt-1">
+                                <table class="table table-sm table-hover">
+                                    <thead>
+                                        <tr class="text-center">
+                                        <th>Leave Date</th>
+                                        <th>Leave Type</th>
+                                        <th>Day Type</th>
+                                        <th>Status</th>
+                                        <th class="text-center">Action</th>
+                                        </tr>
+                                    </thead>
+                                    <template x-if="leaveIsLoading">
+                                        <tbody>
+                                            <tr>
+                                                <td class="text-center" colspan="5"><div class="spinner-border"></div></td>
+                                            </tr>
+                                        </tbody>
+                                    </template>
+                                    <template x-if="!leaveIsLoading">
+                                        <tbody>
+                                            <template x-if="(leaveData ?? []).length == 0">
+                                                <tr class="text-center">
+                                                    <td class="" colspan="5"><i class="fa fa-info-circle"></i> There Leave Request's record.</td>
+                                                </tr>
+                                            </template>
+                                            <template x-if="(leaveData ?? []).length > 0">
+                                                <template x-for="(rows, indexData) in leaveData">
+                                                    <tr class="text-center">
+                                                        <td><p class="dark-text fs-14" x-text="rows.leave_date"></p></td>
+                                                        <td><p class="dark-text fs-14" x-text="rows.leave_type"></p></td>
+                                                        <td><p class="dark-text fs-14" x-text="rows.day_type"></p></td>
+                                                        <td>
+                                                            <template x-if="rows.status == 'Pending'">
+                                                                <div class="badge badge-warning" x-text="rows.status"></div>
+                                                            </template>
+                                                            <template x-if="rows.status == 'Accepted'">
+                                                                <div class="badge badge-success" x-text="rows.status"></div>
+                                                            </template>
+                                                            <template x-if="rows.status == 'Declined'">
+                                                                <div class="badge badge-danger" x-text="rows.status"></div>
+                                                            </template>
+                                                            {{-- <p class="dark-text fs-14" ></p> --}}
+                                                        </td>
+                                                        <td class="text-center" style="padding-top: 28px;">
+                                                            <button type="button" class="btn btn-sm action-btn btn-outline-info" @click="editLeaveRequest(indexData)" :title="rows.status != 'Pending' ? 'View' : 'Edit'" x-text="rows.status != 'Pending' ? 'View' : 'Edit'"></button>
+                                                            <button type="button" class="btn btn-sm action-btn btn-outline-danger" @click="removeLeaveRequest(indexData)" x-text="rows.status != 'Pending' ? 'Delete' : 'Cancel'"></button>
+                                                        </td>
+                                                    </tr>
+                                                </template>
+                                            </template>
+                                        </tbody>
+                                    </template>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-            </div>
-            <div class="table-responsive mt-1">
-            <table class="table table-sm table-hover">
-                <thead>
-                    <tr class="text-center">
-                    <th>Leave Date</th>
-                    <th>Leave Type</th>
-                    <th>Day Type</th>
-                    <th>Status</th>
-                    <th class="text-center">Action</th>
-                    </tr>
-                </thead>
-            <template x-if="leaveIsLoading">
-                <tbody>
-                    <tr>
-                        <td class="text-center" colspan="5"><div class="spinner-border"></div></td>
-                    </tr>
-                </tbody>
-            </template>
-            <template x-if="!leaveIsLoading">
-                <tbody>
-                    <template x-if="(leaveData ?? []).length == 0">
-                        <tr class="text-center">
-                            <td class="" colspan="5"><i class="fa fa-info-circle"></i> There Leave Request's record.</td>
-                        </tr>
-                    </template>
-                    <template x-if="(leaveData ?? []).length > 0">
-                        <template x-for="(rows, indexData) in leaveData">
-                            <tr class="text-center">
-                                <td><p class="dark-text fs-14" x-text="rows.leave_date"></p></td>
-                                <td><p class="dark-text fs-14" x-text="rows.leave_type"></p></td>
-                                <td><p class="dark-text fs-14" x-text="rows.day_type"></p></td>
-                                <td>
-                                    <template x-if="rows.status == 'Pending'">
-                                        <div class="badge badge-warning" x-text="rows.status"></div>
-                                    </template>
-                                    <template x-if="rows.status == 'Accepted'">
-                                        <div class="badge badge-success" x-text="rows.status"></div>
-                                    </template>
-                                    <template x-if="rows.status == 'Declined'">
-                                        <div class="badge badge-danger" x-text="rows.status"></div>
-                                    </template>
-                                    {{-- <p class="dark-text fs-14" ></p> --}}
-                                </td>
-                                <td class="text-center" style="padding-top: 28px;">
-                                    <button type="button" class="btn btn-sm action-btn btn-outline-info" @click="editLeaveRequest(indexData)" :title="rows.status != 'Pending' ? 'View' : 'Edit'" x-text="rows.status != 'Pending' ? 'View' : 'Edit'"></button>
-                                    <button type="button" class="btn btn-sm action-btn btn-outline-danger" @click="removeLeaveRequest(indexData)" x-text="rows.status != 'Pending' ? 'Delete' : 'Cancel'"></button>
-                                </td>
-                            </tr>
-                        </template>
-                    </template>
-                </tbody>
-            </template>
-                </table>
-                </div>
-            </div>
             </div>
         </div>
+    </div>
+    <div class="col-lg-6 d-flex flex-column">
+        <div class="row flex-grow">
+            <div class="col-12 col-lg-4 col-lg-12 grid-margin stretch-card">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-start">
+                            <div>
+                                <h4 class="card-title card-title-dash">Attendance Monitoring</h4>
+                                <p class="text-small modern-color-999">Filter and search your attendance here...</p>
+                            </div>
+                            <div>
+                                <div class="input-group">
+                                    <span class="icon-calendar input-group-text calendar-icon"></span>
+                                    <input type="text" class="form-control bg-white text-center" id="attendance-monitoring-input" name="attendance-monitoring-input" x-model="dateToday">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="table-sm table-responsive ">
+                            <table class="table table-striped table-bordered">
+                                <thead>
+                                <tr class="text-center">
+                                    <th>Clock In</th>
+                                    <th>Break Out</th>
+                                    <th>Break In</th>
+                                    <th>Clock Out</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                    <tr class="text-center">
+                                        <td>SAMPLE</td>
+                                        <td>SAMPLE</td>
+                                        <td>SAMPLE</td>
+                                        <td>SAMPLE</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 </div>

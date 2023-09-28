@@ -167,28 +167,32 @@ class EmployeeController extends Controller
             'userImage'        =>  'required|string'
         ]);
 
-        // HANDLE IMAGE UPLOAD AND STORAGE
-        $imageData = $this->uploadImage($request->input('userImage'));
-
         try {
             Validator::make($request->all(), [
                 'email'     => ['required', 'string', 'max:255', 'unique:users'],
                 'password'  => ['required', 'string', 'min:8', 'confirmed'],
             ]);
 
+            $imageData = '';
             $id = $request->input('recordId');
 
             $employeeAccount    =   $this->prepareEmployeeAccount($request);
-            $employeeData       =   $this->prepareEmployeeData($request, $imageData);
+            $employeeData       =   $this->prepareEmployeeData($request);
 
             if (empty($id)) { // CREATE OR STORE DATA
+                // HANDLE IMAGE UPLOAD AND STORAGE
+                $imageData = $this->uploadImage($request->input('userImage'), null);
                 $userId = $this->storeUserData($employeeAccount);
                 $this->storeEmployeeData($employeeData, $userId);
                 $this->storeEmployeeImage($imageData, $userId);
 
+
                 return response()->json(['message' => 'Successfully Added'], 200);
             } else { // UPDATE DATA
+                $imageData = $this->uploadImage($request->input('userImage'), $id);
                 $this->updateEmployeeData($employeeData, $id);
+                $this->updateEmployeeImage($imageData, $id);
+                // dd($imageData, 'image data');
 
                 return response()->json(['message' => 'Successfully Updated'], 200);
             }
@@ -201,15 +205,46 @@ class EmployeeController extends Controller
     /**
      * Handle uploading image function.
      */
-    private function uploadImage($base64Image)
+    private function uploadImage($base64Image, $userId = null)
     {
-        $decodedImage   =   base64_decode(preg_replace('#^data:image/\w+;base64,#i', '', $base64Image));
-        $fileName       =   time() . '_' . uniqid() . '.png';
-        // Save the image to the storage directory
+        $fileName       =   null;
+        $decodedImage   =   null;
+
+        // Check if $base64Image is a base64-encoded image
+        if (strpos($base64Image, 'data:image/') === 0) {
+            $fileName       =   time() . '_' . uniqid() . '.png';
+            $decodedImage   =   base64_decode(preg_replace('#^data:image/\w+;base64,#i', '', $base64Image));
+        } else {
+            $path           =   $base64Image;
+            $fileName       =   basename($path);
+            $decodedImage   =   file_get_contents($path);
+        }
+
+        // Check if there is an existing image for the user
+        if ($userId) {
+            $userImage = DB::table('employees as e')
+                        ->select(
+                            'e.id',
+                            'e.user_id',
+
+                            'i.file_path',
+                            'i.file_name'
+                            )
+                        ->leftJoin('images as i', 'i.user_id' , '=', 'e.user_id')
+                        ->where('e.id', '=', $userId)
+                        ->first();
+
+            if ($userImage) {
+                Storage::disk('public')->delete($userImage->file_path);
+            }
+        }
+
+        // Save the new image to the storage directory
         Storage::disk('public')->put('uploads/images/' . $fileName, $decodedImage);
+
         return [
-            'file_name'     =>  $fileName,
-            'file_path'     =>  'uploads/images/' . $fileName,
+            'file_name' => $fileName,
+            'file_path' => 'uploads/images/' . $fileName,
         ];
     }
 
@@ -228,7 +263,7 @@ class EmployeeController extends Controller
     /**
      * Prepare Employee Data to save in employees table.
      */
-    private function prepareEmployeeData($request, $imageData)
+    private function prepareEmployeeData($request)
     {
         return [
             'last_name'             =>      !empty($request->lastName)             ?   $request->lastName             :  '',
@@ -292,6 +327,31 @@ class EmployeeController extends Controller
             $imageData['created_at']        =  now();
             $imageData['user_id']           =  $userId;
             DB::table('images')->insert($imageData);
+        } catch (QueryException $e) {
+            $errorMessage = $e->getMessage();
+            return response()->json(['error' => $errorMessage], 500);
+        }
+    }
+
+    public function updateEmployeeImage($imageData, $userId)
+    {
+        try {
+            $imageData['updated_by']        =  Auth::id();
+            $imageData['updated_at']        =  now();
+            $id = DB::table('employees as e')
+                        ->select(
+                            'e.id as employee_id',
+                            'e.user_id',
+
+                            'i.id as image_id',
+                            'i.file_path',
+                            'i.file_name'
+                            )
+                        ->leftJoin('images as i', 'i.user_id' , '=', 'e.user_id')
+                        ->where('e.id', '=', $userId)
+                        ->first();
+
+            DB::table('images')->where('id', '=', $id->image_id)->update($imageData);
         } catch (QueryException $e) {
             $errorMessage = $e->getMessage();
             return response()->json(['error' => $errorMessage], 500);

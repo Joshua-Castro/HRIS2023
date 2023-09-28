@@ -54,6 +54,7 @@ function adminDashboard() {
         ],
 
         leaveData       :   [],
+        employeeFiles   :   [],
         currentLeave    :   {
             leaveRecordId   :   0,
             leaveDate       :   '',
@@ -62,34 +63,37 @@ function adminDashboard() {
             reason          :   '',
         },
 
-        reasonDecline           :   '',
-        leaveIsLoading          :   false,
-        timeLoading             :   false,
-        isDisabled              :   false,
-        inputTimer              :   null,
-        pond                    :   null,
-        isLoading               :   false,
-        currentDate             :   '',
-        currentTime             :   '',
-        searchName              :   '',
-        imageUrl                :   '',
-        filter                  :   'all',
-        filterName              :   '',
-        pagination              :   10,
-        page                    :   1,
-        employeeCount           :   0,
-        leaveCount              :   0,
-        overAllLeaveCount       :   0,
-        leaveModal              :   '#request-leave-modal',
-        modal                   :   '#employee-modal',
-        fileUploadModal         :   '#employee-file-upload-modal',
-        leaveReqForm            :   '#leaveRequestForm',
-        employeeForm            :   '#employeeForm',
-        passwordField           :   '.real-password',
-        togglePassword          :   '.toggle-password',
-        confirmPasswordField    :   '.confirm-password',
-        confirmTogglePassword   :   '.toggle-confirm-password',
-        csrfToken               :   $('meta[name="csrf-token"]').attr('content'),
+        dateToday                   :   '',
+        reasonDecline               :   '',
+        leaveIsLoading              :   false,
+        timeLoading                 :   false,
+        isDisabled                  :   false,
+        inputTimer                  :   null,
+        pond                        :   null,
+        isLoading                   :   false,
+        fileFetchLoading            :   false,
+        currentDate                 :   '',
+        currentTime                 :   '',
+        searchName                  :   '',
+        imageUrl                    :   '',
+        filter                      :   'all',
+        filterName                  :   '',
+        pagination                  :   10,
+        page                        :   1,
+        employeeCount               :   0,
+        leaveCount                  :   0,
+        overAllLeaveCount           :   0,
+        leaveModal                  :   '#request-leave-modal',
+        modal                       :   '#employee-modal',
+        fileUploadModal             :   '#employee-file-upload-modal',
+        viewUploadedFileModal       :   '#employee-view-uploaded-file-modal',
+        leaveReqForm                :   '#leaveRequestForm',
+        employeeForm                :   '#employeeForm',
+        passwordField               :   '.real-password',
+        togglePassword              :   '.toggle-password',
+        confirmPasswordField        :   '.confirm-password',
+        confirmTogglePassword       :   '.toggle-confirm-password',
+        csrfToken                   :   $('meta[name="csrf-token"]').attr('content'),
 
 
 
@@ -106,6 +110,14 @@ function adminDashboard() {
             // INITIALIZE THE DATEPICKER WHEN THE MODAL IS SHOWN IN ADD EMPLOYEE
             $('#date-hired', this.modal).datepicker({
                 format: "yyyy-mm-dd",
+                autoclose: true,
+                todayHighlight: true,
+                clearBtn: true,
+            }).attr("readonly", "readonly");
+
+            // INITIALIZE THE DATEPICKER IN ATTENDANCE MONITORING
+            $('#attendance-monitoring-input').datepicker({
+                format: "mm-dd-yyyy",
                 autoclose: true,
                 todayHighlight: true,
                 clearBtn: true,
@@ -241,6 +253,12 @@ function adminDashboard() {
                 document.getElementById('customerOverviewEcommerce-legend').innerHTML = customerOverviewEcommerce.generateLegend();
             }
 
+            const now       =   new Date();
+            const month     =   String(now.getMonth() + 1).padStart(2, '0'); // Months are 0-based
+            const day       =   String(now.getDate()).padStart(2, '0');
+            const year      =   now.getFullYear();
+
+            this.dateToday = `${month}-${day}-${year}`;
             this.getEmployeeData();
             this.paginationPage();
             this.startClock();
@@ -250,9 +268,9 @@ function adminDashboard() {
         // CREATE FUNCTION EMPLOYEE
         create : function () {
             $(this.modal).modal({
-                        backdrop: 'static',
-                        keyboard: false
-                        });
+                backdrop: 'static',
+                keyboard: false
+            });
 
             this.imageUrl = '';
             this.$refs.fileInputHidden.value = '';
@@ -364,6 +382,7 @@ function adminDashboard() {
 
                 $('.account-information'    ,this.modal).removeAttr('hidden');
                 $('.submit-btn').attr('hidden', true);
+                $('.upload-picture-btn').attr('hidden', true);
             } else {
                 this.disableFields.forEach(function(field) {
                     $('input[name="' + field + '"]'     ,this.modal).removeAttr('disabled');
@@ -372,6 +391,7 @@ function adminDashboard() {
 
                 $('.account-information'    ,this.modal).attr('hidden', true);
                 $('.account-information'    ,this.modal).removeAttr('required');
+                $('.upload-picture-btn'     ,this.modal).removeAttr('hidden');
                 $('.submit-btn').removeAttr('hidden');
             };
 
@@ -610,6 +630,22 @@ function adminDashboard() {
                 }
         },
 
+        // VIEW UPLOADED FILES FOR EACH EMPLOYEE
+        viewFiles : function (employeeId) {
+            $(this.viewUploadedFileModal).modal({
+                backdrop: 'static',
+                keyboard: false
+            });
+
+            this.getEmployeeFiles(employeeId);
+            $(this.viewUploadedFileModal).modal('show');
+        },
+
+        // VIEW UPLOADED FILES FOR EACH EMPLOYEE
+        closeViewUploadedFilesModal : function () {
+            $(this.viewUploadedFileModal).modal('hide');
+        },
+
         // UPLOAD FILE FOR EACH EMPLOYEE
         uploadFile : function (employeeId) {
             $(this.fileUploadModal).modal({
@@ -692,7 +728,6 @@ function adminDashboard() {
                     },
                     success: (response) => {
                         // Handle success (e.g., display a message to the user)
-                        console.log('File deleted successfully');
                     },
                     error: (error) => {
                         // Handle error (e.g., display an error message)
@@ -747,12 +782,21 @@ function adminDashboard() {
         },
 
         // FOR DATE AND TIME SHOW (USER/EMPLOYEE VIEW)
-        startClock : function () {
+        startClock: function () {
             this.timeLoading = true;
             setInterval(() => {
                 const now = new Date();
+
+                // Get the current time in 12-hour format with AM/PM
+                const options = {
+                    hour    :   'numeric',
+                    minute  :   'numeric',
+                    second  :   'numeric',
+                    hour12  :   true, // Use 12-hour format
+                };
+
                 this.currentDate = now.toISOString().slice(0, 10);
-                this.currentTime = now.toTimeString().slice(0, 8);
+                this.currentTime = now.toLocaleTimeString(undefined, options); // Format time
                 this.timeLoading = false;
             }, 1000);
         },
@@ -900,12 +944,78 @@ function adminDashboard() {
             })
         },
 
+        // GET EMPLOYEE FILES
+        getEmployeeFiles : function (employeeId) {
+            this.fileFetchLoading = true;
+            $.ajax({
+                type        :   "GET",
+                url         :   route("file.show"),
+                data        :   {
+                    employeeId : employeeId
+                },
+            }).then((response) => {
+                this.employeeFiles          =   response.files;
+                this.fileFetchLoading       =   false;
 
+                console.log(this.employeeFiles);
+            }).catch((error) => {
 
+            })
+        },
 
+        // CONVERT 12 HOUR FORMAT TO 24 HOUR FORMAT
+        convertTo24hrFormat : function(timeString) {
+            // Split the input time string into components
+            const timeComponents = timeString.match(/(\d+):(\d+):(\d+) (AM|PM)/);
 
+            if (!timeComponents) {
+                // Handle invalid input
+                return console.log("Invalid Time Format");
+            }
 
+            let [_, hours, minutes, seconds, ampm] = timeComponents;
 
+            hours   = parseInt(hours, 10);
+            minutes = parseInt(minutes, 10);
+            seconds = parseInt(seconds, 10);
+
+            if (ampm === 'PM' && hours !== 12) {
+                hours += 12;
+            } else if (ampm === 'AM' && hours === 12) {
+                hours = 0;
+            }
+
+            // Format the hours, minutes, and seconds with leading zeros
+            hours   = String(hours).padStart(2, '0');
+            minutes = String(minutes).padStart(2, '0');
+            seconds = String(seconds).padStart(2, '0');
+
+            // Create the 24-hour time string with seconds
+            return `${hours}:${minutes}:${seconds}`;
+        },
+
+        // WEB BUNDY FUNCTION FOR EACH EMPLOYEE (CLOCK IN, BREAK OUT, BREAK IN, CLOCK OUT)
+        webBundyFunction : function (userId, type) {
+            switch (type) {
+                case 'clock-in' :
+                    $('.clock-in').addClass('d-none');
+                    $('.break-out').removeClass('d-none');
+                    $('.break-out').attr('disabled', true);
+                break;
+                case 'break-out' :
+                    $('.break-out').addClass('d-none');
+                    $('.break-in').removeClass('d-none');
+                break;
+                case 'break-in' :
+                    $('.break-in').addClass('d-none');
+                    $('.clock-out').removeClass('d-none');
+                break;
+                case 'clock-out' :
+                    $('.clock-out').addClass('d-none');
+                    $('.clock-in').removeClass('d-none');
+                break;
+            }
+        }
 
     }
 }

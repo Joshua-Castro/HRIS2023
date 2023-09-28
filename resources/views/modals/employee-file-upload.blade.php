@@ -1,4 +1,4 @@
-<div class="modal fade" id="employee-file-upload-modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel-2" aria-hidden="true">
+<div class="modal fade" id="employee-file-upload-modal" tabindex="-1" role="dialog" aria-labelledby="employeefileuploadmodal" aria-hidden="true">
     <div class="modal-dialog modal-md-dialog" role="document">
         <div class="modal-content">
             <div class="modal-body">
