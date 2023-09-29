@@ -116,7 +116,7 @@
                                                         Delete
                                                     </a>
                                                     <div class="dropdown-divider"></div>
-                                                    <a class="dropdown-item text-reset text-decoration-none" href="javascript:void(0);" @click="uploadFile(rows.employee_id)">
+                                                    <a class="dropdown-item text-reset text-decoration-none" href="javascript:void(0);" @click="uploadFile(rows.employee_id, rows.employee_token)">
                                                         <i class="ti-cloud-up btn-icon-prepend me-2"></i>
                                                         Upload
                                                     </a>

@@ -66,6 +66,7 @@ function adminDashboard() {
         dateToday                   :   '',
         reasonDecline               :   '',
         leaveIsLoading              :   false,
+        removeFileIsLoading         :   false,
         timeLoading                 :   false,
         isDisabled                  :   false,
         inputTimer                  :   null,
@@ -647,7 +648,7 @@ function adminDashboard() {
         },
 
         // UPLOAD FILE FOR EACH EMPLOYEE
-        uploadFile : function (employeeId) {
+        uploadFile : function (employeeId, employeeToken) {
             $(this.fileUploadModal).modal({
                 backdrop: 'static',
                 keyboard: false
@@ -658,7 +659,7 @@ function adminDashboard() {
                 allowMultiple: true,
                 server: {
                     process: {
-                        url                :   route("file.store"),
+                        url                :   route("file.store", employeeToken),
                         method             :   "POST",
                         withCredentials    :   false,
                         headers: {
@@ -684,10 +685,10 @@ function adminDashboard() {
 
             // EVENT LISTENER FOR ADD FILE THEN STORE IT ON THE DATABASE
             this.pond.on('processfile', (error, file) => {
-                // Include the file.id in the data to be sent to the server
                 const data = new FormData();
                     data.append('employee_id', employeeId);
                     data.append('file_id', file.id);
+                    data.append('employee_token', employeeToken);
                     data.append('filepond[]', file.file);
 
                 // Send the file data to your server
@@ -787,7 +788,7 @@ function adminDashboard() {
             setInterval(() => {
                 const now = new Date();
 
-                // Get the current time in 12-hour format with AM/PM
+                // GET THE CURRENT TIME IN 12-HOUR FORMAT WITH AM/PM
                 const options = {
                     hour    :   'numeric',
                     minute  :   'numeric',
@@ -796,7 +797,21 @@ function adminDashboard() {
                 };
 
                 this.currentDate = now.toISOString().slice(0, 10);
-                this.currentTime = now.toLocaleTimeString(undefined, options); // Format time
+                this.currentTime = now.toLocaleTimeString(undefined, options); // FORMAT TIME
+
+                // // DEFINE THE START AND END TIME FOR THE RANGE (12:00 PM TO 1:00 PM)
+                // const startTime  =  '12:00:00 PM';
+                // const endTime    =  '1:00:00 PM';
+
+                // // Check if the current time is within the specified range
+                // if (this.currentTime >= startTime && this.currentTime <= endTime) {
+                //     // Enable the "break-out" button
+                //     $('.break-out').prop('disabled', false);
+                // } else {
+                //     // Disable the "break-out" button
+                //     $('.break-out').prop('disabled', true);
+                // }
+
                 this.timeLoading = false;
             }, 1000);
         },
@@ -891,6 +906,53 @@ function adminDashboard() {
               });
 
               $('.custom-swal-icon').css('margin-top', '20px');
+        },
+
+        // REMOVE SPECIFIC FILE OF EMPLOYEE
+        removeEmployeeFile : function (data) {
+            const file_id   = data.file_unique_id      ?  data.file_unique_id       :   '';
+            const user_id   = data.employee_id         ?  data.employee_id          :   '';
+            const file_name = data.file_name           ?  data.file_name            :   '';
+            const text      = 'File Name: <b>' + file_name + '</b>';
+            Swal.fire({
+                title               :   "Are you sure?",
+                html                :   text,
+                icon                :   "warning",
+                showCancelButton    :   !0,
+                confirmButtonColor  :   "#28bb4b",
+                cancelButtonColor   :   "#f34e4e",
+                confirmButtonText   :   "Yes, delete it!",
+                customClass: {
+                    icon: 'remove-file-swal-icon' // Apply custom class to the icon
+                  }
+              }).then(result => {
+                  if(result.isConfirmed){
+                      this.removeFileIsLoading = true;
+                      $.ajax({
+                        type      :   "POST",
+                        url       :   route('file.revert'),
+                        data      :   {
+                            _token        :   this.csrfToken,
+                            file_id       :   file_id,
+                            employee_id   :   user_id
+                        },
+                      }).then((data) => {
+                        Swal.fire({
+                                  title               : data.message,
+                                  icon                : 'success',
+                                  timer               : 1000,
+                                  showConfirmButton   : false,
+                              });
+
+                        this.getEmployeeFiles(user_id);
+                      }).catch(err => {
+                        this.removeFileIsLoading = false;
+                        Swal.fire('Delete Failed. Please refresh the page and try again.','error');
+                    })
+                  }
+              });
+
+              $('.remove-file-swal-icon').css('margin-top', '20px');
         },
 
         // ON SUBMIT FORM LEAVE REQUEST (USER/EMPLOYEE VIEW)
@@ -996,26 +1058,66 @@ function adminDashboard() {
 
         // WEB BUNDY FUNCTION FOR EACH EMPLOYEE (CLOCK IN, BREAK OUT, BREAK IN, CLOCK OUT)
         webBundyFunction : function (userId, type) {
+            var time = this.currentTime;
+
             switch (type) {
                 case 'clock-in' :
                     $('.clock-in').addClass('d-none');
                     $('.break-out').removeClass('d-none');
-                    $('.break-out').attr('disabled', true);
+                    this.processWebBundy(type, time, userId);
                 break;
                 case 'break-out' :
                     $('.break-out').addClass('d-none');
                     $('.break-in').removeClass('d-none');
+                    this.processWebBundy(type, time, userId);
                 break;
                 case 'break-in' :
                     $('.break-in').addClass('d-none');
                     $('.clock-out').removeClass('d-none');
+                    this.processWebBundy(type, time, userId);
                 break;
                 case 'clock-out' :
                     $('.clock-out').addClass('d-none');
                     $('.clock-in').removeClass('d-none');
+                    this.processWebBundy(type, time, userId);
                 break;
             }
-        }
+        },
+
+        // ALL AJAX REQUEST FOR SENDING TO ATTENDANCE CONTROLLER
+        processWebBundy : function (type, time, userId) {
+            $.ajax({
+                type    :   "POST",
+                url     :   route("attendance.store"),
+                headers: {
+                    'X-CSRF-TOKEN' : this.csrfToken
+                },
+                data    : {
+                    time        : time,
+                    type        : type,
+                    user_id     : userId
+                },
+            }).then((response) => {
+                Swal.fire({
+                    title               : response.message,
+                    icon                : 'success',
+                    timer               : 1000,
+                    showConfirmButton   : false,
+                });
+                // this.isDisabled = false;
+                // $(this.modal).modal('hide');
+                // this.getEmployeeData();
+            }).catch((error) => {
+                if (error.responseJSON && error.responseJSON.error) {
+
+                } else {
+                    // Handle other error scenarios
+                    // ...
+                }
+            });
+        },
+
+
 
     }
 }

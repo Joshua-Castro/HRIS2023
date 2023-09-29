@@ -95,24 +95,26 @@
                                     </template>
                                     <h3 class="rate-percentage text-primary" x-text="currentTime"></h3>
                                 </div>
-                                <div class="col-lg-6 col-md-12 d-flex justify-content-end">
-                                    <button type="button" class="btn btn-success btn-icon-text clock-in" @click="webBundyFunction({{ auth()->user()->id }}, 'clock-in')">
-                                        <i class="ti-alarm-clock btn-icon-prepend"></i>
-                                        Clock In
-                                    </button>
-                                    <button type="button" class="btn btn-danger btn-icon-text clock-out d-none" @click="webBundyFunction({{ auth()->user()->id }}, 'clock-out')">
-                                        <i class="ti-home btn-icon-prepend"></i>
-                                        Clock Out
-                                    </button>
-                                    <button type="button" class="btn btn-danger btn-icon-text break-out d-none" @click="webBundyFunction({{ auth()->user()->id }}, 'break-out')">
-                                        <i class="ti-bell btn-icon-prepend"></i>
-                                        Break Out
-                                    </button>
-                                    <button type="button" class="btn btn-success btn-icon-text break-in d-none" @click="webBundyFunction({{ auth()->user()->id }}, 'break-in')">
-                                        <i class="ti-pencil-alt btn-icon-prepend"></i>
-                                        Break In
-                                    </button>
-                                </div>
+                                <template x-if="!timeLoading">
+                                    <div class="col-lg-6 col-md-12 d-flex justify-content-end">
+                                        <button type="button" class="btn btn-success btn-icon-text clock-in" @click="webBundyFunction({{ auth()->user()->id }}, 'clock-in')">
+                                            <i class="ti-alarm-clock btn-icon-prepend"></i>
+                                            Clock In
+                                        </button>
+                                        <button type="button" class="btn btn-danger btn-icon-text clock-out d-none" @click="webBundyFunction({{ auth()->user()->id }}, 'clock-out')">
+                                            <i class="ti-home btn-icon-prepend"></i>
+                                            Clock Out
+                                        </button>
+                                        <button type="button" class="btn btn-danger btn-icon-text break-out d-none" @click="webBundyFunction({{ auth()->user()->id }}, 'break-out')">
+                                            <i class="ti-bell btn-icon-prepend"></i>
+                                            Break Out
+                                        </button>
+                                        <button type="button" class="btn btn-success btn-icon-text break-in d-none" @click="webBundyFunction({{ auth()->user()->id }}, 'break-in')">
+                                            <i class="ti-pencil-alt btn-icon-prepend"></i>
+                                            Break In
+                                        </button>
+                                    </div>
+                                </template>
                             </div>
                         </div>
                     </div>

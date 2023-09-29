@@ -43,7 +43,7 @@
                                                                 View
                                                             </a>
                                                             <div class="dropdown-divider"></div>
-                                                            <a class="dropdown-item text-reset text-decoration-none" href="javascript:void(0);">
+                                                            <a class="dropdown-item text-reset text-decoration-none" href="javascript:void(0);" @click="removeEmployeeFile(rows)">
                                                                 <i class="ti-trash btn-icon-prepend me-2"></i>
                                                                 Delete
                                                             </a>

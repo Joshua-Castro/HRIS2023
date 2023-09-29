@@ -30,27 +30,32 @@ class FileUploadController extends Controller
     /**
      * Store the files to the public storage path
      */
-    public function store(Request $request)
+    public function store(Request $request, $employeeToken)
     {
         try {
+            DB::beginTransaction();
+
             // VALIDATE THE UPLOADED FIELS
             $request->validate([
                 'filepond' => 'required|array',
             ]);
 
-            $uploadedFiles = $request->file('filepond');
-
+            $uploadedFiles  = $request->file('filepond');
+            $token          = $employeeToken;
             // $filePaths  = [];
             $fileData   = [];
 
             foreach ($uploadedFiles as $file) {
                 // STORE THE FILE IN THE "UPLOADS" DIRECTORY WITHIN THE "PUBLIC" DISK
                 $fileName   =   $file->getClientOriginalName();
-                $path       =   $file->storeAs('uploads/tmp', $file->getClientOriginalName(), 'public');
+                $path       =   $file->storeAs('uploads/tmp', $token . $fileName, 'public');
             }
 
+            DB::commit();
             return response()->json(['message' => 'Files uploaded successfully']);
         } catch (QueryException $e) {
+            DB::rollBack();
+
             $errorMessage = $e->getMessage();
             return response()->json(['error' => $errorMessage], 500);
         }
@@ -70,9 +75,10 @@ class FileUploadController extends Controller
             $files      = $request->file('filepond');
             $fileData   = [];
             foreach ($files as $file) {
+                $token      =   $request->input('employee_token') ? $request->input('employee_token') : '';
                 $fileName   =   $file->getClientOriginalName();
                 $fileId     =   $request->input('file_id') ? $request->input('file_id') : '';
-                $path       =   $fileName ? 'uploads/tmp/' . $fileName : '';
+                $path       =   $fileName ? 'uploads/tmp/' . $token . $fileName : '';
 
                 $fileData[] = [
                     'employee_id'       =>  $request->input('employee_id'),
@@ -119,8 +125,8 @@ class FileUploadController extends Controller
     public function revert(Request $request)
     {
         try {
-            $fileId         =   $request->input('file_id');
-            $employeeId     =   $request->input('employee_id');
+            $fileId         =   $request->input('file_id')      ? $request->input('file_id')        :   $request->file_id;
+            $employeeId     =   $request->input('employee_id')  ? $request->input('employee_id')    :   $request->employee_id;
 
             $file = DB::table('file_uploads')
                 ->select(

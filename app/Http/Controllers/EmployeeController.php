@@ -10,9 +10,18 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Database\QueryException;
 use Illuminate\Support\Facades\Validator;
+use App\Services\ManualCascadeDeleteService;
+
 
 class EmployeeController extends Controller
 {
+    protected $cascadeDelete;
+
+    public function __construct(ManualCascadeDeleteService $ManualCascadeDeleteService)
+    {
+        $this->cascadeDelete = $ManualCascadeDeleteService;
+    }
+
     /**
      * Display a listing of the resource.
      */
@@ -176,8 +185,9 @@ class EmployeeController extends Controller
             $imageData = '';
             $id = $request->input('recordId');
 
-            $employeeAccount    =   $this->prepareEmployeeAccount($request);
-            $employeeData       =   $this->prepareEmployeeData($request);
+            $token = uniqid() . now()->timestamp;
+            $employeeAccount    =   $this->prepareEmployeeAccount($request, $token);
+            $employeeData       =   $this->prepareEmployeeData($request, $token);
 
             if (empty($id)) { // CREATE OR STORE DATA
                 // HANDLE IMAGE UPLOAD AND STORAGE
@@ -251,10 +261,11 @@ class EmployeeController extends Controller
     /**
      * Prepare Employee Account to save in users table.
      */
-    private function prepareEmployeeAccount($request)
+    private function prepareEmployeeAccount($request, $token)
     {
         return [
             'name'      =>  $request->input('name', ''),
+            'token'     =>  $token,
             'email'     =>  $request->input('email', ''),
             'password'  =>  Hash::make($request->input('password')),
         ];
@@ -263,9 +274,10 @@ class EmployeeController extends Controller
     /**
      * Prepare Employee Data to save in employees table.
      */
-    private function prepareEmployeeData($request)
+    private function prepareEmployeeData($request, $token)
     {
         return [
+            'employee_token'        =>      !empty($token)                         ?   $token                         :  '',
             'last_name'             =>      !empty($request->lastName)             ?   $request->lastName             :  '',
             'first_name'            =>      !empty($request->firstName)            ?   $request->firstName            :  '',
             'middle_name'           =>      !empty($request->middleName)           ?   $request->middleName           :  '',
@@ -428,6 +440,7 @@ class EmployeeController extends Controller
                         'employees.sss',
                         'employees.pag_ibig',
                         'employees.phil_health',
+                        'employees.employee_token',
 
                         'users.id as user_id',
                         'users.name',
@@ -474,15 +487,13 @@ class EmployeeController extends Controller
     {
         try {
             $data = DB::table('employees')
-            ->where('id','=', $request->id)
-            ->update([
-                'deleted_by' => Auth::id(),
-                'deleted_at' => now(),
-            ]);
+                ->where('id','=', $request->id)
+                ->update([
+                    'deleted_by' => Auth::id(),
+                    'deleted_at' => now(),
+                ]);
 
-            $user = DB::table('users')
-                ->where('id', '=', $request->userId)
-                ->delete();
+            $this->cascadeDelete->delete($request);
 
             return response()->json(['message' => 'Successfully Deleted']);
         } catch (QueryException $e) {

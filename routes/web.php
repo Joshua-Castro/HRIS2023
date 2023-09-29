@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\LeaveController;
 use App\Http\Controllers\EmployeeController;
 use App\Http\Controllers\FileUploadController;
+use App\Http\Controllers\AttendanceController;
 
 
 /*
@@ -39,7 +40,7 @@ Route::prefix('employee')->as('employee.')->group(function () {
 
 // FILE UPLOAD CONTROLLER ROUTES
 Route::prefix('file-upload')->as('file.')->group(function () {
-    Route::post('/store'                        ,[FileUploadController::class, 'store'           ])->name('store');
+    Route::post('/store/{token}'                ,[FileUploadController::class, 'store'           ])->name('store');
     Route::post('/upload'                       ,[FileUploadController::class, 'upload'          ])->name('upload');
     Route::delete('/delete'                     ,[FileUploadController::class, 'delete'          ])->name('delete');
     Route::post('/revert'                       ,[FileUploadController::class, 'revert'          ])->name('revert');
@@ -54,3 +55,10 @@ Route::prefix('leave')->as('leave.')->group(function () {
     Route::post('/delete'   ,[LeaveController::class, 'destroy'   ])->name('delete');
     Route::post('/update'   ,[LeaveController::class, 'update'    ])->name('update');
 });
+
+// ATTENDANCE CONTROLLER ROUTES
+Route::prefix('attendance')->as('attendance.')->group(function () {
+    Route::get('/show'      ,[AttendanceController::class, 'show'      ])->name('show');
+    Route::post('/store'    ,[AttendanceController::class, 'store'     ])->name('store');
+});
+
