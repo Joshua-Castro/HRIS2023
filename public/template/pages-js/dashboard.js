@@ -1,8 +1,14 @@
 function adminDashboard() {
     return {
         // PROPERTIES
-        employeeData    :   [],
-        current         :   {
+        employeeData            :   [],
+        employeeAttendance      :   {
+            clockIn                 :   '',
+            breakOut                :   '',
+            breakIn                 :   '',
+            clockOut                :   '',
+        },
+        current                 :   {
             recordId                :   0,
             lastName                :   '',
             firstName               :   '',
@@ -30,7 +36,7 @@ function adminDashboard() {
             userImage               :   '',
         },
 
-        disableFields       : [
+        disableFields           :   [
             'last_name',
             'first_name',
             'middle_name',
@@ -53,9 +59,10 @@ function adminDashboard() {
             'password'
         ],
 
-        leaveData       :   [],
-        employeeFiles   :   [],
-        currentLeave    :   {
+        leaveData               :   [],
+        employeeFiles           :   [],
+        fetchAttendance         :   [],
+        currentLeave            :   {
             leaveRecordId   :   0,
             leaveDate       :   '',
             leaveType       :   '',
@@ -63,38 +70,43 @@ function adminDashboard() {
             reason          :   '',
         },
 
-        dateToday                   :   '',
-        reasonDecline               :   '',
-        leaveIsLoading              :   false,
-        removeFileIsLoading         :   false,
-        timeLoading                 :   false,
-        isDisabled                  :   false,
-        inputTimer                  :   null,
-        pond                        :   null,
-        isLoading                   :   false,
-        fileFetchLoading            :   false,
-        currentDate                 :   '',
-        currentTime                 :   '',
-        searchName                  :   '',
-        imageUrl                    :   '',
-        filter                      :   'all',
-        filterName                  :   '',
-        pagination                  :   10,
-        page                        :   1,
-        employeeCount               :   0,
-        leaveCount                  :   0,
-        overAllLeaveCount           :   0,
-        leaveModal                  :   '#request-leave-modal',
-        modal                       :   '#employee-modal',
-        fileUploadModal             :   '#employee-file-upload-modal',
-        viewUploadedFileModal       :   '#employee-view-uploaded-file-modal',
-        leaveReqForm                :   '#leaveRequestForm',
-        employeeForm                :   '#employeeForm',
-        passwordField               :   '.real-password',
-        togglePassword              :   '.toggle-password',
-        confirmPasswordField        :   '.confirm-password',
-        confirmTogglePassword       :   '.toggle-confirm-password',
-        csrfToken                   :   $('meta[name="csrf-token"]').attr('content'),
+        dateToday                       :   '',
+        reasonDecline                   :   '',
+        leaveIsLoading                  :   false,
+        removeFileIsLoading             :   false,
+        attendanceMonitoringLoading     :   false,
+        timeLoading                     :   false,
+        isDisabled                      :   false,
+        inputTimer                      :   null,
+        pond                            :   null,
+        isLoading                       :   false,
+        fileFetchLoading                :   false,
+        clockInBtn                      :   false,
+        breakOutBtn                     :   false,
+        breakInBtn                      :   false,
+        clockOutBtn                     :   false,
+        currentDate                     :   '',
+        currentTime                     :   '',
+        searchName                      :   '',
+        imageUrl                        :   '',
+        filter                          :   'all',
+        filterName                      :   '',
+        pagination                      :   10,
+        page                            :   1,
+        employeeCount                   :   0,
+        leaveCount                      :   0,
+        overAllLeaveCount               :   0,
+        leaveModal                      :   '#request-leave-modal',
+        modal                           :   '#employee-modal',
+        fileUploadModal                 :   '#employee-file-upload-modal',
+        viewUploadedFileModal           :   '#employee-view-uploaded-file-modal',
+        leaveReqForm                    :   '#leaveRequestForm',
+        employeeForm                    :   '#employeeForm',
+        passwordField                   :   '.real-password',
+        togglePassword                  :   '.toggle-password',
+        confirmPasswordField            :   '.confirm-password',
+        confirmTogglePassword           :   '.toggle-confirm-password',
+        csrfToken                       :   $('meta[name="csrf-token"]').attr('content'),
 
 
 
@@ -118,17 +130,31 @@ function adminDashboard() {
 
             // INITIALIZE THE DATEPICKER IN ATTENDANCE MONITORING
             $('#attendance-monitoring-input').datepicker({
-                format: "mm-dd-yyyy",
+                format: "yyyy-mm-dd",
                 autoclose: true,
                 todayHighlight: true,
                 clearBtn: true,
-            }).attr("readonly", "readonly");
+            }).attr("readonly", "readonly").on('changeDate', function() {
+                // Trigger the custom event when the date is selected
+                $(this).trigger('date-selected');
+            });
+
+            let here = this;
+            // DATE TIME PICKER PROVIDES AN EVENT HANDLER FOR VALUE CHANGE
+            $('#attendance-monitoring-input').on('change', function() {
+                // GET THE CHANGED OR NEW DATE VALUE FROM THE DATE TIME PICKER
+                const date = $(this).val();
+
+                // TRIGGER THE CUSTOM EVENT WITH THE NEW VALUE
+                this.dispatchEvent(new CustomEvent('datetime-changed', { detail: date }));
+                here.getEmployeeAttendance(date);
+            });
 
             // INITIALIZE THE SELECT2 IN SALARY GRADE
             $('#salary-grade').select2({
                 theme: "bootstrap-5",
                 width: $(this).data('width') ? $(this).data('width') : $(this).hasClass('w-100') ? '100%' : 'style',
-                dropdownParent: $('#salary-grade').closest('.form-floating') // Set the dropdown parent to the closest form-group container
+                dropdownParent: $('#salary-grade').closest('.form-floating') // SET THE DROPDOWN PARENT TO THE CLOSEST FORM-GROUP CONTAINER
             });
 
             // INITIALIZE SLICK JS IN DASHBOARD
@@ -174,68 +200,68 @@ function adminDashboard() {
             if ($("#customerOverviewEcommerce").length) {
                 var customerOverviewEcommerceCanvas = $("#customerOverviewEcommerce").get(0).getContext("2d");
                 var customerOverviewEcommerceData = {
-                  datasets: [{
-                    data: [250, 50, 700],
-                    backgroundColor: [
-                      "#1E3BB3",
-                      "#00CDFF",
-                      "#00AAB7",
-                    ],
-                    borderColor: [
-                      "#fff",
-                      "#fff",
-                      "#fff",
-                    ],
-                  }],
+                    datasets: [{
+                        data: [250, 50, 700],
+                        backgroundColor: [
+                            "#1E3BB3",
+                            "#00CDFF",
+                            "#00AAB7",
+                        ],
+                        borderColor: [
+                            "#fff",
+                            "#fff",
+                            "#fff",
+                        ],
+                    }],
 
-                  // These labels appear in the legend and in the tooltips when hovering different arcs
-                  labels: [
-                    'Resigned Employee',
-                    'New Employee',
-                    'OJT',
-                  ]
+                    // THESE LABELS APPEAR IN THE LEGEND AND IN THE TOOLTIPS WHEN HOVERING DIFFERENT ARCS
+                    labels: [
+                        'Resigned Employee',
+                        'New Employee',
+                        'OJT',
+                    ]
                 };
                 var customerOverviewEcommerceOptions = {
-                  cutoutPercentage          :   60,
-                  animationEasing           :   "easeOutBounce",
-                  animateRotate             :   true,
-                  animateScale              :   true,
-                  responsive                :   false,
-                  maintainAspectRatio       :   true,
-                  showScale                 :   true,
-                  legend                    :   false,
-                  legendCallback    : function (chart) {
-                    var text = [];
-                    text.push('<div class="chartjs-legend"><ul>');
-                    for (var i = 0; i < chart.data.datasets[0].data.length; i++) {
-                      text.push('<li><span style="background-color:' + chart.data.datasets[0].backgroundColor[i] + '">');
-                      text.push('</span>');
+                    cutoutPercentage          :   60,
+                    animationEasing           :   "easeOutBounce",
+                    animateRotate             :   true,
+                    animateScale              :   true,
+                    responsive                :   false,
+                    maintainAspectRatio       :   true,
+                    showScale                 :   true,
+                    legend                    :   false,
+                    legendCallback    : function (chart) {
+                        var text = [];
+                        text.push('<div class="chartjs-legend"><ul>');
+                        for (var i = 0; i < chart.data.datasets[0].data.length; i++) {
+                            text.push('<li><span style="background-color:' + chart.data.datasets[0].backgroundColor[i] + '">');
+                            text.push('</span>');
 
-                      if (chart.data.labels[i]) {
-                        text.push(chart.data.labels[i]);
-                      }
-                      text.push('</li>');
-                    }
-                    text.push('</div></ul>');
-                    return text.join("");
-                  },
+                            if (chart.data.labels[i]) {
+                                text.push(chart.data.labels[i]);
+                            }
+                            text.push('</li>');
+                        }
+                        text.push('</div></ul>');
+                        return text.join("");
+                    },
 
-                  layout: {
+                layout: {
                     padding : {
-                      left      :   0,
-                      right     :   0,
-                      top       :   0,
-                      bottom    :   0
+                        left      :   0,
+                        right     :   0,
+                        top       :   0,
+                        bottom    :   0
                     }
-                  },
-                  tooltips: {
+                },
+                tooltips: {
                     callbacks: {
-                      title: function(tooltipItem, data) {
-                        return data['labels'][tooltipItem[0]['index']];
-                      },
-                      label: function(tooltipItem, data) {
-                        return data['datasets'][0]['data'][tooltipItem['index']];
-                      }
+                        title: function(tooltipItem, data) {
+                            return data['labels'][tooltipItem[0]['index']];
+                        },
+                        label: function(tooltipItem, data) {
+                            return data['datasets'][0]['data'][tooltipItem['index']];
+                        }
                     },
 
                     backgroundColor     :   '#fff',
@@ -244,7 +270,7 @@ function adminDashboard() {
                     bodyFontColor       :   '#737F8B',
                     bodyFontSize        :   11,
                     displayColors       :   false
-                  }
+                }
                 };
                 var customerOverviewEcommerce = new Chart(customerOverviewEcommerceCanvas, {
                     type          :   'doughnut',
@@ -259,11 +285,13 @@ function adminDashboard() {
             const day       =   String(now.getDate()).padStart(2, '0');
             const year      =   now.getFullYear();
 
-            this.dateToday = `${month}-${day}-${year}`;
+            this.dateToday = `${year}-${month}-${day}`;
             this.getEmployeeData();
             this.paginationPage();
             this.startClock();
             this.getLeaveRequest();
+            this.dailyAttendance();
+            this.getEmployeeAttendance();
         },
 
         // CREATE FUNCTION EMPLOYEE
@@ -803,12 +831,12 @@ function adminDashboard() {
                 // const startTime  =  '12:00:00 PM';
                 // const endTime    =  '1:00:00 PM';
 
-                // // Check if the current time is within the specified range
+                // // CHECK IF THE CURRENT TIME IS WITHIN THE SPECIFIED RANGE
                 // if (this.currentTime >= startTime && this.currentTime <= endTime) {
-                //     // Enable the "break-out" button
+                //     // ENABLE THE "BREAK OUT" BUTTON
                 //     $('.break-out').prop('disabled', false);
                 // } else {
-                //     // Disable the "break-out" button
+                //     // DISABLE THE "BREAK OUT" BUTTON
                 //     $('.break-out').prop('disabled', true);
                 // }
 
@@ -1019,66 +1047,48 @@ function adminDashboard() {
                 this.employeeFiles          =   response.files;
                 this.fileFetchLoading       =   false;
 
-                console.log(this.employeeFiles);
             }).catch((error) => {
 
             })
         },
 
         // CONVERT 12 HOUR FORMAT TO 24 HOUR FORMAT
-        convertTo24hrFormat : function(timeString) {
-            // Split the input time string into components
-            const timeComponents = timeString.match(/(\d+):(\d+):(\d+) (AM|PM)/);
+        convert24hrTo12hr : function(time) {
+            // Assuming timeData is in the format "HH:mm:ss"
+            const [hours, minutes, seconds] = time.split(':').map(Number);
 
-            if (!timeComponents) {
-                // Handle invalid input
-                return console.log("Invalid Time Format");
-            }
+            // Create a Date object and set hours, minutes, and seconds
+            const date = new Date();
+            date.setHours(hours);
+            date.setMinutes(minutes);
+            date.setSeconds(seconds);
 
-            let [_, hours, minutes, seconds, ampm] = timeComponents;
+            // Format as 12-hour time with AM/PM
+            const formattedTime = date.toLocaleString('en-US', {
+                hour: 'numeric',
+                minute: 'numeric',
+                second: 'numeric',
+                hour12: true,
+            });
 
-            hours   = parseInt(hours, 10);
-            minutes = parseInt(minutes, 10);
-            seconds = parseInt(seconds, 10);
-
-            if (ampm === 'PM' && hours !== 12) {
-                hours += 12;
-            } else if (ampm === 'AM' && hours === 12) {
-                hours = 0;
-            }
-
-            // Format the hours, minutes, and seconds with leading zeros
-            hours   = String(hours).padStart(2, '0');
-            minutes = String(minutes).padStart(2, '0');
-            seconds = String(seconds).padStart(2, '0');
-
-            // Create the 24-hour time string with seconds
-            return `${hours}:${minutes}:${seconds}`;
+            return formattedTime;
         },
 
         // WEB BUNDY FUNCTION FOR EACH EMPLOYEE (CLOCK IN, BREAK OUT, BREAK IN, CLOCK OUT)
         webBundyFunction : function (userId, type) {
-            var time = this.currentTime;
+            let time = this.currentTime;
 
             switch (type) {
                 case 'clock-in' :
-                    $('.clock-in').addClass('d-none');
-                    $('.break-out').removeClass('d-none');
                     this.processWebBundy(type, time, userId);
                 break;
                 case 'break-out' :
-                    $('.break-out').addClass('d-none');
-                    $('.break-in').removeClass('d-none');
                     this.processWebBundy(type, time, userId);
                 break;
                 case 'break-in' :
-                    $('.break-in').addClass('d-none');
-                    $('.clock-out').removeClass('d-none');
                     this.processWebBundy(type, time, userId);
                 break;
                 case 'clock-out' :
-                    $('.clock-out').addClass('d-none');
-                    $('.clock-in').removeClass('d-none');
                     this.processWebBundy(type, time, userId);
                 break;
             }
@@ -1104,9 +1114,92 @@ function adminDashboard() {
                     timer               : 1000,
                     showConfirmButton   : false,
                 });
+                this.dailyAttendance();
                 // this.isDisabled = false;
                 // $(this.modal).modal('hide');
                 // this.getEmployeeData();
+            }).catch((error) => {
+                if (error.responseJSON && error.responseJSON.error) {
+
+                } else {
+                    // Handle other error scenarios
+                    // ...
+                }
+            });
+        },
+
+        // EMPLOTEE DAILY ATTENDANCE
+        dailyAttendance : function () {
+            $.ajax({
+                type    :   "GET",
+                url     :   route("attendance.daily"),
+                headers :   {
+                    'X-CSRF-TOKEN' : this.csrfToken
+                }
+            }).then((response) => {
+                const data = response.dailyAttendance ? response.dailyAttendance : '';
+                this.employeeAttendance = {
+                    clockIn     :   data.clock_in   ?  data.clock_in    :   '',
+                    breakOut    :   data.break_out  ?  data.break_out   :   '',
+                    breakIn     :   data.break_in   ?  data.break_in    :   '',
+                    clockOut    :   data.clock_out  ?  data.clock_out   :   '',
+                };
+
+                this.clockInBtn    = false;
+                this.breakOutBtn   = false;
+                this.breakInBtn    = false;
+                this.clockOutBtn   = false;
+
+                switch (true) {
+                    case !this.employeeAttendance.clockIn:
+                        this.clockInBtn = true;
+                        break;
+                    case this.employeeAttendance.clockIn && !this.employeeAttendance.breakOut:
+                        this.breakOutBtn = true;
+                        break;
+                    case this.employeeAttendance.clockIn && this.employeeAttendance.breakOut && !this.employeeAttendance.breakIn:
+                        this.breakInBtn = true;
+                        break;
+                    case this.employeeAttendance.clockIn && this.employeeAttendance.breakOut && this.employeeAttendance.breakIn && !this.employeeAttendance.clockOut:
+                        this.clockOutBtn = true;
+                        break;
+                }
+                this.getEmployeeAttendance();
+            }).catch((error) => {
+                if (error.responseJSON && error.responseJSON.error) {
+
+                } else {
+                    // Handle other error scenarios
+                    // ...
+                }
+            });
+        },
+
+        // EMPLOYEE ATTENDANCE
+        getEmployeeAttendance : function (date = null) {
+            this.attendanceMonitoringLoading = true;
+            let requestDate = date != null ? date : this.dateToday;
+            console.log(requestDate);
+            $.ajax({
+                type        : "GET",
+                url         : route("attendance.record"),
+                headers     : {
+                    'X-CSRF-TOKEN' : this.csrfToken
+                },
+                data        : {
+                    date : requestDate
+                }
+            }).then((response) => {
+                this.attendanceMonitoringLoading    = false;
+                this.fetchAttendance                = response.attendance ? response.attendance : [];
+                if (this.fetchAttendance.length > 0) {
+                    const attendance = this.fetchAttendance[0];
+                    attendance.clock_in     = attendance.clock_in   ? this.convert24hrTo12hr(attendance.clock_in)   : '';
+                    attendance.break_out    = attendance.break_out  ? this.convert24hrTo12hr(attendance.break_out)  : '';
+                    attendance.break_in     = attendance.break_in   ? this.convert24hrTo12hr(attendance.break_in)   : '';
+                    attendance.clock_out    = attendance.clock_out  ? this.convert24hrTo12hr(attendance.clock_out)  : '';
+                }
+
             }).catch((error) => {
                 if (error.responseJSON && error.responseJSON.error) {
 

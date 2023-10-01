@@ -4,11 +4,13 @@ namespace App\Http\Controllers;
 
 use App\Models\Attendance;
 use Illuminate\Http\Request;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Storage;
-use Illuminate\Database\QueryException;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Database\QueryException;
 
+use Illuminate\Support\Facades\Storage;
+use function Symfony\Component\HttpKernel\DataCollector\getMessage;
 
 class AttendanceController extends Controller
 {
@@ -34,9 +36,9 @@ class AttendanceController extends Controller
     public function store(Request $request)
     {
         try {
-            $time       =   $request->time ? $request->time             :   '';
-            $userId     =   $request->user_id ? $request->user_id       :   '';
-            $type       =   $request->type ? $request->type             :   '';
+            $time       =   $request->time         ?    $request->time          :   '';
+            $userId     =   $request->user_id      ?    $request->user_id       :   '';
+            $type       =   $request->type         ?    $request->type          :   '';
 
             $employee   =   DB::table('employees')->where('user_id', '=', $userId)->first();
             $data = [
@@ -47,17 +49,20 @@ class AttendanceController extends Controller
 
             switch ($type) {
                 case 'clock-in' :
-                    $result = $this->updateOrCreateAttendance('clock_in', $data);
-                    return $result;
+                    $clockInResult = $this->updateOrCreateAttendance('clock_in', $data);
+                    return $clockInResult;
                 break;
                 case 'break-out' :
-                    $this->updateOrCreateAttendance('break_out', $data);
+                    $breakOutResult = $this->updateOrCreateAttendance('break_out', $data);
+                    return $breakOutResult;
                 break;
                 case 'break-in' :
-                    $this->updateOrCreateAttendance('break_in', $data);
+                    $breakInResult = $this->updateOrCreateAttendance('break_in', $data);
+                    return $breakInResult;
                 break;
                 case 'clock-out' :
-                    $this->updateOrCreateAttendance('clock_out', $data);
+                    $clockOutResult = $this->updateOrCreateAttendance('clock_out', $data);
+                    return $clockOutResult;
                 break;
             }
 
@@ -68,11 +73,13 @@ class AttendanceController extends Controller
     }
 
     /**
-     * Processing to save in database
+     * Processing to save the time that the employee or user
+     * take action on web bundy in database
      */
     protected function updateOrCreateAttendance($column, $data)
     {
         try {
+            $action         =   '';
             $userId         =   !empty($data['user_id'])        ?   $data['user_id']                             :   '';
             $employeeId     =   !empty($data['employee_id'])    ?   $data['employee_id']                         :   '';
             $time           =   !empty($data['time'])           ?   date('H:i:s', strtotime($data['time']))      :   '';
@@ -92,8 +99,8 @@ class AttendanceController extends Controller
                     'created_by'    =>  Auth::id()
                 ]);
 
-                // dd($userId, $employeeId, $time, $column);
-                return response()->json(['message' => 'Successfully ' . $column]);
+                $action = $column === 'clock_in' ? 'Clock In!' : '';
+                return response()->json(['message' => 'Successfully ' . $action]);
             } else {
                 DB::table('attendances')
                     ->where('id', $attendance->id)
@@ -101,11 +108,23 @@ class AttendanceController extends Controller
                         $column         =>  $time,
                         'updated_at'    =>  now(),
                         'updated_by'    =>  Auth::id()
-                ]);
+                    ]);
 
-                // return response()->json(['message' => 'Successfully ' . $column]);
+                switch ($column) {
+                    case 'break_out' :
+                        $action = 'Break Out!';
+                        return response()->json(['message' => 'Successfully ' . $action]);
+                    break;
+                    case 'break_in' :
+                        $action = 'Break In!';
+                        return response()->json(['message' => 'Successfully ' . $action]);
+                    break;
+                    case 'clock_out' :
+                        $action = 'Clock Out!';
+                        return response()->json(['message' => 'Successfully ' . $action]);
+                    break;
+                }
             }
-
         } catch (QueryException $e) {
             $errorMessage = $e->getMessage();
             return response()->json(['error' => $errorMessage], 500);
@@ -142,5 +161,51 @@ class AttendanceController extends Controller
     public function destroy(Attendance $attendance)
     {
         //
+    }
+
+    /**
+     * Get Employee Today's Attendance
+     */
+    public function dailyAttendance()
+    {
+        try {
+            $user   =   Auth::user();
+            $today  =   Carbon::now();
+
+            $dailyAttendance = DB::table('attendances')
+                    ->where('user_id', $user->id)
+                    ->whereDate('created_at', '>=', $today->startOfDay())
+                    ->whereDate('created_at', '<=', $today->endOfDay())
+                    ->first();
+
+            return response()->json(['message' => 'Daily Attendance : ', 'dailyAttendance' => $dailyAttendance]);
+        } catch (QueryException $e) {
+            $errorMessage = $e->getMessage();
+            return response()->json(['message' => $errorMessage], 500);
+        }
+    }
+
+    /**
+     * Get all attendace of each employee base on the
+     * date they pick
+     */
+    public function attendanceRecord(Request $request)
+    {
+        try {
+            // $date = $request->date ? $request->date : '';
+            $validatedData = $request->validate([
+                'date' => 'required|date_format:Y-m-d',
+            ]);
+
+            $attendance = DB::table('attendances')
+                    ->where('created_at', 'LIKE', '%' . $validatedData['date'] . '%')
+                    ->whereNull('deleted_at')
+                    ->get();
+
+            return response()->json(['message' => 'Fetched Attendance', 'attendance' => $attendance]);
+        } catch (QueryException $e) {
+            $errorMessage = $e->getMessage();
+            return response()->json(['message' => $errorMessage], 500);
+        }
     }
 }

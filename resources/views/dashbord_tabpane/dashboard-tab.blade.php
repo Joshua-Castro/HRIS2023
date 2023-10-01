@@ -93,23 +93,23 @@
                                     <template x-if="timeLoading">
                                         <div class="spinner-border"></div>
                                     </template>
-                                    <h3 class="rate-percentage text-primary" x-text="currentTime"></h3>
+                                    <h3 class="rate-percentage text-primary" style="font-size: 24px;" x-text="currentTime"></h3>
                                 </div>
                                 <template x-if="!timeLoading">
                                     <div class="col-lg-6 col-md-12 d-flex justify-content-end">
-                                        <button type="button" class="btn btn-success btn-icon-text clock-in" @click="webBundyFunction({{ auth()->user()->id }}, 'clock-in')">
+                                        <button type="button" x-show="clockInBtn" class="btn btn-primary btn-icon-text clock-in text-white" @click="webBundyFunction({{ auth()->user()->id }}, 'clock-in')">
                                             <i class="ti-alarm-clock btn-icon-prepend"></i>
                                             Clock In
                                         </button>
-                                        <button type="button" class="btn btn-danger btn-icon-text clock-out d-none" @click="webBundyFunction({{ auth()->user()->id }}, 'clock-out')">
+                                        <button type="button" x-show="clockOutBtn" class="btn btn-primary btn-icon-text clock-out text-white" @click="webBundyFunction({{ auth()->user()->id }}, 'clock-out')">
                                             <i class="ti-home btn-icon-prepend"></i>
                                             Clock Out
                                         </button>
-                                        <button type="button" class="btn btn-danger btn-icon-text break-out d-none" @click="webBundyFunction({{ auth()->user()->id }}, 'break-out')">
+                                        <button type="button" x-show="breakOutBtn" class="btn btn-primary btn-icon-text break-out text-white" @click="webBundyFunction({{ auth()->user()->id }}, 'break-out')">
                                             <i class="ti-bell btn-icon-prepend"></i>
                                             Break Out
                                         </button>
-                                        <button type="button" class="btn btn-success btn-icon-text break-in d-none" @click="webBundyFunction({{ auth()->user()->id }}, 'break-in')">
+                                        <button type="button" x-show="breakInBtn" class="btn btn-primary btn-icon-text break-in text-white" @click="webBundyFunction({{ auth()->user()->id }}, 'break-in')">
                                             <i class="ti-pencil-alt btn-icon-prepend"></i>
                                             Break In
                                         </button>
@@ -169,7 +169,7 @@
                             <div class="align-items-start">
                                 <div class="d-flex justify-content-between">
                                     <h4 class="card-title card-title-dash">Leave Requests</h4>
-                                    <button class="btn btn-sm btn-outline-primary employee-btn" @click="createRequest">Request</button>
+                                    <button class="btn btn-outline-primary employee-btn" @click="createRequest">Request</button>
                                 </div>
                             </div>
                             <div class="table-responsive mt-1">
@@ -245,7 +245,8 @@
                             <div>
                                 <div class="input-group">
                                     <span class="icon-calendar input-group-text calendar-icon"></span>
-                                    <input type="text" class="form-control bg-white text-center" id="attendance-monitoring-input" name="attendance-monitoring-input" x-model="dateToday">
+                                    <input type="text" class="form-control bg-white text-center" id="attendance-monitoring-input" name="attendance-monitoring-input" x-model="dateToday" x-bind:value="dateToday" x-on:datetime-changed="dateToday = $event.target.value">
+                                    {{-- <span x-text="dateToday"></span> --}}
                                 </div>
                             </div>
                         </div>
@@ -259,14 +260,34 @@
                                     <th>Clock Out</th>
                                 </tr>
                                 </thead>
-                                <tbody>
-                                    <tr class="text-center">
-                                        <td>SAMPLE</td>
-                                        <td>SAMPLE</td>
-                                        <td>SAMPLE</td>
-                                        <td>SAMPLE</td>
-                                    </tr>
-                                </tbody>
+                                <template x-if="attendanceMonitoringLoading">
+                                    <tbody>
+                                        <tr class="text-center">
+                                            <td colspan="5">
+                                                <div class="spinner-border"></div>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </template>
+                                <template x-if="!attendanceMonitoringLoading">
+                                    <tbody>
+                                        <template x-if="(fetchAttendance ?? []).length == 0">
+                                            <tr class="text-center">
+                                                <td class="" colspan="5"><i class="fa fa-info-circle"></i> There is no attendance record for this date.</td>
+                                            </tr>
+                                        </template>
+                                        <template x-if="(fetchAttendance ?? []).length > 0">
+                                            <template x-for="(row, data) in fetchAttendance">
+                                                <tr class="text-center">
+                                                    <td x-text="row.clock_in"></td>
+                                                    <td x-text="row.break_out"></td>
+                                                    <td x-text="row.break_in"></td>
+                                                    <td x-text="row.clock_out"></td>
+                                                </tr>
+                                            </template>
+                                        </template>
+                                    </tbody>
+                                </template>
                             </table>
                         </div>
                     </div>

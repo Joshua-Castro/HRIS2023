@@ -25,7 +25,7 @@
   <!-- inject:css -->
   <link rel="stylesheet" href="{{ asset('template/css/vertical-layout-light/style.css') }}">
   <!-- endinject -->
-  <link rel="shortcut icon" href="{{ asset('template/images/auth/deped-logo.jpg') }}" />
+  {{-- <link rel="shortcut icon" href="{{ asset('template/images/auth/deped-logo.jpg') }}" /> --}}
   <!-- Styles -->
   <link rel="stylesheet" href="{{ asset('template/css/select2.min.css') }}" />
   <link rel="stylesheet" href="{{ asset('template/css/select2-bootstrap-5-theme.min.css') }}" />
