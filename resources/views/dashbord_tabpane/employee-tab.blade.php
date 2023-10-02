@@ -14,7 +14,11 @@
                     <div class="card-body">
                         <div class="row">
                             <div class="col-lg-3 col-xl-6 order-2 order-md-1 my-auto">
-                                <h4 class="card-title card-title-dash">Employees</h4>
+                                {{-- <h4 class="card-title card-title-dash">Employees</h4> --}}
+                                <div>
+                                    <h4 class="card-title card-title-dash">Employees</h4>
+                                    <p class="text-small modern-color-999">All of your employee details are here...</p>
+                                </div>
                             </div>
                             <div class="col-lg-9 col-xl-6 order-1 order-md-2 mb-2 mb-md-0">
                                 <div class="row gx-1">

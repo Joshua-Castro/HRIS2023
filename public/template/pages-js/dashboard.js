@@ -286,12 +286,7 @@ function adminDashboard() {
             const year      =   now.getFullYear();
 
             this.dateToday = `${year}-${month}-${day}`;
-            this.getEmployeeData();
-            this.paginationPage();
-            this.startClock();
-            this.getLeaveRequest();
-            this.dailyAttendance();
-            this.getEmployeeAttendance();
+            this.getAllInitialization();
         },
 
         // CREATE FUNCTION EMPLOYEE
@@ -988,10 +983,8 @@ function adminDashboard() {
             const leaveRequestForm = $('#leaveRequestForm', this.leaveModal)[0];
             $(leaveRequestForm).removeClass('was-validated').addClass('was-validated');
             this.currentLeave.leaveDate = $('input[name="leave_date"]').val();
-            console.log("🚀 ~ file: dashboard.js:534 ~ adminDashboard ~ currentLeave:", this.currentLeave.leaveDate);
 
             if (leaveRequestForm.checkValidity()) {
-
                 $.ajax({
                     type: "POST",
                     url: route("leave.store"),
@@ -1179,7 +1172,6 @@ function adminDashboard() {
         getEmployeeAttendance : function (date = null) {
             this.attendanceMonitoringLoading = true;
             let requestDate = date != null ? date : this.dateToday;
-            console.log(requestDate);
             $.ajax({
                 type        : "GET",
                 url         : route("attendance.record"),
@@ -1210,7 +1202,14 @@ function adminDashboard() {
             });
         },
 
-
-
+        // GET ALL FETCH TO LOAD IN DOM ONCE
+        getAllInitialization : function () {
+            this.getEmployeeData();
+            this.paginationPage();
+            this.startClock();
+            this.getLeaveRequest();
+            this.dailyAttendance();
+            this.getEmployeeAttendance();
+        },
     }
 }
