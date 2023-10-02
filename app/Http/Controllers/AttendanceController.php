@@ -192,14 +192,16 @@ class AttendanceController extends Controller
     public function attendanceRecord(Request $request)
     {
         try {
+            $user = Auth::user();
             // $date = $request->date ? $request->date : '';
             $validatedData = $request->validate([
                 'date' => 'required|date_format:Y-m-d',
             ]);
 
             $attendance = DB::table('attendances')
-                    ->where('created_at', 'LIKE', '%' . $validatedData['date'] . '%')
+                    ->where('user_id', $user->id)
                     ->whereNull('deleted_at')
+                    ->whereDate('created_at', 'LIKE', $validatedData['date'] . '%')
                     ->get();
 
             return response()->json(['message' => 'Fetched Attendance', 'attendance' => $attendance]);
