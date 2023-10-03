@@ -22,75 +22,28 @@
             </div>
             <div class="tab-content tab-content-basic">
                 <div class="tab-pane fade show active" id="overview" role="tabpanel" aria-labelledby="overview">
-                    {{-- <div class="row">
-                        <div class="col-sm-12">
-                        <div class="statistics-details mb-0">
-                            <div class="row">
-                            <div class="col-sm-3 grid-margin">
-                            <div class="card">
-                                <div class="card-body">
-                                <div>
-                                    <p class="card-title card-title-dash font-weight-medium">Leave Requests</p>
-                                    <h3 class="rate-percentage d-flex justify-content-between" x-text="leaveRequestCount"></h3>
-                                </div>
-                                </div>
-                            </div>
-                            </div>
-                            <div class="col-sm-3 grid-margin">
-                                <div class="card">
-                                <div class="card-body">
-                                    <div>
-                                    <p class="card-title card-title-dash font-weight-medium">Overtime Requests</p>
-                                    <h3 class="rate-percentage d-flex justify-content-between align-items-center">SOON</h3>
-                                    </div>
-                                </div>
-                                </div>
-                            </div>
-                            <div class="col-sm-3 grid-margin">
-                                <div class="card">
-                                <div class="card-body">
-                                    <div>
-                                    <p class="card-title card-title-dash font-weight-medium">WFH Request</p>
-                                    <h3 class="rate-percentage d-flex justify-content-between">SOON</h3>
-                                    </div>
-                                </div>
-                                </div>
-                            </div>
-                            <div class="col-sm-3 grid-margin">
-                                <div class="card">
-                                <div class="card-body">
-                                    <div>
-                                    <p class="card-title card-title-dash font-weight-medium">Undertime Request</p>
-                                    <h3 class="rate-percentage  d-flex justify-content-between">SOON</h3>
-                                    </div>
-                                </div>
-                                </div>
-                            </div>
-                            </div>
-                        </div>
-                        </div>
-                    </div> --}}
                     <div class="row">
                         <div class="col-xl-12 col-lg-12 d-flex flex-column">
                             <div class="row flex-grow">
                                 <div class="col-12 grid-margin stretch-card">
                                     <div class="card card-rounded">
                                         <div class="card-body">
-                                            <div class="align-items-start">
-                                                <div class="d-flex justify-content-between">
+                                            <div class="d-flex justify-content-between align-items-start">
+                                                <div>
                                                     <h4 class="card-title card-title-dash">Leave Requests</h4>
+                                                    <p class="text-small modern-color-999">See all of your employees Leave Request here...</p>
                                                 </div>
                                             </div>
-                                            <div class="table-responsive mt-1">
-                                                <table class="table table-sm table-hover">
+                                            <div class="table-sm table-responsive mt-1">
+                                                <table class="table table-striped table-bordered">
                                                     <thead>
                                                         <tr>
-                                                        <th>Employee Name</th>
-                                                        <th>Employee Number</th>
-                                                        <th>Leave Date</th>
-                                                        <th>Leave Type</th>
-                                                        <th>Leave Status</th>
-                                                        <th class="text-center">Action</th>
+                                                            <th>Employee Name</th>
+                                                            <th>Employee Number</th>
+                                                            <th>Leave Date</th>
+                                                            <th>Leave Type</th>
+                                                            <th>Leave Status</th>
+                                                            <th class="text-center">Action</th>
                                                         </tr>
                                                     </thead>
                                                     <tbody>

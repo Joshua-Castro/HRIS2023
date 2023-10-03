@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Attendance;
+use App\Models\Employee;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
@@ -79,6 +80,8 @@ class AttendanceController extends Controller
     protected function updateOrCreateAttendance($column, $data)
     {
         try {
+            $now = Carbon::now('Asia/Manila');
+
             $action         =   '';
             $userId         =   !empty($data['user_id'])        ?   $data['user_id']                             :   '';
             $employeeId     =   !empty($data['employee_id'])    ?   $data['employee_id']                         :   '';
@@ -95,7 +98,7 @@ class AttendanceController extends Controller
                     'user_id'       =>  $userId,
                     'employee_id'   =>  $employeeId,
                     $column         =>  $time,
-                    'created_at'    =>  now(),
+                    'created_at'    =>  $now,
                     'created_by'    =>  Auth::id()
                 ]);
 
@@ -106,7 +109,7 @@ class AttendanceController extends Controller
                     ->where('id', $attendance->id)
                     ->update([
                         $column         =>  $time,
-                        'updated_at'    =>  now(),
+                        'updated_at'    =>  $now,
                         'updated_by'    =>  Auth::id()
                     ]);
 
@@ -170,7 +173,7 @@ class AttendanceController extends Controller
     {
         try {
             $user   =   Auth::user();
-            $today  =   Carbon::now();
+            $today  =   Carbon::now('Asia/Manila');
 
             $dailyAttendance = DB::table('attendances')
                     ->where('user_id', $user->id)
@@ -205,6 +208,58 @@ class AttendanceController extends Controller
                     ->get();
 
             return response()->json(['message' => 'Fetched Attendance', 'attendance' => $attendance]);
+        } catch (QueryException $e) {
+            $errorMessage = $e->getMessage();
+            return response()->json(['message' => $errorMessage], 500);
+        }
+    }
+
+    /**
+     * Get all attendace of employees
+     */
+    public function getAllAttendance(Request $request)
+    {
+        try {
+            $status         =   request('status')       ?   request('status')           : 'all';
+            $name           =   request('name')         ?   request('name')             : '';
+            $pagination     =   request('pagination')   ?   request('pagination')       : '';
+            $usersQuery     =   Employee::query();
+
+            if ($name) {
+                $usersQuery->where(function ($query) use ($name) {
+                    $query->whereRaw("CONCAT(first_name,' ',COALESCE(middle_name, ''),' ',last_name) like ?", ["%{$name}%"])
+                        ->orWhereRaw("CONCAT(last_name,' ',COALESCE(middle_name, ''),' ',first_name) like ?", ["%{$name}%"])
+                        ->orWhereRaw("CONCAT(first_name,' ',last_name) like ?", ["%{$name}%"])
+                        ->orWhereRaw("CONCAT(last_name,' ',first_name) like ?", ["%{$name}%"]);
+                });
+            }
+            if ($status !== 'all') {
+                $usersQuery->where('employees.gender', $status);
+            }
+
+            $data = $usersQuery
+                    ->leftJoin('users', 'employees.user_id', '=', 'users.id')
+                    ->leftJoin('images', 'images.user_id', '=', 'users.id')
+                    ->leftJoin('attendances', 'employees.id', '=', 'attendances.employee_id')
+                    ->select(
+                        'employees.id as employee_id',
+                        'employees.last_name',
+                        'employees.first_name',
+                        'employees.middle_name',
+                        'employees.gender',
+                        'employees.maiden_name',
+                        'employees.position',
+
+                        'users.id as user_id',
+                        'users.name',
+                        'users.email',
+
+                        'images.file_path as image_filepath',
+                        'images.file_name as image_filename',
+                        )
+                    ->paginate(5);
+
+            return response()->json(['data' => $data]);
         } catch (QueryException $e) {
             $errorMessage = $e->getMessage();
             return response()->json(['message' => $errorMessage], 500);

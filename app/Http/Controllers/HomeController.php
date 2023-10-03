@@ -35,4 +35,14 @@ class HomeController extends Controller
     {
         return view('leave-request');
     }
+
+    /**
+     * Show the attendance page.
+     *
+     * @return \Illuminate\Contracts\Support\Renderable
+     */
+    public function attendance()
+    {
+        return view('attendance');
+    }
 }

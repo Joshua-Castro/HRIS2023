@@ -59,8 +59,8 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="table-responsive mt-1">
-                        <table class="table table-sm table-hover">
+                        <div class="table-sm table-responsive mt-1">
+                        <table class="table table-striped table-bordered">
                         <thead>
                             <tr>
                                 <th>Employee Name</th>
@@ -89,8 +89,17 @@
                                     <template x-for="(rows, indexData) in employeeData">
                                         <tr>
                                             <td>
-                                                <div class="d-flex align-items-center">
+                                                {{-- <div class="d-flex align-items-center">
+                                                    <img class="img-sm rounded" src="{{ asset('template/images/faces/face8.jpg') }}" alt="profile">
                                                     <div>
+                                                      <p class="dark-text fs-14 fw-bold">Alex George</p>
+                                                      <p class="text-muted text-small">HR Manager</p>
+                                                    </div>
+                                                  </div> --}}
+                                                <div class="d-flex align-items-center">
+                                                    {{-- <img class="img-sm rounded" src="{{ asset('template/images/faces/face8.jpg') }}" alt="profile"> --}}
+                                                    <img class="img-sm rounded mb-2" x-bind:src="'storage/' + rows.image_filepath" alt="profile">
+                                                    <div class="ms-2">
                                                         <p class="dark-text fs-14 fw-bold mb-0 pb-0" x-text="rows.first_name + ' ' + (rows.middle_name ?? '') + ' ' + rows.last_name"></p>
                                                         <p class="text-muted text-small" x-text="rows.position"></p>
                                                     </div>

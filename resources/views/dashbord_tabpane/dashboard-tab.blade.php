@@ -1,68 +1,10 @@
 @if(auth()->user()->is_admin == 1)
 <div class="row">
-    <div class="col-sm-12">
-        <div class="statistics-details mb-0">
-            <div class="row details-count">
-                <div class="mx-2 py-4">
-                    <div class="card">
-                        <div class="card-body">
-                            <div>
-                                <p class="card-title card-title-dash font-weight-medium">Total employees</p>
-                                <h3 class="rate-percentage d-flex justify-content-between" x-text="employeeCount"></h3>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="mx-2 py-4">
-                    <a href="{{ route('request') }}" style="text-decoration: none !important; color: inherit;">
-                    <div class="card">
-                        <div class="card-body">
-                        <div>
-                            <p class="card-title card-title-dash font-weight-medium">Leave Requests</p>
-                            <h3 class="rate-percentage d-flex justify-content-between align-items-center" x-text="overAllLeaveCount"></h3>
-                        </div>
-                        </div>
-                    </div>
-                    </a>
-                </div>
-                <div class="mx-2 py-4">
-                    <div class="card">
-                    <div class="card-body">
-                        <div>
-                        <p class="card-title card-title-dash font-weight-medium">New employees</p>
-                        <h3 class="rate-percentage d-flex justify-content-between">SOON</h3>
-                        </div>
-                    </div>
-                    </div>
-                </div>
-                <div class="mx-2 py-4">
-                    <div class="card">
-                    <div class="card-body">
-                        <div>
-                        <p class="card-title card-title-dash font-weight-medium">Overtime Requests</p>
-                        <h3 class="rate-percentage  d-flex justify-content-between">SOON</h3>
-                        </div>
-                    </div>
-                    </div>
-                </div>
-                <div class="mx-2 py-4">
-                    <div class="card">
-                    <div class="card-body">
-                        <div>
-                        <p class="card-title card-title-dash font-weight-medium">Others</p>
-                        <h3 class="rate-percentage d-flex justify-content-between">SOON</h3>
-                        </div>
-                    </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
     <div class="col-lg-4 d-flex flex-column">
         <div class="row flex-grow">
             <div class="col-12 col-lg-4 col-lg-12 grid-margin stretch-card">
-                <div class="card" style="height: 460px;">
-                    <div class="card-body d-flex flex-column justify-content-center align-items-center" style="margin-top: -100px;">
+                <div class="card" style="height: 400px;">
+                    <div class="card-body d-flex flex-column align-items-center">
                         <h3 class="card-title card-title-dash text-center">Employee Overview</h3>
                         <p class="text-small modern-color-999 text-center">Information about your People</p>
                         <div id="customerOverviewEcommerce-legend" class="text-center mb-2 rectangle-legend"></div>
@@ -159,21 +101,18 @@
             <div class="col-12 col-lg-4 col-lg-12 grid-margin stretch-card">
                 <div class="card">
                     <div class="card-body">
-                        {{-- <div class="d-flex justify-content-between align-items-start">
+                        <div class="d-flex justify-content-between align-items-start">
                             <div>
-                                <h4 class="modern-user-intro">Hello John Doe,</h4>
-                                <h6 class="mdern-welcome-text">Welcome back</h6>
+                                <h4 class="card-title card-title-dash">Leave Requests</h4>
+                                <p class="text-small modern-color-999">See all of your Leave Request here...</p>
                             </div>
-                        </div> --}}
+                            <div>
+                                <button class="btn btn-outline-primary employee-btn mt-2" @click="createRequest">Request</button>
+                            </div>
+                        </div>
                         <div class="row">
-                            <div class="align-items-start">
-                                <div class="d-flex justify-content-between">
-                                    <h4 class="card-title card-title-dash">Leave Requests</h4>
-                                    <button class="btn btn-outline-primary employee-btn" @click="createRequest">Request</button>
-                                </div>
-                            </div>
-                            <div class="table-responsive mt-1">
-                                <table class="table table-sm table-hover">
+                            <div class="table-sm table-responsive">
+                                <table class="table table-striped table-bordered">
                                     <thead>
                                         <tr class="text-center">
                                         <th>Leave Date</th>
@@ -246,11 +185,10 @@
                                 <div class="input-group">
                                     <span class="icon-calendar input-group-text calendar-icon"></span>
                                     <input type="text" class="form-control bg-white text-center" id="attendance-monitoring-input" name="attendance-monitoring-input" x-model="dateToday" x-bind:value="dateToday" x-on:datetime-changed="dateToday = $event.target.value">
-                                    {{-- <span x-text="dateToday"></span> --}}
                                 </div>
                             </div>
                         </div>
-                        <div class="table-sm table-responsive ">
+                        <div class="table-sm table-responsive">
                             <table class="table table-striped table-bordered">
                                 <thead>
                                 <tr class="text-center">

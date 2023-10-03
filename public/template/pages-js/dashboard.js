@@ -71,6 +71,7 @@ function adminDashboard() {
         },
 
         dateToday                       :   '',
+        newEmployees                    :   '',
         reasonDecline                   :   '',
         leaveIsLoading                  :   false,
         removeFileIsLoading             :   false,
@@ -156,129 +157,6 @@ function adminDashboard() {
                 width: $(this).data('width') ? $(this).data('width') : $(this).hasClass('w-100') ? '100%' : 'style',
                 dropdownParent: $('#salary-grade').closest('.form-floating') // SET THE DROPDOWN PARENT TO THE CLOSEST FORM-GROUP CONTAINER
             });
-
-            // INITIALIZE SLICK JS IN DASHBOARD
-            $('.details-count').slick({
-                dots                :   false,
-                arrows              :   false,
-                infinite            :   true,
-                autoplay            :   true,
-                autoplaySpeed       :   2000,
-                speed               :   300,
-                slidesToShow        :   4,
-                slidesToScroll      :   1,
-                responsive: [
-                  {
-                    breakpoint      : 1024,
-                    settings        : {
-                      slidesToShow      :   3,
-                      slidesToScroll    :   3,
-                      infinite          :   true,
-                      dots              :   false,
-                    }
-                  },
-                  {
-                    breakpoint      : 600,
-                    settings        : {
-                      slidesToShow      :   2,
-                      slidesToScroll    :   2,
-                      dots              :   false,
-                    }
-                  },
-                  {
-                    breakpoint      : 480,
-                    settings        : {
-                      slidesToShow      :   1,
-                      slidesToScroll    :   1,
-                      dots              :   false,
-                    }
-                  }
-                ]
-            });
-
-            // DONUT CHART
-            if ($("#customerOverviewEcommerce").length) {
-                var customerOverviewEcommerceCanvas = $("#customerOverviewEcommerce").get(0).getContext("2d");
-                var customerOverviewEcommerceData = {
-                    datasets: [{
-                        data: [250, 50, 700],
-                        backgroundColor: [
-                            "#1E3BB3",
-                            "#00CDFF",
-                            "#00AAB7",
-                        ],
-                        borderColor: [
-                            "#fff",
-                            "#fff",
-                            "#fff",
-                        ],
-                    }],
-
-                    // THESE LABELS APPEAR IN THE LEGEND AND IN THE TOOLTIPS WHEN HOVERING DIFFERENT ARCS
-                    labels: [
-                        'Resigned Employee',
-                        'New Employee',
-                        'OJT',
-                    ]
-                };
-                var customerOverviewEcommerceOptions = {
-                    cutoutPercentage          :   60,
-                    animationEasing           :   "easeOutBounce",
-                    animateRotate             :   true,
-                    animateScale              :   true,
-                    responsive                :   false,
-                    maintainAspectRatio       :   true,
-                    showScale                 :   true,
-                    legend                    :   false,
-                    legendCallback    : function (chart) {
-                        var text = [];
-                        text.push('<div class="chartjs-legend"><ul>');
-                        for (var i = 0; i < chart.data.datasets[0].data.length; i++) {
-                            text.push('<li><span style="background-color:' + chart.data.datasets[0].backgroundColor[i] + '">');
-                            text.push('</span>');
-
-                            if (chart.data.labels[i]) {
-                                text.push(chart.data.labels[i]);
-                            }
-                            text.push('</li>');
-                        }
-                        text.push('</div></ul>');
-                        return text.join("");
-                    },
-
-                layout: {
-                    padding : {
-                        left      :   0,
-                        right     :   0,
-                        top       :   0,
-                        bottom    :   0
-                    }
-                },
-                tooltips: {
-                    callbacks: {
-                        title: function(tooltipItem, data) {
-                            return data['labels'][tooltipItem[0]['index']];
-                        },
-                        label: function(tooltipItem, data) {
-                            return data['datasets'][0]['data'][tooltipItem['index']];
-                        }
-                    },
-
-                    backgroundColor     :   '#fff',
-                    titleFontSize       :   14,
-                    titleFontColor      :   '#0B0F32',
-                    bodyFontColor       :   '#737F8B',
-                    bodyFontSize        :   11,
-                    displayColors       :   false
-                }
-                };
-                var customerOverviewEcommerce = new Chart(customerOverviewEcommerceCanvas, {
-                    type          :   'doughnut',
-                    data          :   customerOverviewEcommerceData,
-                    options       :   customerOverviewEcommerceOptions
-                });
-                document.getElementById('customerOverviewEcommerce-legend').innerHTML = customerOverviewEcommerce.generateLegend();
-            }
 
             const now       =   new Date();
             const month     =   String(now.getMonth() + 1).padStart(2, '0'); // Months are 0-based
@@ -605,7 +483,95 @@ function adminDashboard() {
                 this.isLoading      = false;
                 this.isDisabled     = false;
                 this.employeeData   = users;
-                this.employeeCount  = response.count;
+                this.employeeCount  = response.count ? response.count : '';
+                this.newEmployees   = response.newEmployees ? response.newEmployees : '';
+                // DONUT CHART
+                if ($("#customerOverviewEcommerce").length) {
+                    var customerOverviewEcommerceCanvas = $("#customerOverviewEcommerce").get(0).getContext("2d");
+                    var customerOverviewEcommerceData = {
+                        datasets: [{
+                            data: [
+                                1,
+                                this.newEmployees,
+                                1
+                            ],
+                            backgroundColor: [
+                                "#1E3BB3",
+                                "#00CDFF",
+                                "#00AAB7",
+                            ],
+                            borderColor: [
+                                "#fff",
+                                "#fff",
+                                "#fff",
+                            ],
+                        }],
+
+                        // THESE LABELS APPEAR IN THE LEGEND AND IN THE TOOLTIPS WHEN HOVERING DIFFERENT ARCS
+                        labels: [
+                            'Resigned Employee',
+                            'New Employee',
+                            'OJT',
+                        ]
+                    };
+                    var customerOverviewEcommerceOptions = {
+                        cutoutPercentage          :   60,
+                        animationEasing           :   "easeOutBounce",
+                        animateRotate             :   true,
+                        animateScale              :   true,
+                        responsive                :   false,
+                        maintainAspectRatio       :   true,
+                        showScale                 :   true,
+                        legend                    :   false,
+                        legendCallback    : function (chart) {
+                            var text = [];
+                            text.push('<div class="chartjs-legend"><ul>');
+                            for (var i = 0; i < chart.data.datasets[0].data.length; i++) {
+                                text.push('<li><span style="background-color:' + chart.data.datasets[0].backgroundColor[i] + '">');
+                                text.push('</span>');
+
+                                if (chart.data.labels[i]) {
+                                    text.push(chart.data.labels[i]);
+                                }
+                                text.push('</li>');
+                            }
+                            text.push('</div></ul>');
+                            return text.join("");
+                        },
+
+                    layout: {
+                        padding : {
+                            left      :   0,
+                            right     :   0,
+                            top       :   0,
+                            bottom    :   0
+                        }
+                    },
+                    tooltips: {
+                        callbacks: {
+                            title: function(tooltipItem, data) {
+                                return data['labels'][tooltipItem[0]['index']];
+                            },
+                            label: function(tooltipItem, data) {
+                                return data['datasets'][0]['data'][tooltipItem['index']];
+                            }
+                        },
+
+                        backgroundColor     :   '#fff',
+                        titleFontSize       :   14,
+                        titleFontColor      :   '#0B0F32',
+                        bodyFontColor       :   '#737F8B',
+                        bodyFontSize        :   11,
+                        displayColors       :   false
+                    }
+                    };
+                    var customerOverviewEcommerce = new Chart(customerOverviewEcommerceCanvas, {
+                        type          :   'doughnut',
+                        data          :   customerOverviewEcommerceData,
+                        options       :   customerOverviewEcommerceOptions
+                    });
+                    document.getElementById('customerOverviewEcommerce-legend').innerHTML = customerOverviewEcommerce.generateLegend();
+                }
             }).catch((error) => {
 
             })
@@ -841,6 +807,13 @@ function adminDashboard() {
 
         // CREATE LEAVE REQUEST (USER/EMPLOYEE VIEW)
         createRequest : function () {
+            $('#leave-date', this.leaveModal).datepicker({
+                format: "yyyy-mm-dd",
+                autoclose: true,
+                todayHighlight: true,
+                clearBtn: true,
+            }).attr("readonly", "readonly");
+
             $(this.leaveModal).modal({
                 backdrop: 'static',
                 keyboard: false
