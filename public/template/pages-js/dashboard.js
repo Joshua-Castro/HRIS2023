@@ -129,6 +129,14 @@ function adminDashboard() {
                 clearBtn: true,
             }).attr("readonly", "readonly");
 
+            // INITIALIZE THE DATEPICKER WHEN THE MODAL IS SHOWN IN ADD EMPLOYEE
+            $('#last-promotion', this.modal).datepicker({
+                format: "yyyy-mm-dd",
+                autoclose: true,
+                todayHighlight: true,
+                clearBtn: true,
+            }).attr("readonly", "readonly");
+
             // INITIALIZE THE DATEPICKER IN ATTENDANCE MONITORING
             $('#attendance-monitoring-input').datepicker({
                 format: "yyyy-mm-dd",
@@ -378,10 +386,11 @@ function adminDashboard() {
         // FORM ON SUBMIT EITHER STORE | UPDATE EMPLOYEE DATA
         submit : function () {
             // this.isDisabled             =   true;
-            const employeeForm          =   $('#employeeForm'  ,this.modal)[0];
-            this.current.salaryGrade    =   $('#salary-grade'  ,this.modal).val();
-            this.current.dateHired      =   $('#date-hired'    ,this.modal).val();
-            this.current.userImage      =   this.imageUrl;
+            const employeeForm              =   $('#employeeForm'     ,this.modal)[0];
+            this.current.salaryGrade        =   $('#salary-grade'     ,this.modal).val();
+            this.current.dateHired          =   $('#date-hired'       ,this.modal).val();
+            this.current.lastPromotion      =   $('#last-promotion'   ,this.modal).val();
+            this.current.userImage          =   this.imageUrl;
 
             // SHOW ERROR WHEN THERE IS NO IMAGE
             if (this.current.userImage === '') {

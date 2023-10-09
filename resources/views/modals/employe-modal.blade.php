@@ -110,7 +110,8 @@
                                 <div class="form-group row p-1 m-0" >
                                     <div class="col-sm-12 p-0 m-0">
                                         <div class="form-floating">
-                                            <input type="text" name="last_promotion" class="form-control" placeholder="Last Promotion" x-model="current.lastPromotion" required>
+                                            {{-- <input type="text" name="last_promotion" class="form-control" placeholder="Last Promotion" x-model="current.lastPromotion" required> --}}
+                                            <input type="text" id="last-promotion" name="last_promotion" class="form-control bg-white" placeholder="Last Promotion" x-model="current.lastPromotion" required>
                                             <label for="last_promotion">Last Promotion<span class="text-danger"> *</span></label>
                                             <div class="invalid-feedback">
                                                 This field is required.

@@ -220,7 +220,7 @@ class EmployeeController extends Controller
         $fileName       =   null;
         $decodedImage   =   null;
 
-        // Check if $base64Image is a base64-encoded image
+        // CHECK IF THE $base64Image IS A BASE-64-ENCODED IMAGE
         if (strpos($base64Image, 'data:image/') === 0) {
             $fileName       =   time() . '_' . uniqid() . '.png';
             $decodedImage   =   base64_decode(preg_replace('#^data:image/\w+;base64,#i', '', $base64Image));
@@ -230,7 +230,7 @@ class EmployeeController extends Controller
             $decodedImage   =   file_get_contents($path);
         }
 
-        // Check if there is an existing image for the user
+        // CHECK IF THERE IS AN EXISTING IMAGE FOR THE USER
         if ($userId) {
             $userImage = DB::table('employees as e')
                         ->select(
@@ -249,7 +249,7 @@ class EmployeeController extends Controller
             }
         }
 
-        // Save the new image to the storage directory
+        // SAVE THE NEW IMAGE TO THE STORAGE DIRECTORY
         Storage::disk('public')->put('uploads/images/' . $fileName, $decodedImage);
 
         return [

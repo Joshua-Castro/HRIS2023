@@ -14,7 +14,6 @@
                     <div class="card-body">
                         <div class="row">
                             <div class="col-lg-3 col-xl-6 order-2 order-md-1 my-auto">
-                                {{-- <h4 class="card-title card-title-dash">Employees</h4> --}}
                                 <div>
                                     <h4 class="card-title card-title-dash">Employees</h4>
                                     <p class="text-small modern-color-999">All of your employee details are here...</p>
@@ -32,9 +31,11 @@
                                         <div class="input-group">
                                             <input id="users-search-keyword" type="text" class="form-control form-control-sm"
                                                 name="search-keyword" placeholder="Name" x-model="searchName" @keydown="inputSearch">
-                                            <button id="users-search"
-                                                class="btn input-group-text btn-secondary border waves-effect py-0 px-2 form-control form-control-sm"
-                                                type="button" x-ref="usersSearchButton" @click="getEmployeeData">Search</button>
+                                            <div class="input-group-append">
+                                                <button id="users-search"
+                                                class="btn input-group-text btn-secondary border waves-effect form-control form-control-sm text-dark"
+                                                type="button" x-ref="usersSearchButton" @click="getEmployeeData" style="border-end-start-radius: 0px; border-start-start-radius: 0px;">Search</button>
+                                            </div>
                                         </div>
                                     </div>
                                     <div class="col-md-4 mb-2 mb-lg-0" style="padding-top: 1px;">
@@ -97,7 +98,6 @@
                                                     </div>
                                                   </div> --}}
                                                 <div class="d-flex align-items-center">
-                                                    {{-- <img class="img-sm rounded" src="{{ asset('template/images/faces/face8.jpg') }}" alt="profile"> --}}
                                                     <img class="img-sm rounded mb-2" x-bind:src="'storage/' + rows.image_filepath" alt="profile">
                                                     <div class="ms-2">
                                                         <p class="dark-text fs-14 fw-bold mb-0 pb-0" x-text="rows.first_name + ' ' + (rows.middle_name ?? '') + ' ' + rows.last_name"></p>

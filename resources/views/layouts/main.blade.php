@@ -136,6 +136,21 @@
                             </a>
                         </li>
                     @endif
+                    <li class="nav-item">
+                        <a class="nav-link" data-bs-toggle="collapse" href="#settings" aria-expanded="false" aria-controls="settings">
+                            <i class="ti ti-settings ms-3 me-4" style="font-size: 20px;"></i>
+                            <span class="menu-title">Settings</span>
+                            <i class="menu-arrow"></i>
+                        </a>
+                    </li>
+                    <div class="collapse" id="settings">
+                        <ul class="nav flex-column sub-menu">
+                            <li class="nav-item ms-4"> <a class="nav-link" href="javascript:void(0);">Profile</a></li>
+                            <li class="nav-item ms-4"> <a class="nav-link" href="javascript:void(0);">Activity</a></li>
+                            <li class="nav-item ms-4"> <a class="nav-link" href="{{ route('logout') }}" onclick="event.preventDefault();
+                                document.getElementById('logout-form').submit();">Logout</a></li>
+                        </ul>
+                    </div>
                 </ul>
             </nav>
             <div class="main-panel">
@@ -160,6 +175,7 @@
 
   <!-- plugins:js -->
   <script src="{{ asset('template/vendors/js/vendor.bundle.base.js') }}"></script>
+  <script src="{{ asset('template/vendors/moment/moment.js') }}"></script>
   <script src="{{ asset('template/vendors/bootstrap-datepicker/bootstrap-datepicker.min.js') }}"></script>
   <script src="{{ asset('template/vendors/progressbar.js/progressbar.min.js') }}"></script>
   <script src="{{ asset('template/js/off-canvas.js') }}"></script>

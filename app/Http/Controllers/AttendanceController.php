@@ -220,27 +220,24 @@ class AttendanceController extends Controller
     public function getAllAttendance(Request $request)
     {
         try {
-            $status         =   request('status')       ?   request('status')           : 'all';
-            $name           =   request('name')         ?   request('name')             : '';
-            $pagination     =   request('pagination')   ?   request('pagination')       : '';
-            $usersQuery     =   Employee::query();
+            $employeeNumberName       =   request('employee-number-hidden')         ?   request('employee-number-hidden')             : '';
+            $pagination               =   request('attendance-pagination-hidden')   ?   request('attendance-pagination-hidden')       : '';
+            // $usersQuery               =   Employee::query();
+            $attendanceQuery          =   Attendance::query();
 
-            if ($name) {
-                $usersQuery->where(function ($query) use ($name) {
-                    $query->whereRaw("CONCAT(first_name,' ',COALESCE(middle_name, ''),' ',last_name) like ?", ["%{$name}%"])
-                        ->orWhereRaw("CONCAT(last_name,' ',COALESCE(middle_name, ''),' ',first_name) like ?", ["%{$name}%"])
-                        ->orWhereRaw("CONCAT(first_name,' ',last_name) like ?", ["%{$name}%"])
-                        ->orWhereRaw("CONCAT(last_name,' ',first_name) like ?", ["%{$name}%"]);
+            if ($employeeNumberName) {
+                $attendanceQuery->leftJoin('employees as e', 'e.id', '=', 'attendances.employee_id');
+                $attendanceQuery->where(function ($query) use ($employeeNumberName) {
+                    $query->whereRaw("CONCAT(e.first_name,' ',COALESCE(e.middle_name, ''),' ',e.last_name) like ?", ["%{$employeeNumberName}%"])
+                        ->orWhereRaw("CONCAT(e.last_name,' ',COALESCE(e.middle_name, ''),' ',e.first_name) like ?", ["%{$employeeNumberName}%"])
+                        ->orWhereRaw("CONCAT(e.first_name,' ',e.last_name) like ?", ["%{$employeeNumberName}%"])
+                        ->orWhereRaw("CONCAT(e.last_name,' ',e.first_name) like ?", ["%{$employeeNumberName}%"])
+                        ->orWhere('e.employee_no', 'like', "%{$employeeNumberName}%");
                 });
             }
-            if ($status !== 'all') {
-                $usersQuery->where('employees.gender', $status);
-            }
 
-            $data = $usersQuery
-                    ->leftJoin('users', 'employees.user_id', '=', 'users.id')
-                    ->leftJoin('images', 'images.user_id', '=', 'users.id')
-                    ->leftJoin('attendances', 'employees.id', '=', 'attendances.employee_id')
+            $data = $attendanceQuery
+                    ->leftJoin('employees', 'employees.id', '=', 'attendances.employee_id')
                     ->select(
                         'employees.id as employee_id',
                         'employees.last_name',
@@ -249,14 +246,15 @@ class AttendanceController extends Controller
                         'employees.gender',
                         'employees.maiden_name',
                         'employees.position',
+                        'employees.employee_no',
 
-                        'users.id as user_id',
-                        'users.name',
-                        'users.email',
-
-                        'images.file_path as image_filepath',
-                        'images.file_name as image_filename',
+                        'attendances.clock_in',
+                        'attendances.clock_out',
+                        'attendances.break_in',
+                        'attendances.break_out',
+                        'attendances.created_at',
                         )
+                    ->orderBy('attendances.created_at', 'DESC')
                     ->paginate(5);
 
             return response()->json(['data' => $data]);
