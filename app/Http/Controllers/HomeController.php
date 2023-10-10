@@ -45,4 +45,14 @@ class HomeController extends Controller
     {
         return view('attendance');
     }
+
+    /**
+     * Show the trainings page.
+     *
+     * @return \Illuminate\Contracts\Support\Renderable
+     */
+    public function training()
+    {
+        return view('training');
+    }
 }

@@ -41,7 +41,7 @@
 <body class="with-welcome-text">
     <div class="container-scroller">
         <nav class="navbar default-layout col-lg-12 col-12 p-0 fixed-top d-flex align-items-top flex-row">
-            <div class="text-center navbar-brand-wrapper d-flex align-items-center justify-content-start">
+            <div class="text-center navbar-brand-wrapper d-flex align-items-center justify-content-start bg-white">
             <div class="me-3">
                 <button class="navbar-toggler navbar-toggler align-self-center" type="button" data-bs-toggle="minimize">
                 <span class="icon-menu"></span>
@@ -106,7 +106,7 @@
             </div>
         </nav>
         <div class="container-fluid page-body-wrapper">
-            <nav class="sidebar sidebar-offcanvas" id="sidebar">
+            <nav class="sidebar sidebar-offcanvas bg-white" id="sidebar">
                 <ul class="nav">
                     <li class="nav-item">
                         <a class="nav-link" href="{{ route('home') }}">
@@ -135,6 +135,12 @@
                             </a>
                         </li>
                     @endif
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ route('training') }}">
+                            <i class="ti ti-briefcase ms-3 me-4" style="font-size: 20px;"></i>
+                            <span class="menu-title">Trainings</span>
+                        </a>
+                    </li>
                     <li class="nav-item">
                         <a class="nav-link" data-bs-toggle="collapse" href="#settings" aria-expanded="false" aria-controls="settings">
                             <i class="ti ti-settings ms-3 me-4" style="font-size: 20px;"></i>

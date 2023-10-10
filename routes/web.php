@@ -31,6 +31,7 @@ Auth::routes();
 Route::get('/home'          ,[App\Http\Controllers\HomeController::class, 'index'           ])->name('home');
 Route::get('/request'       ,[App\Http\Controllers\HomeController::class, 'request'         ])->name('request');
 Route::get('/attendance'    ,[App\Http\Controllers\HomeController::class, 'attendance'      ])->name('attendance');
+Route::get('/training'      ,[App\Http\Controllers\HomeController::class, 'training'        ])->name('training');
 
 // EMPLOYEE CONTROLLER ROUTES
 Route::prefix('employee')->as('employee.')->group(function () {
@@ -64,5 +65,10 @@ Route::prefix('attendance')->as('attendance.')->group(function () {
     Route::get('/daily-attendance'          ,[AttendanceController::class, 'dailyAttendance'     ])->name('daily');
     Route::get('/get-attendace'             ,[AttendanceController::class, 'attendanceRecord'    ])->name('record');
     Route::get('/get-all-attendace'         ,[AttendanceController::class, 'getAllAttendance'    ])->name('all');
+});
+
+// TRAINING/SEMINARS CONTROLLER ROUTES
+Route::prefix('training')->as('training.')->group(function () {
+
 });
 

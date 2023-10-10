@@ -89,6 +89,11 @@ function attendance() {
                 url         :   route("attendance.all"),
                 data        :   $('#attendance-search-form').serializeArray(),
             }).then((response) => {
+                $(this.attendanceModal).modal({
+                    backdrop: 'static',
+                    keyboard: false
+                });
+
                 var data = response.attendance;
                 var attendanceData = data['data'],
                     navlinks = data['links'];
