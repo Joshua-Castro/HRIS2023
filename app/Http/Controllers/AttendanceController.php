@@ -220,12 +220,13 @@ class AttendanceController extends Controller
     public function getAllAttendance(Request $request)
     {
         try {
-            $employeeNumberName       =   request('employee-number-hidden')         ?   request('employee-number-hidden')             : '';
-            $pagination               =   request('attendance-pagination-hidden')   ?   request('attendance-pagination-hidden')       : '';
-            // $usersQuery               =   Employee::query();
+            $employeeNumberName       =   request('employee-number-hidden');
+            $pagination               =   request('attendance-pagination-hidden');
             $attendanceQuery          =   Attendance::query();
+            $dateFrom                 =   !empty(request('date-from')) ? request('date-from')   : '';
+            $dateTo                   =   !empty(request('date-to'))   ? request('date-to')     : $dateFrom;
 
-            if ($employeeNumberName) {
+            if (!empty($employeeNumberName)) {
                 $attendanceQuery->leftJoin('employees as e', 'e.id', '=', 'attendances.employee_id');
                 $attendanceQuery->where(function ($query) use ($employeeNumberName) {
                     $query->whereRaw("CONCAT(e.first_name,' ',COALESCE(e.middle_name, ''),' ',e.last_name) like ?", ["%{$employeeNumberName}%"])
@@ -233,6 +234,13 @@ class AttendanceController extends Controller
                         ->orWhereRaw("CONCAT(e.first_name,' ',e.last_name) like ?", ["%{$employeeNumberName}%"])
                         ->orWhereRaw("CONCAT(e.last_name,' ',e.first_name) like ?", ["%{$employeeNumberName}%"])
                         ->orWhere('e.employee_no', 'like', "%{$employeeNumberName}%");
+                });
+            }
+
+            if (!empty($dateFrom) && !empty($dateTo)) {
+                $attendanceQuery->where(function ($query) use ($dateFrom, $dateTo) {
+                    $query->whereDate('attendances.created_at', '>=', $dateFrom)
+                        ->whereDate('attendances.created_at', '<=', $dateTo);
                 });
             }
 
@@ -255,9 +263,9 @@ class AttendanceController extends Controller
                         'attendances.created_at',
                         )
                     ->orderBy('attendances.created_at', 'DESC')
-                    ->paginate(5);
+                    ->paginate($pagination);
 
-            return response()->json(['data' => $data]);
+            return response()->json(['attendance' => $data]);
         } catch (QueryException $e) {
             $errorMessage = $e->getMessage();
             return response()->json(['message' => $errorMessage], 500);

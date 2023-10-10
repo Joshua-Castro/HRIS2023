@@ -3,7 +3,7 @@ function attendance() {
         attendanceData      :       [],
 
         currentSearchName               :   '',
-        currentPagination               :   10,
+        currentPagination               :   5,
         currentPage                     :   1,
         attendanceInputTimer            :   null,
         attendanceModal                 :   '#attendance-filter-modal',
@@ -30,8 +30,8 @@ function attendance() {
                 clearBtn: true,
             }).attr("readonly", "readonly");
 
-            this.getAllAttendance();
             this.attendancePaginationPage();
+            this.getAllAttendance();
         },
 
         // OPEN MODAL FOR FILTERING. FILTERING BUTTON ON THE ATTENDANCE TABLE
@@ -42,21 +42,6 @@ function attendance() {
             });
 
             $(this.attendanceModal).modal('show');
-        },
-
-        // PAGINATION PAGE ON THE TABLE ATTENDANCE DATA
-        attendancePaginationPage : function () {
-            var component = this;
-
-            $(document).on('click', '.pagination a', function (e) {
-                e.preventDefault();
-                var page = $(this).attr('href').split('page=')[1];
-
-                component.currentPage = page;
-
-                // CALL THE getAllAttendance METHOD USING THE COMPONENT REFERENCE OR THIS
-                component.getAllAttendance();
-            });
         },
 
         // SEARCH SPECIFIC EMPLOYEE NUMBER ON ATTENDANCE TABLE
@@ -89,22 +74,22 @@ function attendance() {
             this.attendanceLoading   = true;
             $('ul.pagination').empty();
 
-            this.currentSearchName = $('input[id="attendance-search-keyword"]', this.attendanceModal).val() ? $('input[id="attendance-search-keyword"]', this.attendanceModal).val() : '';
+            this.currentSearchName      = $('input[id="attendance-search-keyword"]'   ,this.attendanceModal).val() ? $('input[id="attendance-search-keyword"]'    ,this.attendanceModal).val() : '';
+            this.attendanceFilterFrom   = $('input[name="attendance-date-from"]'      ,this.attendanceModal).val() ? $('input[name="attendance-date-from"]'       ,this.attendanceModal).val() : '';
+            this.attendanceFilterTo     = $('input[name="attendance-date-to"]'        ,this.attendanceModal).val() ? $('input[name="attendance-date-to"]'         ,this.attendanceModal).val() : '';
 
-            $('input[name="employee-number-hidden"]'                  ,this.attendanceModal).val(this.currentSearchName);
-            $('input[name="attendance-pagination-hidden"]'            ,this.attendanceModal).val(this.currentPagination);
-            $('input[name="attendance-page-hidden"]'                  ,this.attendanceModal).val(this.currentPage);
+            $('input[name="employee-number-hidden"]'         ).val(this.currentSearchName);
+            $('input[name="attendance-pagination-hidden"]'   ).val(this.currentPagination);
+            $('input[name="date-from"]'                      ).val(this.attendanceFilterFrom);
+            $('input[name="date-to"]'                        ).val(this.attendanceFilterTo);
+            $('input[name="page"]'                           ).val(this.currentPage);
 
             $.ajax({
-                type        : "GET",
-                url         : route("attendance.all"),
+                type        :   "GET",
+                url         :   route("attendance.all"),
                 data        :   $('#attendance-search-form').serializeArray(),
-                headers     : {
-                    'X-CSRF-TOKEN' : this.csrfToken
-                },
-
             }).then((response) => {
-                var data = response.data;
+                var data = response.attendance;
                 var attendanceData = data['data'],
                     navlinks = data['links'];
 
@@ -134,15 +119,14 @@ function attendance() {
 
 
                     this.attendanceLoading      = false;
-                    component.attendanceData   = attendanceData;
-                    $.each(component.attendanceData, function (i, row) {
+                    this.attendanceData    = attendanceData;
+                    $.each(this.attendanceData, function (i, row) {
                         component.attendanceData[i].clock_in    = component.attendanceData[i].clock_in  ? component.attendanceConvert24hrTo12hr(component.attendanceData[i].clock_in)   : '';
                         component.attendanceData[i].break_out   = component.attendanceData[i].break_out ? component.attendanceConvert24hrTo12hr(component.attendanceData[i].break_out)  : '';
                         component.attendanceData[i].break_in    = component.attendanceData[i].break_in  ? component.attendanceConvert24hrTo12hr(component.attendanceData[i].break_in)   : '';
                         component.attendanceData[i].clock_out   = component.attendanceData[i].clock_out ? component.attendanceConvert24hrTo12hr(component.attendanceData[i].clock_out)  : '';
                     });
                     $(component.attendanceModal).modal('hide');
-                console.log(component.attendanceData);
             }).catch((error) => {
                 if (error.responseJSON && error.responseJSON.error) {
 
@@ -150,6 +134,20 @@ function attendance() {
                     // Handle other error scenarios
                     // ...
                 }
+            });
+        },
+
+        // PAGINATION PAGE ON THE TABLE ATTENDANCE DATA
+        attendancePaginationPage : function () {
+            let component = this;
+
+            $(document).on('click', '.pagination a', function (e) {
+                e.preventDefault();
+                let page = $(this).attr('href').split('page=')[1];
+                component.currentPage = page;
+
+                // CALL THE getAllAttendance METHOD USING THE COMPONENT REFERENCE OR THIS
+                component.getAllAttendance();
             });
         },
 

@@ -3,11 +3,6 @@
         <div class="modal-content">
             <div class="modal-body">
                 <div class="row mt-2">
-                    <form id="attendance-search-form" class="d-none">
-                        <input type="hidden" name="employee-number-hidden" x-ref="employeeNumberInput">
-                        <input type="hidden" name="attendance-pagination-hidden">
-                        <input type="hidden" name="attendance-page-hidden">
-                    </form>
                     <div class="col-lg-12 col-sm-12">
                         <div class="form-floating">
                             <input type="text" id="attendance-search-keyword" name="search-keyword" class="form-control form-control-sm" placeholder="Employee Number \ Employee Name" x-model="currentSearchName">
@@ -32,7 +27,7 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-sm btn-outline-danger" data-bs-dismiss="modal">Cancel</button>
-                <button type="button" class="btn btn-sm btn-outline-primary submit-btn" @click="getAllAttendance">Apply Filter</button>
+                <button type="button" class="btn btn-sm btn-outline-primary submit-btn" @click="getAllAttendance" :disabled="attendanceLoading">Apply Filter</button>
             </div>
         </div>
     </div>

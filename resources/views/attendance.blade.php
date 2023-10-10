@@ -12,6 +12,13 @@
                     </div>
                     <div>
                         <div class="row gx-1">
+                            <form id="attendance-search-form" class="d-none">
+                                <input type="hidden" name="employee-number-hidden" x-ref="employeeNumberInput">
+                                <input type="hidden" name="attendance-pagination-hidden">
+                                <input type="hidden" name="page">
+                                <input type="hidden" name="date-from">
+                                <input type="hidden" name="date-to">
+                            </form>
                             <div class="col-lg-7 col-sm-12">
                                 <button class="btn btn-sm btn-outline-primary form-control form-control-sm btn-icon fw-bold" type="button" style="border-radius: 5px;" @click="filtering">
                                     <i class="ti ti-sm ti-filter me-2" style="font-size: 14px;"></i>
