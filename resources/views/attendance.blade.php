@@ -5,7 +5,20 @@
     <div class="col-12 grid-margin stretch-card">
         <div class="card card-rounded">
             <div class="card-body">
-                <div class="d-flex justify-content-between align-items-start">
+                <div class="col-md-6">
+                    <h4 class="card-title card-title-dash">Attendance Monitoring</h4>
+                        <p class="text-small modern-color-999">Monitor your employees attendance here...</p>
+                </div>
+                <div class="col-md-6 d-flex justify-content-end">
+                    <button class="btn btn-sm btn-outline-primary form-control form-control-sm btn-icon fw-bold me-1" type="button" style="border-radius: 5px; width: 150px;">
+                        <i class="ti ti-sm ti-filter me-2" style="font-size: 14px;"></i>
+                        Filter
+                    </button>
+                    <button class="btn btn-sm btn-outline-primary form-control form-control-sm btn-icon fw-bold me-1" type="button" style="border-radius: 5px; width: 150px;">
+                        Create
+                    </button>
+                </div>
+                {{-- <div class="d-flex justify-content-between align-items-start">
                     <div>
                         <h4 class="card-title card-title-dash">Attendance Monitoring</h4>
                         <p class="text-small modern-color-999">Monitor your employees attendance here...</p>
@@ -63,7 +76,7 @@
                             </div>
                         </div> --}}
                     </div>
-                </div>
+                </div> --}}
                 <div class="table-sm table-responsive mt-1">
                     <table class="table table-striped table-bordered">
                         <thead>

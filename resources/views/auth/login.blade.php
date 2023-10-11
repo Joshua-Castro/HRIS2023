@@ -99,15 +99,15 @@
 </div> --}}
     <div class="account-pages vh-100">
         <div class="container authentication-container">
-            <div class="card shadow-lg overflow-hidden m-0">
+            <div class="card overflow-hidden m-0">
                 <div class="card-body p-0">
                     <div class="row">
                         {{-- Login Form --}}
-                        <div class="col-12 col-md-6 col-lg-4 px-4 pe-md-3 pt-3 pb-5 position-relative">
+                        <div class="col-12 col-md-6 col-lg-4 px-4 pe-md-3 pt-3 pb-5 position-relative bg-light">
                             <div class="flex-row brand-logo-mini d-flex justify-content-center">
-                                <a href="{{ route('login') }}">
+                                {{-- <a href="{{ route('login') }}">
                                     <img src="{{ asset("template/images/auth/deped-logo.jpg") }}" alt="logo" height="100">
-                                </a>
+                                </a> --}}
                             </div>
 
                             <h3 class="text-dark mt-4 mb-1 px-2">Welcome!</h3>
@@ -167,10 +167,10 @@
                                     <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="2" aria-label="Slide 3"></button>
                                 </div>
                                 <div class="carousel-inner h-100">
-                                    <div class="carousel-item h-100 active" style="background-image: url({{ asset("template/images/auth/deped1.jpg") }})">
-                                        
+                                    <div class="carousel-item h-100 active" style="background-image: url({{ asset("template/images/auth/carousel-1.jpg") }})">
+
                                     </div>
-                                    <div class="carousel-item h-100" style="background-image: url({{ asset("template/images/auth/deped2.jpg") }})">
+                                    <div class="carousel-item h-100" style="background-image: url({{ asset("template/images/auth/carousel-2.jpg") }})">
                                         {{-- <div class="h-100 pt-3">
                                             <div class="feature-container">
                                                 <p class="feature-title">Keep track of your progress. Anytime. Anywhere.</p>
@@ -178,7 +178,7 @@
                                             </div>
                                         </div> --}}
                                     </div>
-                                    <div class="carousel-item h-100" style="background-image: url({{ asset("template/images/auth/deped3.jpg") }})">
+                                    <div class="carousel-item h-100" style="background-image: url({{ asset("template/images/auth/carousel-3.jpg") }})">
                                         {{-- <div class="h-100 pt-3">
                                             <div class="feature-container">
                                                 <p class="feature-title">Collaborate with your team.</p>
