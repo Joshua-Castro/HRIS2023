@@ -5,78 +5,32 @@
     <div class="col-12 grid-margin stretch-card">
         <div class="card card-rounded">
             <div class="card-body">
-                <div class="col-md-6">
-                    <h4 class="card-title card-title-dash">Attendance Monitoring</h4>
-                        <p class="text-small modern-color-999">Monitor your employees attendance here...</p>
-                </div>
-                <div class="col-md-6 d-flex justify-content-end">
-                    <button class="btn btn-sm btn-outline-primary form-control form-control-sm btn-icon fw-bold me-1" type="button" style="border-radius: 5px; width: 150px;">
-                        <i class="ti ti-sm ti-filter me-2" style="font-size: 14px;"></i>
-                        Filter
-                    </button>
-                    <button class="btn btn-sm btn-outline-primary form-control form-control-sm btn-icon fw-bold me-1" type="button" style="border-radius: 5px; width: 150px;">
-                        Create
-                    </button>
-                </div>
-                {{-- <div class="d-flex justify-content-between align-items-start">
-                    <div>
+                <div class="row">
+                    <form id="attendance-search-form" class="d-none">
+                        <input type="hidden" name="employee-number-hidden" x-ref="employeeNumberInput">
+                        <input type="hidden" name="attendance-pagination-hidden">
+                        <input type="hidden" name="page">
+                        <input type="hidden" name="date-from">
+                        <input type="hidden" name="date-to">
+                    </form>
+                    <div class="col-md-6">
                         <h4 class="card-title card-title-dash">Attendance Monitoring</h4>
-                        <p class="text-small modern-color-999">Monitor your employees attendance here...</p>
+                            <p class="text-small modern-color-999">Monitor your employees attendance here...</p>
                     </div>
-                    <div>
-                        <div class="row gx-1">
-                            <form id="attendance-search-form" class="d-none">
-                                <input type="hidden" name="employee-number-hidden" x-ref="employeeNumberInput">
-                                <input type="hidden" name="attendance-pagination-hidden">
-                                <input type="hidden" name="page">
-                                <input type="hidden" name="date-from">
-                                <input type="hidden" name="date-to">
-                            </form>
-                            <div class="col-lg-7 col-sm-12">
-                                <button class="btn btn-sm btn-outline-primary form-control form-control-sm btn-icon fw-bold" type="button" style="border-radius: 5px;" @click="filtering">
-                                    <i class="ti ti-sm ti-filter me-2" style="font-size: 14px;"></i>
-                                    Filter
-                                </button>
-                            </div>
-                            <div class="col-lg-5 col-sm-12">
-                                <select id="attendance-pagination" class="form-select form-select-sm bg-soft-secondary fw-bold" x-model="currentPagination" @change="getAllAttendance">
-                                    <option value="5">5</option>
-                                    <option value="10">10</option>
-                                    <option value="15">15</option>
-                                    <option value="20">20</option>
-                                    <option value="50">50</option>
-                                </select>
-                            </div>
-                        </div>
-                        {{-- <div class="row gx-1">
-                            <form id="attendance-search-form" class="d-none">
-                                <input type="hidden" name="employee-number-hidden" x-ref="employeeNumberInput">
-                                <input type="hidden" name="attendance-pagination-hidden">
-                                <input type="hidden" name="attendance-page-hidden">
-                            </form>
-                            <div class="col-md-8 mb-2 mb-lg-0">
-                                <div class="input-group">
-                                    <input id="attendance-search-keyword" type="text" class="form-control form-control-sm"
-                                        name="search-keyword" placeholder="Name" x-model="currentSearchName" @keydown="inputAttendanceSearch">
-                                    <div class="input-group-append">
-                                        <button id="attendance-search"
-                                        class="btn input-group-text btn-secondary border waves-effect form-control form-control-sm text-dark"
-                                        type="button" x-ref="attendanceSearchButton" @click="getAllAttendance" style="border-end-start-radius: 0px; border-start-start-radius: 0px;">Search</button>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-md-4" style="padding-top: 1px;">
-                                <select id="attendance-pagination" class="form-select form-select-sm bg-soft-secondary fw-bold" x-model="currentPagination" @change="getAllAttendance">
-                                    <option value="5">5</option>
-                                    <option value="10">10</option>
-                                    <option value="15">15</option>
-                                    <option value="20">20</option>
-                                    <option value="50">50</option>
-                                </select>
-                            </div>
-                        </div> --}}
+                    <div class="col-md-6 d-flex justify-content-end">
+                        <button class="btn btn-sm btn-outline-primary form-control form-control-sm btn-icon fw-bold me-1" type="button" style="border-radius: 5px; width: 150px;" @click="filtering">
+                            <i class="ti ti-sm ti-filter me-2" style="font-size: 14px;"></i>
+                            Filter
+                        </button>
+                        <select id="attendance-pagination" class="form-select form-select-sm bg-soft-secondary fw-bold" x-model="currentPagination" style="border-radius: 5px; width: 80px; height: 31.6px;" @change="getAllAttendance">
+                            <option value="5">5</option>
+                            <option value="10">10</option>
+                            <option value="15">15</option>
+                            <option value="20">20</option>
+                            <option value="50">50</option>
+                        </select>
                     </div>
-                </div> --}}
+                </div>
                 <div class="table-sm table-responsive mt-1">
                     <table class="table table-striped table-bordered">
                         <thead>
