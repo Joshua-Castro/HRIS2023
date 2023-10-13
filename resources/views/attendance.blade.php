@@ -47,7 +47,11 @@
                         <template x-if="attendanceLoading">
                             <tbody>
                                 <tr>
-                                    <td class="text-center" colspan="10"><div class="spinner-border"></div></td>
+                                    <td class="text-center" colspan="10">
+                                        <div class="spinner-container">
+                                            <div class="spinner"></div>
+                                        </div>
+                                    </td>
                                 </tr>
                             </tbody>
                         </template>

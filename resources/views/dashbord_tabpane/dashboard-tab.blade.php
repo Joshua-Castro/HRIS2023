@@ -33,7 +33,7 @@
                             <div class="row">
                                 <div class="col-lg-6 col-md-12">
                                     <template x-if="timeLoading">
-                                        <div class="spinner-border"></div>
+                                            <div class="spinner" style="width: 26px; height: 26px"></div>
                                     </template>
                                     <h3 class="rate-percentage text-primary" style="font-size: 24px;" x-text="currentTime"></h3>
                                 </div>
@@ -125,7 +125,11 @@
                                     <template x-if="leaveIsLoading">
                                         <tbody>
                                             <tr>
-                                                <td class="text-center" colspan="5"><div class="spinner-border"></div></td>
+                                                <td class="text-center" colspan="5">
+                                                    <div class="spinner-container">
+                                                        <div class="spinner"></div>
+                                                    </div>
+                                                </td>
                                             </tr>
                                         </tbody>
                                     </template>
@@ -202,7 +206,9 @@
                                     <tbody>
                                         <tr class="text-center">
                                             <td colspan="5">
-                                                <div class="spinner-border"></div>
+                                                <div class="spinner-container">
+                                                    <div class="spinner"></div>
+                                                </div>
                                             </td>
                                         </tr>
                                     </tbody>

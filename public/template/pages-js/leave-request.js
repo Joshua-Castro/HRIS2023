@@ -10,6 +10,7 @@ function leaveRequest() {
             reason          :   '',
         },
 
+        adminLeaveLoading    :   false,
         leaveRequestCount    :   0,
         leaveCsrfToken       :   $('meta[name="csrf-token"]').attr('content'),
 
@@ -20,13 +21,15 @@ function leaveRequest() {
 
         // FETCH ALL LEAVE AND UPDATE IT EITHER ACCEPT OR DECLINE
         fetchLeaveData : function () {
-
+            this.adminLeaveLoading = true;
             $.ajax({
                 type        :   "GET",
                 url         :   route("leave.show.all"),
             }).then((response) => {
-                this.leaveData = response.data;
+                this.leaveData         = response.data;
                 this.leaveRequestCount = response.count;
+                this.adminLeaveLoading = false;
+
             }).catch((error) => {
 
             })

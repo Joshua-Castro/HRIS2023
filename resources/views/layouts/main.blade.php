@@ -32,6 +32,7 @@
   <link rel="stylesheet" href="{{ asset('template/css/select2-bootstrap-5-theme.rtl.min.css') }}" />
   <link rel="stylesheet" href="{{ asset('template/css/slick.css') }}" />
   <link rel="stylesheet" href="{{ asset('template/css/filepond.css') }}" />
+  <link rel="stylesheet" href="{{ asset('template/css/custom-styles.css') }}" />
 
   @stack('styles')
   <!-- Scripts -->
@@ -60,7 +61,7 @@
             <div class="navbar-menu-wrapper d-flex align-items-top">
             <ul class="navbar-nav">
                 <li class="nav-item font-weight-semibold d-none d-lg-block ms-0">
-                <h1 class="welcome-text">Good Day, <span class="text-black fw-bold">{{ Auth::user()->name }}</span></h1>
+                <h1 class="welcome-text">Good Day, <span class="text-black fw-bold">{{ Auth::user()->name ?? Auth::user()->email }}</span></h1>
                 @if(auth()->user()->is_admin == 1)
                 <h3 class="welcome-sub-text">All details about your employees are here... </h3>
                 @else

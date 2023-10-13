@@ -46,52 +46,65 @@
                                                             <th class="text-center">Action</th>
                                                         </tr>
                                                     </thead>
-                                                    <tbody>
-                                                        <template x-if="(leaveData ?? []).length == 0">
-                                                            <tr class="text-center">
-                                                                <td class="" colspan="6"><i class="fa fa-info-circle"></i> There is no leave request's record.</td>
-                                                            </tr>
-                                                        </template>
-                                                        <template x-for="(rows, indexData) in leaveData">
+                                                    <template x-if="adminLeaveLoading">
+                                                        <tbody>
                                                             <tr>
-                                                                <td>
-                                                                    <div class="d-flex align-items-center">
-                                                                        <div>
-                                                                            <p class="dark-text fs-14 fw-bold mb-0 pb-0" x-text="rows.first_name + ' ' + (rows.middle_name ?? '') + ' ' + rows.last_name"></p>
-                                                                            <p class="text-muted text-small" x-text="rows.position"></p>
-                                                                        </div>
+                                                                <td class="text-center" colspan="10">
+                                                                    <div class="spinner-container">
+                                                                        <div class="spinner"></div>
                                                                     </div>
                                                                 </td>
-                                                                <td><p class="dark-text fs-14" x-text="rows.employee_no"></p></td>
-                                                                <td><p class="dark-text fs-14" x-text="rows.leave_date"></p></td>
-                                                                <td><p class="dark-text fs-14" x-text="rows.leave_type"></p></td>
-                                                                <td>
-                                                                    <template x-if="rows.status == 'Pending'">
-                                                                        <div class="badge badge-warning" x-text="rows.status"></div>
-                                                                    </template>
-                                                                    <template x-if="rows.status == 'Accepted'">
-                                                                        <div class="badge badge-success" x-text="rows.status"></div>
-                                                                    </template>
-                                                                    <template x-if="rows.status == 'Declined'">
-                                                                        <div class="badge badge-danger" x-text="rows.status"></div>
-                                                                    </template>
-                                                                    {{-- <p class="dark-text fs-14" x-text="rows.status"></p> --}}
-                                                                </td>
-                                                                <template x-if="rows.status === 'Pending'">
-                                                                    <td class="text-center" style="padding-top: 28px;">
-                                                                        <button type="button" class="btn btn-sm action-btn btn-outline-primary" @click="viewRequest(indexData)">View</button>
-                                                                        <button type="button" class="btn btn-sm action-btn btn-outline-info" @click="updateRequest(indexData, 'Accepted')">Accept</button>
-                                                                        <button type="button" class="btn btn-sm action-btn btn-outline-danger" @click="updateRequest(indexData, 'Declined')">Decline</button>
-                                                                    </td>
-                                                                </template>
-                                                                <template x-if="rows.status != 'Pending'">
-                                                                    <td class="text-center" style="padding-top: 28px;">
-                                                                        <button type="button" class="btn btn-sm action-btn btn-outline-primary" @click="viewRequest(indexData)">View</button>
-                                                                    </td>
-                                                                </template>
                                                             </tr>
-                                                        </template>
-                                                    </tbody>
+                                                        </tbody>
+                                                    </template>
+                                                    <template x-if="!adminLeaveLoading">
+                                                        <tbody>
+                                                            <template x-if="(leaveData ?? []).length == 0">
+                                                                <tr class="text-center">
+                                                                    <td class="" colspan="6"><i class="fa fa-info-circle"></i> There is no leave request's record.</td>
+                                                                </tr>
+                                                            </template>
+                                                            <template x-for="(rows, indexData) in leaveData">
+                                                                <tr>
+                                                                    <td>
+                                                                        <div class="d-flex align-items-center">
+                                                                            <div>
+                                                                                <p class="dark-text fs-14 fw-bold mb-0 pb-0" x-text="rows.first_name + ' ' + (rows.middle_name ?? '') + ' ' + rows.last_name"></p>
+                                                                                <p class="text-muted text-small" x-text="rows.position"></p>
+                                                                            </div>
+                                                                        </div>
+                                                                    </td>
+                                                                    <td><p class="dark-text fs-14" x-text="rows.employee_no"></p></td>
+                                                                    <td><p class="dark-text fs-14" x-text="rows.leave_date"></p></td>
+                                                                    <td><p class="dark-text fs-14" x-text="rows.leave_type"></p></td>
+                                                                    <td>
+                                                                        <template x-if="rows.status == 'Pending'">
+                                                                            <div class="badge badge-warning" x-text="rows.status"></div>
+                                                                        </template>
+                                                                        <template x-if="rows.status == 'Accepted'">
+                                                                            <div class="badge badge-success" x-text="rows.status"></div>
+                                                                        </template>
+                                                                        <template x-if="rows.status == 'Declined'">
+                                                                            <div class="badge badge-danger" x-text="rows.status"></div>
+                                                                        </template>
+                                                                        {{-- <p class="dark-text fs-14" x-text="rows.status"></p> --}}
+                                                                    </td>
+                                                                    <template x-if="rows.status === 'Pending'">
+                                                                        <td class="text-center" style="padding-top: 28px;">
+                                                                            <button type="button" class="btn btn-sm action-btn btn-outline-primary" @click="viewRequest(indexData)">View</button>
+                                                                            <button type="button" class="btn btn-sm action-btn btn-outline-info" @click="updateRequest(indexData, 'Accepted')">Accept</button>
+                                                                            <button type="button" class="btn btn-sm action-btn btn-outline-danger" @click="updateRequest(indexData, 'Declined')">Decline</button>
+                                                                        </td>
+                                                                    </template>
+                                                                    <template x-if="rows.status != 'Pending'">
+                                                                        <td class="text-center" style="padding-top: 28px;">
+                                                                            <button type="button" class="btn btn-sm action-btn btn-outline-primary" @click="viewRequest(indexData)">View</button>
+                                                                        </td>
+                                                                    </template>
+                                                                </tr>
+                                                            </template>
+                                                        </tbody>
+                                                    </template>
                                                 </table>
                                             </div>
                                         </div>
