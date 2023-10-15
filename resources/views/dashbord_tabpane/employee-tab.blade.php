@@ -6,7 +6,7 @@
         }
     </style>
 @endpush
-<div class="row">
+<div class="row" @loademployeedata.window="getEmployeeInit">
     <div class="col-xl-12 col-lg-12 d-flex flex-column">
         <div class="row flex-grow">
             <div class="col-12 grid-margin stretch-card">
@@ -94,13 +94,6 @@
                                     <template x-for="(rows, indexData) in employeeData">
                                         <tr>
                                             <td>
-                                                {{-- <div class="d-flex align-items-center">
-                                                    <img class="img-sm rounded" src="{{ asset('template/images/faces/face8.jpg') }}" alt="profile">
-                                                    <div>
-                                                      <p class="dark-text fs-14 fw-bold">Alex George</p>
-                                                      <p class="text-muted text-small">HR Manager</p>
-                                                    </div>
-                                                  </div> --}}
                                                 <div class="d-flex align-items-center">
                                                     <img class="img-sm rounded mb-2" x-bind:src="'storage/' + rows.image_filepath" alt="profile">
                                                     <div class="ms-2">

@@ -56,7 +56,7 @@
                 <a class="nav-link" id="hiring-tab" data-bs-toggle="tab" href="#hiring" role="tab" aria-selected="false">Hirings</a>
                 </li>
                 <li class="nav-item">
-                <a class="nav-link" id="employees-tab" data-bs-toggle="tab" href="#employees" role="tab" aria-selected="false">Employees</a>
+                <a class="nav-link" id="employees-tab" data-bs-toggle="tab" href="#employees" role="tab" aria-selected="false" @click="dispatchCustomEvent">Employees</a>
                 </li>
                 <li class="nav-item">
                 <a class="nav-link border-0" id="more-tab" data-bs-toggle="tab" href="#more" role="tab" aria-selected="false">More</a>

@@ -482,8 +482,6 @@ function adminDashboard() {
                         } else {
                             $('.pagination a[href="' + data['first_page_url'] + '"]').trigger('click');
                         }
-
-                        // return;
                     } else {
                         $('#user-counter').text('No Accounts Found!');
                     }
@@ -1186,12 +1184,27 @@ function adminDashboard() {
 
         // GET ALL FETCH TO LOAD IN DOM ONCE
         getAllInitialization : function () {
-            this.getEmployeeData();
-            this.paginationPage();
+            // this.getEmployeeData();
+            // this.paginationPage();
             this.startClock();
             this.getLeaveRequest();
             this.dailyAttendance();
             this.getEmployeeAttendance();
         },
+
+        // DISPATCH EMPLOYEE DATA. USING CUSTOM EVENT SO THE DATA WILL LOAD ONLY AFTER OPENING THE TAB
+        dispatchCustomEvent : function () {
+            event.target.dispatchEvent(new CustomEvent ('loademployeedata',
+                {
+                    bubbles : true
+                }
+            ));
+        },
+
+        // EMPLOYEE TAB DATA FETCH INITIALIZATION
+        getEmployeeInit : function () {
+            this.getEmployeeData();
+            this.paginationPage();
+        }
     }
 }

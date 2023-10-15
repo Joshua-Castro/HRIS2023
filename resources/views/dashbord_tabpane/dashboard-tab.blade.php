@@ -21,6 +21,119 @@
         </div>
     </div>
 </div>
+<div class="row">
+    <div class="col-xl-6 col-lg-12 d-flex flex-column grid-margin stretch-card">
+        <div class="card card-rounded">
+            <div class="card-body">
+                <h4 class="card-title card-title-dash">Employees by Department</h4>
+                <div class="pt-3">
+                    <div class="row">
+                    <div class="col-sm-6">
+                        <div class="chartjs-size-monitor">
+                            <div class="chartjs-size-monitor-expand">
+                                <div class=""></div>
+                            </div>
+                            <div class="chartjs-size-monitor-shrink">
+                                <div class=""></div>
+                            </div>
+                        </div>
+                        <canvas class="my-auto chartjs-render-monitor" id="doughnutCharthr" height="234" width="352" style="display: block; width: 352px; height: 234px;"></canvas>
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="row doughnut-hr-legend mb-4">
+                            <div class="col-6">
+                                <p class="legend-value">50</p>
+                                <p class="legend-label align-items-center d-flex">
+                                    <span class="bg-primary me-2"></span>Developers
+                                </p>
+                            </div>
+                            <div class="col-6">
+                                <p class="legend-value">20</p>
+                                <p class="legend-label align-items-center d-flex">
+                                    <span class="bg-secondary me-2"></span>Marketing
+                                </p>
+                            </div>
+                        </div>
+                        <div class="row doughnut-hr-legend">
+                        <div class="col-6">
+                            <p class="legend-value">
+                            20
+                            </p>
+                            <p class="legend-label align-items-center d-flex">
+                            <span class="bg-danger me-2"></span>Finance
+                            </p>
+                        </div>
+                        <div class="col-6">
+                            <p class="legend-value">
+                            10
+                            </p>
+                            <p class="legend-label align-items-center d-flex">
+                            <span class="bg-info me-2"></span>Designing
+                            </p>
+                        </div>
+                        </div>
+                    </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-xl-6 col-lg-12 d-flex flex-column grid-margin stretch-card">
+        <div class="card card-rounded">
+            <div class="card-body">
+                <div>
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <div>
+                            <h4 class="card-title card-title-dash">Todays Birthday (2) <img src="{{ asset('template/images/dashboard/cake.png') }}" alt="Birthday cake" class="pb-2"></h4>
+                        </div>
+                    </div>
+                    <div class="mt-3" style="max-height: 250px; overflow-y: auto;">
+                        <div class="wrapper d-flex align-items-center justify-content-between py-2 pe-4 border-bottom">
+                            <div class="d-flex">
+                                <img class="img-sm rounded" src="{{ asset('template/images/faces/face1.jpg') }}" alt="profile">
+                                <div class="wrapper ms-3">
+                                    <p class="ms-1 mb-1 fw-bold">Allen Walker</p>
+                                    <small class="text-muted mb-0">30/12/1996</small>
+                                </div>
+                            </div>
+                            <div class="badge badge-primary px-3 py-2">Wish</div>
+                        </div>
+                        <div class="wrapper d-flex align-items-center justify-content-between py-2 pe-4 border-bottom">
+                            <div class="d-flex">
+                                <img class="img-sm rounded" src="{{ asset('template/images/faces/face2.jpg') }}" alt="profile">
+                                <div class="wrapper ms-3">
+                                    <p class="ms-1 mb-1 fw-bold">Stella John</p>
+                                    <small class="text-muted mb-0">30/12/1996</small>
+                                </div>
+                            </div>
+                            <div class="badge badge-primary px-3 py-2">Wish</div>
+                        </div>
+                        <div class="wrapper d-flex align-items-center justify-content-between py-2 pe-4 border-bottom">
+                            <div class="d-flex">
+                                <img class="img-sm rounded" src="{{ asset('template/images/faces/face3.jpg') }}" alt="profile">
+                                <div class="wrapper ms-3">
+                                    <p class="ms-1 mb-1 fw-bold">Jonathan James</p>
+                                    <small class="text-muted mb-0">30/12/1996</small>
+                                </div>
+                            </div>
+                            <div class="badge badge-primary px-3 py-2">Wish</div>
+                        </div>
+                        <div class="wrapper d-flex align-items-center justify-content-between py-2 pe-4">
+                            <div class="d-flex">
+                                <img class="img-sm rounded" src="{{ asset('template/images/faces/face4.jpg') }}" alt="profile">
+                                <div class="wrapper ms-3">
+                                    <p class="ms-1 mb-1 fw-bold">James Jonathan </p>
+                                    <small class="text-muted mb-0">30/12/1996</small>
+                                </div>
+                            </div>
+                            <div class="badge badge-primary px-3 py-2">Wish</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 @else
 <div class="row">
     <div class="col-sm-12">
