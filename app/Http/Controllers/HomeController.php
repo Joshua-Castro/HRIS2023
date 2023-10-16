@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
 
 class HomeController extends Controller
 {
@@ -23,7 +25,14 @@ class HomeController extends Controller
      */
     public function index()
     {
-        return view('home');
+        $userId    = Auth::id();
+        $userImage = DB::table('images')
+            ->where('user_id', '=', $userId)
+            ->first();
+
+        $image      = $userImage ?  'storage/' . $userImage->file_path : 'template/images/default-icon.png';
+
+        return view('home', ['image' => $image]);
     }
 
     /**

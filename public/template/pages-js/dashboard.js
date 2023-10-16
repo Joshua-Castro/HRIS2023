@@ -86,6 +86,7 @@ function adminDashboard() {
         breakOutBtn                     :   false,
         breakInBtn                      :   false,
         clockOutBtn                     :   false,
+        indication                      :   false,
         currentDate                     :   '',
         currentTime                     :   '',
         searchName                      :   '',
@@ -227,6 +228,7 @@ function adminDashboard() {
             $('.submit-btn').removeAttr('hidden');
             $('.account-information'    ,this.modal).removeAttr('hidden');
             $('.account-information'    ,this.modal).removeAttr('disabled');
+            $('.upload-picture-btn'     ,this.modal).removeAttr('hidden');
 
             $(this.passwordField).attr("type", "password");
             $(this.togglePassword).html('<i class="fa fa-eye-slash"></i>');
@@ -246,31 +248,31 @@ function adminDashboard() {
                 });
 
             this.current    =  {
-                recordId                :   this.employeeData[index].employee_id,
-                lastName                :   this.employeeData[index].last_name,
-                firstName               :   this.employeeData[index].first_name,
-                middleName              :   this.employeeData[index].middle_name,
-                gender                  :   this.employeeData[index].gender,
-                maidenName              :   this.employeeData[index].maiden_name,
-                position                :   this.employeeData[index].position,
-                lastPromotion           :   this.employeeData[index].last_promotion,
-                stationCode             :   this.employeeData[index].station_code,
-                controlNumber           :   this.employeeData[index].control_no,
-                employeeNumber          :   this.employeeData[index].employee_no,
-                schoolCode              :   this.employeeData[index].school_code,
-                itemNumber              :   this.employeeData[index].item_number,
-                employeeStatus          :   this.employeeData[index].employment_status,
-                salaryGrade             :   this.employeeData[index].salary_grade,
-                dateHired               :   this.employeeData[index].date_hired,
-                sss                     :   this.employeeData[index].sss,
-                pagIbig                 :   this.employeeData[index].pag_ibig,
-                philHealth              :   this.employeeData[index].phil_health,
-                name                    :   this.employeeData[index].name,
-                email                   :   this.employeeData[index].email,
-                password                :   this.employeeData[index].password,
-                confirmPassword         :   this.employeeData[index].password,
-                userId                  :   this.employeeData[index].user_id,
-                userImage               :   this.employeeData[index].image_filepath,
+                recordId            :   this.employeeData[index].employee_id,
+                lastName            :   this.employeeData[index].last_name,
+                firstName           :   this.employeeData[index].first_name,
+                middleName          :   this.employeeData[index].middle_name,
+                gender              :   this.employeeData[index].gender,
+                maidenName          :   this.employeeData[index].maiden_name,
+                position            :   this.employeeData[index].position,
+                lastPromotion       :   this.employeeData[index].last_promotion,
+                stationCode         :   this.employeeData[index].station_code,
+                controlNumber       :   this.employeeData[index].control_no,
+                employeeNumber      :   this.employeeData[index].employee_no,
+                schoolCode          :   this.employeeData[index].school_code,
+                itemNumber          :   this.employeeData[index].item_number,
+                employeeStatus      :   this.employeeData[index].employment_status,
+                salaryGrade         :   this.employeeData[index].salary_grade,
+                dateHired           :   this.employeeData[index].date_hired,
+                sss                 :   this.employeeData[index].sss,
+                pagIbig             :   this.employeeData[index].pag_ibig,
+                philHealth          :   this.employeeData[index].phil_health,
+                name                :   this.employeeData[index].name,
+                email               :   this.employeeData[index].email,
+                password            :   this.employeeData[index].password,
+                confirmPassword     :   this.employeeData[index].password,
+                userId              :   this.employeeData[index].user_id,
+                userImage           :   this.employeeData[index].image_filepath,
             };
 
             // SET TIME OUT FOR SELECT2 AFTER INITIALIZING THE VALUE TO SHOW IT IN THE UI.
@@ -911,7 +913,7 @@ function adminDashboard() {
               $('.custom-swal-icon').css('margin-top', '20px');
         },
 
-        // REMOVE SPECIFIC FILE OF EMPLOYEE
+        // REMOVE SPECIFIC FILE OF EMPLOYEE (USER/EMPLOYEE VIEW)
         removeEmployeeFile : function (data) {
             const file_id   = data.file_unique_id      ?  data.file_unique_id       :   '';
             const user_id   = data.employee_id         ?  data.employee_id          :   '';
@@ -988,7 +990,7 @@ function adminDashboard() {
             }
         },
 
-        // GET EMPLOYEE LEAVE REQUEST
+        // GET EMPLOYEE LEAVE REQUEST (USER/EMPLOYEE VIEW)
         getLeaveRequest : function () {
             this.leaveIsLoading = true;
 
@@ -1007,7 +1009,7 @@ function adminDashboard() {
             })
         },
 
-        // GET EMPLOYEE FILES
+        // GET EMPLOYEE FILES (USER/EMPLOYEE VIEW)
         getEmployeeFiles : function (employeeId) {
             this.fileFetchLoading = true;
             $.ajax({
@@ -1025,7 +1027,7 @@ function adminDashboard() {
             })
         },
 
-        // CONVERT 12 HOUR FORMAT TO 24 HOUR FORMAT
+        // CONVERT 12 HOUR FORMAT TO 24 HOUR FORMAT (USER/EMPLOYEE VIEW)
         convert24hrTo12hr : function(time) {
             // Assuming timeData is in the format "HH:mm:ss"
             const [hours, minutes, seconds] = time.split(':').map(Number);
@@ -1047,7 +1049,7 @@ function adminDashboard() {
             return formattedTime;
         },
 
-        // WEB BUNDY FUNCTION FOR EACH EMPLOYEE (CLOCK IN, BREAK OUT, BREAK IN, CLOCK OUT)
+        // WEB BUNDY FUNCTION FOR EACH EMPLOYEE (CLOCK IN, BREAK OUT, BREAK IN, CLOCK OUT) (USER/EMPLOYEE VIEW)
         webBundyFunction : function (userId, type) {
             let time = this.currentTime;
 
@@ -1067,7 +1069,7 @@ function adminDashboard() {
             }
         },
 
-        // ALL AJAX REQUEST FOR SENDING TO ATTENDANCE CONTROLLER
+        // ALL AJAX REQUEST FOR SENDING TO ATTENDANCE CONTROLLER (USER/EMPLOYEE VIEW)
         processWebBundy : function (type, time, userId) {
             $.ajax({
                 type    :   "POST",
@@ -1088,9 +1090,6 @@ function adminDashboard() {
                     showConfirmButton   : false,
                 });
                 this.dailyAttendance();
-                // this.isDisabled = false;
-                // $(this.modal).modal('hide');
-                // this.getEmployeeData();
             }).catch((error) => {
                 if (error.responseJSON && error.responseJSON.error) {
 
@@ -1101,7 +1100,7 @@ function adminDashboard() {
             });
         },
 
-        // EMPLOTEE DAILY ATTENDANCE
+        // EMPLOTEE DAILY ATTENDANCE (USER/EMPLOYEE VIEW)
         dailyAttendance : function () {
             $.ajax({
                 type    :   "GET",
@@ -1148,7 +1147,7 @@ function adminDashboard() {
             });
         },
 
-        // EMPLOYEE ATTENDANCE
+        // EMPLOYEE ATTENDANCE (USER/EMPLOYEE VIEW)
         getEmployeeAttendance : function (date = null) {
             this.attendanceMonitoringLoading = true;
             let requestDate = date != null ? date : this.dateToday;
@@ -1184,8 +1183,6 @@ function adminDashboard() {
 
         // GET ALL FETCH TO LOAD IN DOM ONCE
         getAllInitialization : function () {
-            // this.getEmployeeData();
-            // this.paginationPage();
             this.startClock();
             this.getLeaveRequest();
             this.dailyAttendance();
@@ -1203,8 +1200,11 @@ function adminDashboard() {
 
         // EMPLOYEE TAB DATA FETCH INITIALIZATION
         getEmployeeInit : function () {
-            this.getEmployeeData();
-            this.paginationPage();
+            if (!this.indication) { // PUT INDICATION TO AVOID INITIALIZE EVERYTIME THE USER CLICK'S ON THE EMPLOYEE TAB
+                this.getEmployeeData();
+                this.paginationPage();
+                this.indication = true;
+            }
         }
     }
 }

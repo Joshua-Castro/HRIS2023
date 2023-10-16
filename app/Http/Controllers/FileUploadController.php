@@ -42,7 +42,6 @@ class FileUploadController extends Controller
 
             $uploadedFiles  = $request->file('filepond');
             $token          = $employeeToken;
-            // $filePaths  = [];
             $fileData   = [];
 
             foreach ($uploadedFiles as $file) {

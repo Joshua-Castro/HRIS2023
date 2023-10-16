@@ -35,19 +35,19 @@
                         </thead>
                         <tbody>
                             <tr>
-                                <td> {{-- TO MAKE THE TABLE MORE COMPRESSED ADD CLASS IN THIS <td> 'class="pb-1 pt-2"' --}}
+                                <td class="pb-1 pt-2"> {{-- TO MAKE THE TABLE MORE COMPRESSED ADD CLASS IN THIS <td> 'class="pb-1 pt-2"' --}}
                                     <div class="d-flex align-items-center mt-0 mb-0 pt-0 pb-0">
                                         <div class="ms-2">
-                                            <p class="dark-text fs-14 fw-bold mb-0 pb-0"></p>
-                                            <p class="text-muted text-small"></p>
+                                            <p class="dark-text fs-14 fw-bold mb-0 pb-0">Sample Training Title</p>
+                                            <p class="text-muted text-small">Department that will have the training</p>
                                         </div>
                                     </div>
                                 </td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
+                                <td>SAMPLE</td>
+                                <td>SAMPLE</td>
+                                <td>SAMPLE</td>
+                                <td>SAMPLE</td>
+                                <td>SAMPLE</td>
                             </tr>
                         </tbody>
                     </table>
@@ -67,9 +67,9 @@
             </div>
         </div>
     </div>
-    @include('modals.attendance-filter-modal')
+    @include('modals.training-modal')
 </div>
 @endsection
 @push('scripts')
-    <script src="{{ asset('template/pages-js/attendance.js') }}"></script>
+    <script src="{{ asset('template/pages-js/training.js') }}"></script>
 @endpush
