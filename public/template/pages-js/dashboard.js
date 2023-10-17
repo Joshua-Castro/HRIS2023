@@ -91,6 +91,7 @@ function adminDashboard(userRole) {
         clockOutBtn                     :   false,
         indication                      :   false,
         webBundyLoading                 :   false,
+        loadGetEmployeeAttendance       :   false,
         currentDate                     :   '',
         currentTime                     :   '',
         searchName                      :   '',
@@ -1068,8 +1069,8 @@ function adminDashboard(userRole) {
         // WEB BUNDY FUNCTION FOR EACH EMPLOYEE (CLOCK IN, BREAK OUT, BREAK IN, CLOCK OUT) (USER/EMPLOYEE VIEW)
         webBundyFunction : function (userId, type) {
             let time = this.currentTime;
-            this.webBundyLoading = true;
-
+            this.webBundyLoading            =   true;
+            this.loadGetEmployeeAttendance  =   true;
             switch (type) {
                 case 'clock-in' :
                     this.processWebBundy(type, time, userId);
@@ -1117,7 +1118,7 @@ function adminDashboard(userRole) {
             });
         },
 
-        // EMPLOTEE DAILY ATTENDANCE (USER/EMPLOYEE VIEW)
+        // EMPLOYEE DAILY ATTENDANCE (USER/EMPLOYEE VIEW)
         dailyAttendance : function () {
             $.ajax({
                 type    :   "GET",
@@ -1154,7 +1155,9 @@ function adminDashboard(userRole) {
                         this.clockOutBtn = true;
                         break;
                 }
-                this.getEmployeeAttendance();
+                if (this.loadGetEmployeeAttendance) {
+                    this.getEmployeeAttendance();
+                }
             }).catch((error) => {
                 if (error.responseJSON && error.responseJSON.error) {
 
@@ -1201,10 +1204,12 @@ function adminDashboard(userRole) {
 
         // GET ALL FETCH TO LOAD IN DOM ONCE
         getAllInitialization : function () {
+            if (this.userRole != 1) {
                 this.getLeaveRequest();
                 this.dailyAttendance();
                 this.getEmployeeAttendance();
                 this.startClock();
+            }
         },
 
         // DISPATCH EMPLOYEE DATA. USING CUSTOM EVENT SO THE DATA WILL LOAD ONLY AFTER OPENING THE TAB
