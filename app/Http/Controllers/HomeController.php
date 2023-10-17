@@ -42,7 +42,14 @@ class HomeController extends Controller
      */
     public function request()
     {
-        return view('leave-request');
+        $userId    = Auth::id();
+        $userImage = DB::table('images')
+            ->where('user_id', '=', $userId)
+            ->first();
+
+        $image      = $userImage ?  'storage/' . $userImage->file_path : 'template/images/default-icon.png';
+
+        return view('leave-request', ['image' => $image]);
     }
 
     /**
@@ -52,7 +59,14 @@ class HomeController extends Controller
      */
     public function attendance()
     {
-        return view('attendance');
+        $userId    = Auth::id();
+        $userImage = DB::table('images')
+            ->where('user_id', '=', $userId)
+            ->first();
+
+        $image      = $userImage ?  'storage/' . $userImage->file_path : 'template/images/default-icon.png';
+
+        return view('attendance', ['image' => $image]);
     }
 
     /**
@@ -62,6 +76,13 @@ class HomeController extends Controller
      */
     public function training()
     {
-        return view('training');
+        $userId    = Auth::id();
+        $userImage = DB::table('images')
+            ->where('user_id', '=', $userId)
+            ->first();
+
+        $image      = $userImage ?  'storage/' . $userImage->file_path : 'template/images/default-icon.png';
+
+        return view('training', ['image' => $image]);
     }
 }

@@ -1,3 +1,5 @@
+'use strict';
+
 function leaveRequest() {
     return {
         // PROPERTIES

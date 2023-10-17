@@ -10,7 +10,7 @@
                         <div class="form-group row p-1 m-0" >
                             <div class="col-sm-12 p-0 m-0">
                                 <div class="form-floating">
-                                    <input type="text" name="leave_date" class="form-control bg-white" id="leave-date" placeholder="Leave Date" x-model="currentLeave.leaveDate" required>
+                                    <input type="text" name="leave_date" class="form-control bg-white leave-form-modal" id="leave-date" placeholder="Leave Date" x-model="currentLeave.leaveDate" required>
                                     <label for="last_name">Leave Date<span class="text-danger"> *</span></label>
                                     <div class="invalid-feedback">
                                         This field is required.
@@ -23,7 +23,7 @@
                         <div class="form-group row p-1 m-0" >
                             <div class="col-sm-12 p-0 m-0">
                                 <div class="form-floating">
-                                    <select class="form-select" name="leave_type" x-model="currentLeave.leaveType" required>
+                                    <select class="form-select leave-form-modal" name="leave_type" x-model="currentLeave.leaveType" required>
                                         <option value="">Select</option>
                                         <option value="Emergency/Sick Leave">Emergency/Sick Leave</option>
                                         <option value="Parental Leave">Parental Leave</option>
@@ -43,7 +43,7 @@
                         <div class="form-group row p-1 m-0" >
                             <div class="col-sm-12 p-0 m-0">
                                 <div class="form-floating">
-                                    <select class="form-select" name="day_type" x-model="currentLeave.dayType" required>
+                                    <select class="form-select leave-form-modal" name="day_type" x-model="currentLeave.dayType" required>
                                         <option value="">Select</option>
                                         <option value="Whole Day">Whole Day</option>
                                         <option value="Half Day">Half Day</option>
@@ -60,7 +60,7 @@
                         <div class="form-group row p-1 m-0" >
                             <div class="col-sm-12 p-0 m-0">
                                 <div class="form-floating">
-                                    <textarea name="reason" class="form-control" placeholder="Reason" required style="height: 100px;" x-model="currentLeave.reason"></textarea>
+                                    <textarea name="reason" class="form-control leave-form-modal" placeholder="Reason" required style="height: 100px;" x-model="currentLeave.reason"></textarea>
                                     <label for="reason">Reason<span class="text-danger"> *</span></label>
                                     <div class="invalid-feedback">
                                         This field is required.

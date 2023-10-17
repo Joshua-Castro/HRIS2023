@@ -66,18 +66,41 @@
                                                     <template x-if="rows.status == 'Declined'">
                                                         <div class="badge badge-danger" x-text="rows.status"></div>
                                                     </template>
-                                                    {{-- <p class="dark-text fs-14" x-text="rows.status"></p> --}}
                                                 </td>
                                                 <template x-if="rows.status === 'Pending'">
-                                                    <td class="text-center" style="padding-top: 28px;">
-                                                        <button type="button" class="btn btn-sm action-btn btn-outline-primary" @click="viewRequest(indexData)">View</button>
-                                                        <button type="button" class="btn btn-sm action-btn btn-outline-info" @click="updateRequest(indexData, 'Accepted')">Accept</button>
-                                                        <button type="button" class="btn btn-sm action-btn btn-outline-danger" @click="updateRequest(indexData, 'Declined')">Decline</button>
+                                                    <td class="text-center" style="padding-top: 18px;">
+                                                        <a href="javascript:void(0);" class="text-reset text-decoration-none" id="dropdownMenuSplitButton13" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                            <i class="fa fa-lg fa-ellipsis-v"></i>
+                                                        </a>
+                                                        <div class="dropdown-menu" aria-labelledby="dropdownMenuSplitButton13">
+                                                            <a class="dropdown-item align-items-center text-reset text-decoration-none" href="javascript:void(0);" @click="viewRequest(indexData)">
+                                                                <i class="ti-eye btn-icon-prepend me-2"></i>
+                                                                View
+                                                            </a>
+                                                            <div class="dropdown-divider"></div>
+                                                            <a class="dropdown-item align-items-center text-reset text-decoration-none" href="javascript:void(0);" @click="updateRequest(indexData, 'Accepted')">
+                                                                <i class="ti-check-box btn-icon-prepend me-2"></i>
+                                                                Accept
+                                                            </a>
+                                                            <div class="dropdown-divider"></div>
+                                                            <a class="dropdown-item text-reset text-decoration-none" href="javascript:void(0);" @click="updateRequest(indexData, 'Declined')">
+                                                                <i class="ti-close btn-icon-prepend me-2"></i>
+                                                                Decline
+                                                            </a>
+                                                        </div>
                                                     </td>
                                                 </template>
                                                 <template x-if="rows.status != 'Pending'">
-                                                    <td class="text-center" style="padding-top: 28px;">
-                                                        <button type="button" class="btn btn-sm action-btn btn-outline-primary" @click="viewRequest(indexData)">View</button>
+                                                    <td class="text-center" style="padding-top: 18px;">
+                                                        <a href="javascript:void(0);" class="text-reset text-decoration-none" id="dropdownMenuSplitButton13" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                            <i class="fa fa-lg fa-ellipsis-v"></i>
+                                                        </a>
+                                                        <div class="dropdown-menu" aria-labelledby="dropdownMenuSplitButton13">
+                                                            <a class="dropdown-item align-items-center text-reset text-decoration-none" href="javascript:void(0);" @click="viewRequest(indexData)">
+                                                                <i class="ti-eye btn-icon-prepend me-2"></i>
+                                                                View
+                                                            </a>
+                                                        </div>
                                                     </td>
                                                 </template>
                                             </tr>

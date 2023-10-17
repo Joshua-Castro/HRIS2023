@@ -18,8 +18,6 @@
   <!-- endinject -->
   <!-- Plugin css for this page -->
   <link rel="stylesheet" href="{{ asset('template/vendors/font-awesome/css/font-awesome.min.css') }}" />
-  <link rel="stylesheet" href="{{ asset('template/vendors/datatables.net-bs4/dataTables.bootstrap4.css') }}">
-  <link rel="stylesheet" type="text/css" href="{{ asset('template/js/select.dataTables.min.css') }}">
   <!-- End plugin css for this page -->
   <link rel="stylesheet" href="{{ asset('template/vendors/mdi/css/materialdesignicons.min.css') }}">
   <!-- inject:css -->
@@ -33,6 +31,8 @@
   <link rel="stylesheet" href="{{ asset('template/css/slick.css') }}" />
   <link rel="stylesheet" href="{{ asset('template/css/filepond.css') }}" />
   <link rel="stylesheet" href="{{ asset('template/css/custom-styles.css') }}" />
+  <script src="{{ asset('template/js/pace.min.js') }}"></script>
+  <link rel="stylesheet" href="{{ asset('template/css/minimal.css') }}" />
 
   @stack('styles')
   <!-- Scripts -->
@@ -73,7 +73,7 @@
                 <li class="nav-item d-none d-lg-block">
                 <div id="datepicker-popup" class="input-group date datepicker navbar-date-picker">
                     <span class="input-group-addon input-group-prepend border-right">
-                    <span class="icon-calendar input-group-text calendar-icon"></span>
+                        <span class="icon-calendar input-group-text calendar-icon"></span>
                     </span>
                     <input type="text" class="form-control">
                 </div>

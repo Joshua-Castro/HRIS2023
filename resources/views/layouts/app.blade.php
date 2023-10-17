@@ -33,6 +33,8 @@
     <link rel="stylesheet" href="{{ asset('template/css/vertical-layout-light/style.css') }}">
     <!-- endinject -->
     <link rel="shortcut icon" href="{{ asset('template/images/auth/deped-logo.jpg') }}" />
+    <script src="{{ asset('template/js/pace.min.js') }}"></script>
+    <link rel="stylesheet" href="{{ asset('template/css/minimal.css') }}" />
 </head>
 <body>
     <div id="app">

@@ -1,4 +1,6 @@
-function adminDashboard() {
+'use strict';
+
+function adminDashboard(userRole) {
     return {
         // PROPERTIES
         employeeData            :   [],
@@ -70,6 +72,7 @@ function adminDashboard() {
             reason          :   '',
         },
 
+        userRole                        :   userRole,
         dateToday                       :   '',
         newEmployees                    :   '',
         reasonDecline                   :   '',
@@ -87,6 +90,7 @@ function adminDashboard() {
         breakInBtn                      :   false,
         clockOutBtn                     :   false,
         indication                      :   false,
+        webBundyLoading                 :   false,
         currentDate                     :   '',
         currentTime                     :   '',
         searchName                      :   '',
@@ -114,7 +118,7 @@ function adminDashboard() {
 
         // METHODS
         init () {
-            // INITIALIZE THE DATEPICKER WHEN THE MODAL IS SHOWN IN REQUEST LEAVE
+            // INITIALIZE THE DATEPICKER WHEN THE MODAL IS SHOWN IN REQUEST LEAVE (USER/EMPLOYEE SIDE)
             $('#leave-date', this.leaveModal).datepicker({
                 format: "yyyy-mm-dd",
                 autoclose: true,
@@ -122,7 +126,7 @@ function adminDashboard() {
                 clearBtn: true,
             }).attr("readonly", "readonly");
 
-            // INITIALIZE THE DATEPICKER WHEN THE MODAL IS SHOWN IN ADD EMPLOYEE
+            // INITIALIZE THE DATEPICKER WHEN THE MODAL IS SHOWN IN ADD EMPLOYEE (ADMIN/HR SIDE)
             $('#date-hired', this.modal).datepicker({
                 format: "yyyy-mm-dd",
                 autoclose: true,
@@ -130,7 +134,7 @@ function adminDashboard() {
                 clearBtn: true,
             }).attr("readonly", "readonly");
 
-            // INITIALIZE THE DATEPICKER WHEN THE MODAL IS SHOWN IN ADD EMPLOYEE
+            // INITIALIZE THE DATEPICKER WHEN THE MODAL IS SHOWN IN ADD EMPLOYEE (ADMIN/HR SIDE)
             $('#last-promotion', this.modal).datepicker({
                 format: "yyyy-mm-dd",
                 autoclose: true,
@@ -138,7 +142,7 @@ function adminDashboard() {
                 clearBtn: true,
             }).attr("readonly", "readonly");
 
-            // INITIALIZE THE DATEPICKER IN ATTENDANCE MONITORING
+            // INITIALIZE THE DATEPICKER IN ATTENDANCE MONITORING (USER/EMPLOYEE SIDE)
             $('#attendance-monitoring-input').datepicker({
                 format: "yyyy-mm-dd",
                 autoclose: true,
@@ -150,7 +154,7 @@ function adminDashboard() {
             });
 
             let here = this;
-            // DATE TIME PICKER PROVIDES AN EVENT HANDLER FOR VALUE CHANGE
+            // DATE TIME PICKER PROVIDES AN EVENT HANDLER FOR VALUE CHANGE (USER/EMPLOYEE SIDE)
             $('#attendance-monitoring-input').on('change', function() {
                 // GET THE CHANGED OR NEW DATE VALUE FROM THE DATE TIME PICKER
                 const date = $(this).val();
@@ -220,9 +224,10 @@ function adminDashboard() {
                 });
             }, 100);
 
+            let here = this;
             this.disableFields.forEach(function(field) {
-                $('input[name="' + field + '"]', this.modal).removeAttr('disabled');
-                $('select[name="' + field + '"]', this.modal).removeAttr('disabled');
+                $('input[name="' + field + '"]', here.modal).removeAttr('disabled');
+                $('select[name="' + field + '"]', here.modal).removeAttr('disabled');
             });
 
             $('.submit-btn').removeAttr('hidden');
@@ -242,6 +247,8 @@ function adminDashboard() {
 
         // EDIT | VIEW FUNCTION EMPLOYEE DATA
         edit : function (index, type) {
+            let here = this;
+
             $(this.modal).modal({
                 backdrop: 'static',
                 keyboard: false
@@ -288,31 +295,35 @@ function adminDashboard() {
             // DISABLE FIELDS WHEN USER WANTS ONLY VIEW FUNCTIONALITIES
             if (type === 'view') {
                 this.disableFields.forEach(function(field) {
-                    $('input[name="' + field + '"]'     ,this.modal).attr('disabled', true);
-                    $('select[name="' + field + '"]'    ,this.modal).attr('disabled', true);
+                    $('input[name="' + field + '"]'     ,here.modal).attr('disabled', true);
+                    $('select[name="' + field + '"]'    ,here.modal).attr('disabled', true);
                 });
 
+                $('input[name="last_promotion"]' ,here.modal).removeClass('bg-white');
+                $('input[name="date_hired"]'     ,here.modal).removeClass('bg-white');
                 $('.account-information'    ,this.modal).removeAttr('hidden');
                 $('.submit-btn').attr('hidden', true);
                 $('.upload-picture-btn').attr('hidden', true);
             } else {
                 this.disableFields.forEach(function(field) {
-                    $('input[name="' + field + '"]'     ,this.modal).removeAttr('disabled');
-                    $('select[name="' + field + '"]'    ,this.modal).removeAttr('disabled');
+                    $('input[name="' + field + '"]'     ,here.modal).removeAttr('disabled');
+                    $('select[name="' + field + '"]'    ,here.modal).removeAttr('disabled');
                 });
 
+                $('input[name="last_promotion"]' ,here.modal).addClass('bg-white');
+                $('input[name="date_hired"]'     ,here.modal).addClass('bg-white');
                 $('.account-information'    ,this.modal).attr('hidden', true);
                 $('.account-information'    ,this.modal).removeAttr('required');
                 $('.upload-picture-btn'     ,this.modal).removeAttr('hidden');
                 $('.submit-btn').removeAttr('hidden');
             };
 
-        $(this.passwordField).attr("type", "password");
-        $(this.togglePassword).html('<i class="fa fa-eye-slash"></i>');
-        $(this.confirmPasswordField).attr("type", "password");
-        $(this.confirmTogglePassword).html('<i class="fa fa-eye-slash"></i>');
-        $(this.employeeForm, this.modal).removeClass('was-validated');
-        $(this.modal).modal('show');
+            $(this.passwordField).attr("type", "password");
+            $(this.togglePassword).html('<i class="fa fa-eye-slash"></i>');
+            $(this.confirmPasswordField).attr("type", "password");
+            $(this.confirmTogglePassword).html('<i class="fa fa-eye-slash"></i>');
+            $(this.employeeForm, this.modal).removeClass('was-validated');
+            $(this.modal).modal('show');
         },
 
         // DELETE OR REMOVE EMPLOYEE DATA
@@ -828,6 +839,7 @@ function adminDashboard() {
                 keyboard: false
                 });
 
+            $('input[name="leave_date"]', this.leaveModal).addClass('bg-white');
             $('.hr-note', this.leaveModal).attr('hidden', true);
             $('.submit-btn', this.leaveModal).removeAttr('hidden');
             $(this.leaveReqForm)[0].reset();
@@ -860,8 +872,12 @@ function adminDashboard() {
 
             if (this.leaveData[index].status != 'Pending') {
                 $('.submit-btn', this.leaveModal).attr('hidden', true);
+                $('.leave-form-modal', this.leaveModal).attr('disabled', true);
+                $('input[name="leave_date"]', this.leaveModal).removeClass('bg-white');
             } else {
                 $('.submit-btn', this.leaveModal).removeAttr('hidden');
+                $('.leave-form-modal', this.leaveModal).removeAttr('disabled');
+                $('input[name="leave_date"]', this.leaveModal).addClass('bg-white');
             }
 
             $(this.leaveReqForm, this.leaveModal).removeClass('was-validated');
@@ -1052,6 +1068,7 @@ function adminDashboard() {
         // WEB BUNDY FUNCTION FOR EACH EMPLOYEE (CLOCK IN, BREAK OUT, BREAK IN, CLOCK OUT) (USER/EMPLOYEE VIEW)
         webBundyFunction : function (userId, type) {
             let time = this.currentTime;
+            this.webBundyLoading = true;
 
             switch (type) {
                 case 'clock-in' :
@@ -1117,10 +1134,11 @@ function adminDashboard() {
                     clockOut    :   data.clock_out  ?  data.clock_out   :   '',
                 };
 
-                this.clockInBtn    = false;
-                this.breakOutBtn   = false;
-                this.breakInBtn    = false;
-                this.clockOutBtn   = false;
+                this.clockInBtn         = false;
+                this.breakOutBtn        = false;
+                this.breakInBtn         = false;
+                this.clockOutBtn        = false;
+                this.webBundyLoading    = false;
 
                 switch (true) {
                     case !this.employeeAttendance.clockIn:
@@ -1183,10 +1201,10 @@ function adminDashboard() {
 
         // GET ALL FETCH TO LOAD IN DOM ONCE
         getAllInitialization : function () {
-            this.startClock();
-            this.getLeaveRequest();
-            this.dailyAttendance();
-            this.getEmployeeAttendance();
+                this.getLeaveRequest();
+                this.dailyAttendance();
+                this.getEmployeeAttendance();
+                this.startClock();
         },
 
         // DISPATCH EMPLOYEE DATA. USING CUSTOM EVENT SO THE DATA WILL LOAD ONLY AFTER OPENING THE TAB
