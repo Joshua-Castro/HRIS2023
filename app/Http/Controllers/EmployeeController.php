@@ -454,7 +454,7 @@ class EmployeeController extends Controller
                     ->paginate($pagination);
 
             return response()->json([
-                'users'             =>  $users,
+                'users'             =>  base64_encode(json_encode($users)),
                 'count'             =>  $totalEmployeesCount,
                 'newEmployees'      =>  $newEmployees
             ]);

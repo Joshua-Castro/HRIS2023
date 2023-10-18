@@ -16,15 +16,12 @@
   <link rel="stylesheet" href="{{ asset('template/vendors/simple-line-icons/css/simple-line-icons.css') }}">
   <link rel="stylesheet" href="{{ asset('template/vendors/css/vendor.bundle.base.css') }}">
   <!-- endinject -->
-  <!-- Plugin css for this page -->
   <link rel="stylesheet" href="{{ asset('template/vendors/font-awesome/css/font-awesome.min.css') }}" />
-  <!-- End plugin css for this page -->
   <link rel="stylesheet" href="{{ asset('template/vendors/mdi/css/materialdesignicons.min.css') }}">
-  <!-- inject:css -->
   <link rel="stylesheet" href="{{ asset('template/css/vertical-layout-light/style.css') }}">
-  <!-- endinject -->
   {{-- <link rel="shortcut icon" href="{{ asset('template/images/auth/deped-logo.jpg') }}" /> --}}
   <!-- Styles -->
+  <link rel="stylesheet" href="{{ asset('template/vendors/fullcalendar/fullcalendar.min.css') }}">
   <link rel="stylesheet" href="{{ asset('template/css/select2.min.css') }}" />
   <link rel="stylesheet" href="{{ asset('template/css/select2-bootstrap-5-theme.min.css') }}" />
   <link rel="stylesheet" href="{{ asset('template/css/select2-bootstrap-5-theme.rtl.min.css') }}" />
@@ -196,7 +193,9 @@
   <script src="{{ asset('template/js/slick.min.js') }}"></script>
   <script src="{{ asset('template/vendors/chart.js/Chart.min.js') }}"></script>
   <script src="{{ asset('template/js/Chart.roundedBarCharts.js') }}"></script>
+  <script src="{{ asset('template/vendors/fullcalendar/fullcalendar.min.js') }}"></script>
   <script src="{{ asset('template/js/filepond.js') }}"></script>
+  <script src="{{ asset('template/js/calendar.js') }}"></script>
   {{-- <script type="text/javascript" src="//cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.min.js"></script> --}}
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
   {{-- <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script> --}}
