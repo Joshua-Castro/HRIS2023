@@ -44,6 +44,7 @@
                       $('#calendar').fullCalendar('removeEvents', event._id); // REMOVE THE EVENT FROM THE CALENDAR.
                     });
                 },
+                event1Color : '#3B71CA',
                 events : [{
                     title: 'All Day Event',
                     start: '2017-07-08'
