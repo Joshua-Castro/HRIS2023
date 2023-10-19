@@ -388,9 +388,15 @@ class EmployeeController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Employee $employee)
+    public function show(Request $request, Employee $employee)
     {
         try {
+            $request->validate([
+                'name'          =>  'nullable|string', // Allow null or string
+                'status'        =>  'nullable|in:all,Male,Female', // Allow specific values
+                'pagination'    =>  'nullable|integer', // Allow null or integer
+            ]);
+
             $totalEmployeesCount = DB::table('employees')
                 ->whereNull('deleted_at')
                 ->count();
@@ -401,9 +407,9 @@ class EmployeeController extends Controller
                             ->whereNull('deleted_at')
                             ->count();
 
-            $status         =   request('status');
-            $name           =   request('name');
-            $pagination     =   request('pagination');
+            $status         =   $request->input('status');
+            $name           =   $request->input('name');
+            $pagination     =   $request->input('pagination');
             $usersQuery     =   Employee::query();
 
             if ($name) {

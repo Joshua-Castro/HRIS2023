@@ -1102,10 +1102,12 @@ function adminDashboard(userRole) {
                 },
             }).then((response) => {
                 Swal.fire({
-                    title               : response.message,
-                    icon                : 'success',
-                    timer               : 1000,
-                    showConfirmButton   : false,
+                    title                   :   response.message,
+                    icon                    :   'success',
+                    timer                   :   1000,
+                    showConfirmButton       :   false,
+                    allowEscapeKey          :   false,
+                    allowOutsideClick       :   false,
                 });
                 this.dailyAttendance();
             }).catch((error) => {

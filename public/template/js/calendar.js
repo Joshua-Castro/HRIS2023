@@ -44,7 +44,7 @@
                       $('#calendar').fullCalendar('removeEvents', event._id); // REMOVE THE EVENT FROM THE CALENDAR.
                     });
                 },
-                event1Color : '#3B71CA',
+                // event1Color : '#3B71CA',
                 events : [{
                     title: 'All Day Event',
                     start: '2017-07-08'
@@ -52,7 +52,9 @@
                     {
                     title: 'Long Event',
                     start: '2017-07-01',
-                    end: '2017-07-07'
+                    end: '2017-07-07',
+                    description: 'This is an all-day event.',
+                    color: '#FF5733'
                     },
                     {
                     id: 999,

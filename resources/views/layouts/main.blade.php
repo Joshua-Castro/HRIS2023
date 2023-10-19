@@ -30,6 +30,7 @@
   <link rel="stylesheet" href="{{ asset('template/css/custom-styles.css') }}" />
   <script src="{{ asset('template/js/pace.min.js') }}"></script>
   <link rel="stylesheet" href="{{ asset('template/css/minimal.css') }}" />
+  <link rel="stylesheet" href="{{ asset('template/vendors/tempusdominus-bootstrap-4/tempusdominus-bootstrap-4.min.css') }}">
 
   @stack('styles')
   <!-- Scripts -->
@@ -179,7 +180,9 @@
 
   <!-- plugins:js -->
   <script src="{{ asset('template/vendors/js/vendor.bundle.base.js') }}"></script>
+  <script src="{{ asset('template/vendors/x-editable/bootstrap-editable.min.js') }}"></script>
   <script src="{{ asset('template/vendors/moment/moment.js') }}"></script>
+  <script src="{{ asset('template/vendors/tempusdominus-bootstrap-4/tempusdominus-bootstrap-4.js') }}"></script>
   <script src="{{ asset('template/vendors/bootstrap-datepicker/bootstrap-datepicker.min.js') }}"></script>
   <script src="{{ asset('template/vendors/progressbar.js/progressbar.min.js') }}"></script>
   <script src="{{ asset('template/js/off-canvas.js') }}"></script>

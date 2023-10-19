@@ -135,8 +135,20 @@ function attendance() {
                     });
                     $(component.attendanceModal).modal('hide');
             }).catch((error) => {
-                if (error.responseJSON && error.responseJSON.error) {
-
+                console.log(error);
+                if (error.responseJSON && error.responseJSON.errors) {
+                    if (error.responseJSON.errors['date-to']) {
+                        Swal.fire({
+                            title                   :   'ERROR DATE RANGE FORMAT',
+                            html                    :   'The <b class="text-decoration-underline">Date To: </b> field must be a date after or equal to <b class="text-decoration-underline">Date From: </b>',
+                            icon                    :   'error',
+                            timer                   :   5000,
+                            showConfirmButton       :   false,
+                            allowEscapeKey          :   false,
+                            allowOutsideClick       :   false,
+                        });
+                        this.attendanceLoading      = false;
+                    }
                 } else {
                     // Handle other error scenarios
                     // ...

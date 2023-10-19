@@ -220,11 +220,18 @@ class AttendanceController extends Controller
     public function getAllAttendance(Request $request)
     {
         try {
-            $employeeNumberName       =   request('employee-number-hidden');
-            $pagination               =   request('attendance-pagination-hidden');
+            $this->validate($request, [
+                'employee-number-hidden'        =>  'nullable|string',
+                'attendance-pagination-hidden'  =>  'nullable|integer',
+                'date-from'                     =>  'nullable|date',
+                'date-to'                       =>  'nullable|date|after_or_equal:date-from',
+            ]);
+
+            $employeeNumberName       =   $request->input('employee-number-hidden');
+            $pagination               =   $request->input('attendance-pagination-hidden');
             $attendanceQuery          =   Attendance::query();
-            $dateFrom                 =   !empty(request('date-from')) ? request('date-from')   : '';
-            $dateTo                   =   !empty(request('date-to'))   ? request('date-to')     : $dateFrom;
+            $dateFrom                 =   !empty($request->input('date-from')) ? $request->input('date-from')   : '';
+            $dateTo                   =   !empty($request->input('date-to'))   ? $request->input('date-to')     : $dateFrom;
 
             if (!empty($employeeNumberName)) {
                 $attendanceQuery->leftJoin('employees as e', 'e.id', '=', 'attendances.employee_id');

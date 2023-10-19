@@ -1,7 +1,7 @@
 @extends('layouts.main')
 
 @section('content')
-<div class="row">
+<div class="row" x-data="training()">
     <div class="col-12 grid-margin stretch-card">
         <div class="card card-rounded">
             <div class="card-body">
@@ -15,7 +15,7 @@
                             <i class="ti ti-sm ti-filter me-2" style="font-size: 14px;"></i>
                             Filter
                         </button>
-                        <button class="btn btn-sm btn-outline-primary form-control form-control-sm btn-icon fw-bold me-1" type="button" style="border-radius: 5px; width: 150px;">
+                        <button class="btn btn-sm btn-outline-primary form-control form-control-sm btn-icon fw-bold me-1" type="button" style="border-radius: 5px; width: 150px;" @click="createTraining">
                             Create
                         </button>
                     </div>
