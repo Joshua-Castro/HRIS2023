@@ -40,10 +40,14 @@
                         </div>
                     </div>
                     <div class="col-lg-6 col-md-12">
-                        <div class="form-floating">
-                            <input type="text" name="training-end-time" id="training-end-time" class="form-control form-control-sm training-time" placeholder="Time End: ">
+                        <div class="form-floating date" id="timePicker">
+                            <input type="text" name="training-end-time" id="training-end-time" class="form-control form-control-sm training-time timePicker" placeholder="Time End: ">
                             <label for="training-end-time">Time End: </label>
                         </div>
+                        {{-- <div class="input-group date" id="timePicker">
+                            <input type="text" class="form-control timePicker">
+                            <span class="input-group-addon"><i class="fa fa-clock-o" aria-hidden="true"></i></span>
+                        </div> --}}
                     </div>
                 </div>
             </div>

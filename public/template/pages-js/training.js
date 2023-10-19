@@ -17,9 +17,12 @@ function training() {
                 clearBtn: true,
             }).attr("readonly", "readonly");
 
-            // TIME PICKER TRAINING TIME
-            $('.training-time').datetimepicker({
-                format: 'LT'
+            var firstOpen = true;
+            var time;
+
+            $('#training-end-time').datetimepicker({
+                useCurrent: true,
+                format: "hh:mm A"
             });
 
         },

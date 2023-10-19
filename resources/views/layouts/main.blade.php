@@ -25,12 +25,12 @@
   <link rel="stylesheet" href="{{ asset('template/css/select2.min.css') }}" />
   <link rel="stylesheet" href="{{ asset('template/css/select2-bootstrap-5-theme.min.css') }}" />
   <link rel="stylesheet" href="{{ asset('template/css/select2-bootstrap-5-theme.rtl.min.css') }}" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.47/css/bootstrap-datetimepicker.min.css">
   <link rel="stylesheet" href="{{ asset('template/css/slick.css') }}" />
   <link rel="stylesheet" href="{{ asset('template/css/filepond.css') }}" />
   <link rel="stylesheet" href="{{ asset('template/css/custom-styles.css') }}" />
   <script src="{{ asset('template/js/pace.min.js') }}"></script>
   <link rel="stylesheet" href="{{ asset('template/css/minimal.css') }}" />
-  <link rel="stylesheet" href="{{ asset('template/vendors/tempusdominus-bootstrap-4/tempusdominus-bootstrap-4.min.css') }}">
 
   @stack('styles')
   <!-- Scripts -->
@@ -77,26 +77,26 @@
                 </div>
                 </li>
                 <li class="nav-item dropdown d-none d-lg-block user-dropdown">
-                <a class="nav-link" id="UserDropdown" href="#" data-bs-toggle="dropdown" aria-expanded="false">
+                    <a class="nav-link" id="UserDropdown" href="#" data-bs-toggle="dropdown" aria-expanded="false">
                     <img class="img-xs rounded-circle" src="{{ asset($image) }}" alt="Profile image" style="width: 40px; height: 40px;"> </a>
-                <div class="dropdown-menu dropdown-menu-right navbar-dropdown" aria-labelledby="UserDropdown">
-                    <div class="dropdown-header text-center">
-                    <img class="img-xs rounded-circle" src="{{ asset($image) }}" alt="Profile image" style="width: 40px; height: 40px;">
-                    <p class="mb-0 mt-3 font-weight-semibold">{{ Auth::user()->name }}</p>
-                    <p class="fw-light text-muted mb-0">{{ Auth::user()->email }}</p>
+                    <div class="dropdown-menu dropdown-menu-right navbar-dropdown" aria-labelledby="UserDropdown">
+                        <div class="dropdown-header text-center">
+                            <img class="img-xs rounded-circle" src="{{ asset($image) }}" alt="Profile image" style="width: 40px; height: 40px;">
+                            <p class="mb-0 mt-3 font-weight-semibold">{{ Auth::user()->name }}</p>
+                            <p class="fw-light text-muted mb-0">{{ Auth::user()->email }}</p>
+                        </div>
+                        <a class="dropdown-item"><i class="dropdown-item-icon ti ti-user text-primary me-3" style="font-size: 18px;"></i> Profile</a>
+                        <a class="dropdown-item"><i class="dropdown-item-icon ti ti-pencil-alt text-primary me-3" style="font-size: 18px;"></i> Activity</a>
+                        <a class="dropdown-item"><i class="dropdown-item-icon ti ti-help text-primary me-3" style="font-size: 18px;"></i> FAQ</a>
+                        <a class="dropdown-item" href="{{ route('logout') }}" onclick="event.preventDefault();
+                            document.getElementById('logout-form').submit();">
+                            <i class="dropdown-item-icon ti ti-share-alt text-primary me-3" style="font-size: 18px;"></i>
+                            {{ __('Logout') }}
+                        </a>
+                        <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
+                            @csrf
+                        </form>
                     </div>
-                    <a class="dropdown-item"><i class="dropdown-item-icon ti ti-user text-primary me-3" style="font-size: 18px;"></i> Profile</a>
-                    <a class="dropdown-item"><i class="dropdown-item-icon ti ti-pencil-alt text-primary me-3" style="font-size: 18px;"></i> Activity</a>
-                    <a class="dropdown-item"><i class="dropdown-item-icon ti ti-help text-primary me-3" style="font-size: 18px;"></i> FAQ</a>
-                    <a class="dropdown-item" href="{{ route('logout') }}" onclick="event.preventDefault();
-                                                            document.getElementById('logout-form').submit();">
-                                                            <i class="dropdown-item-icon ti ti-share-alt text-primary me-3" style="font-size: 18px;"></i>
-                    {{ __('Logout') }}
-                </a>
-                <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
-                    @csrf
-                </form>
-                </div>
                 </li>
             </ul>
             <button class="navbar-toggler navbar-toggler-right d-lg-none align-self-center" type="button" data-bs-toggle="offcanvas">
@@ -180,9 +180,9 @@
 
   <!-- plugins:js -->
   <script src="{{ asset('template/vendors/js/vendor.bundle.base.js') }}"></script>
-  <script src="{{ asset('template/vendors/x-editable/bootstrap-editable.min.js') }}"></script>
   <script src="{{ asset('template/vendors/moment/moment.js') }}"></script>
-  <script src="{{ asset('template/vendors/tempusdominus-bootstrap-4/tempusdominus-bootstrap-4.js') }}"></script>
+  {{-- <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.1.3/js/bootstrap.min.js"></script> --}}
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.47/js/bootstrap-datetimepicker.min.js"></script>
   <script src="{{ asset('template/vendors/bootstrap-datepicker/bootstrap-datepicker.min.js') }}"></script>
   <script src="{{ asset('template/vendors/progressbar.js/progressbar.min.js') }}"></script>
   <script src="{{ asset('template/js/off-canvas.js') }}"></script>
