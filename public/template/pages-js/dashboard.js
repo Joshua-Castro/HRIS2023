@@ -125,7 +125,7 @@ function adminDashboard(userRole) {
                 autoclose: true,
                 todayHighlight: true,
                 clearBtn: true,
-            }).attr("readonly", "readonly");
+            });
 
             // INITIALIZE THE DATEPICKER WHEN THE MODAL IS SHOWN IN ADD EMPLOYEE (ADMIN/HR SIDE)
             $('#date-hired', this.modal).datepicker({
@@ -133,7 +133,7 @@ function adminDashboard(userRole) {
                 autoclose: true,
                 todayHighlight: true,
                 clearBtn: true,
-            }).attr("readonly", "readonly");
+            });
 
             // INITIALIZE THE DATEPICKER WHEN THE MODAL IS SHOWN IN ADD EMPLOYEE (ADMIN/HR SIDE)
             $('#last-promotion', this.modal).datepicker({
@@ -141,7 +141,7 @@ function adminDashboard(userRole) {
                 autoclose: true,
                 todayHighlight: true,
                 clearBtn: true,
-            }).attr("readonly", "readonly");
+            });
 
             // INITIALIZE THE DATEPICKER IN ATTENDANCE MONITORING (USER/EMPLOYEE SIDE)
             $('#attendance-monitoring-input').datepicker({
@@ -833,7 +833,7 @@ function adminDashboard(userRole) {
                 autoclose: true,
                 todayHighlight: true,
                 clearBtn: true,
-            }).attr("readonly", "readonly");
+            });
 
             $(this.leaveModal).modal({
                 backdrop: 'static',

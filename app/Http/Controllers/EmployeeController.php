@@ -156,27 +156,26 @@ class EmployeeController extends Controller
      */
     public function store(Request $request)
     {
-
-        $request->validate([
-            'lastName'         =>  'required',
-            'firstName'        =>  'required',
-            'position'         =>  'required',
-            'lastPromotion'    =>  'required',
-            'stationCode'      =>  'required',
-            'controlNumber'    =>  'required',
-            'employeeNumber'   =>  'required',
-            'schoolCode'       =>  'required',
-            'itemNumber'       =>  'required',
-            'employeeStatus'   =>  'required',
-            'salaryGrade'      =>  'required',
-            'dateHired'        =>  'required',
-            'sss'              =>  'required',
-            'pagIbig'          =>  'required',
-            'philHealth'       =>  'required',
-            'userImage'        =>  'required|string'
-        ]);
-
         try {
+            $request->validate([
+                'lastName'         =>  'required',
+                'firstName'        =>  'required',
+                'position'         =>  'required',
+                'lastPromotion'    =>  'required|date_format:Y-m-d',
+                'stationCode'      =>  'required',
+                'controlNumber'    =>  'required',
+                'employeeNumber'   =>  'required',
+                'schoolCode'       =>  'required',
+                'itemNumber'       =>  'required',
+                'employeeStatus'   =>  'required',
+                'salaryGrade'      =>  'required',
+                'dateHired'        =>  'required|date_format:Y-m-d',
+                'sss'              =>  'required',
+                'pagIbig'          =>  'required',
+                'philHealth'       =>  'required',
+                'userImage'        =>  'required|string'
+            ]);
+
             Validator::make($request->all(), [
                 'email'     => ['required', 'string', 'max:255', 'unique:users'],
                 'password'  => ['required', 'string', 'min:8', 'confirmed'],

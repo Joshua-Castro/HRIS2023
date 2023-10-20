@@ -111,7 +111,7 @@
                                     <div class="col-sm-12 p-0 m-0">
                                         <div class="form-floating">
                                             {{-- <input type="text" name="last_promotion" class="form-control" placeholder="Last Promotion" x-model="current.lastPromotion" required> --}}
-                                            <input type="text" id="last-promotion" name="last_promotion" class="form-control bg-white" placeholder="Last Promotion" x-model="current.lastPromotion" required>
+                                            <input type="text" id="last-promotion" name="last_promotion" class="form-control bg-white" placeholder="Last Promotion" x-model="current.lastPromotion" required data-inputmask-placeholder="YYYY-MM-DD" data-inputmask="'alias': 'datetime'" data-inputmask-inputformat="yyyy-mm-dd">
                                             <label for="last_promotion">Last Promotion<span class="text-danger"> *</span></label>
                                             <div class="invalid-feedback">
                                                 This field is required.
@@ -248,7 +248,7 @@
                                 <div class="form-group row p-1 m-0" >
                                     <div class="col-sm-12 p-0 m-0">
                                         <div class="form-floating">
-                                            <input type="text" id="date-hired" name="date_hired" class="form-control bg-white" placeholder="Date Hired" x-model="current.dateHired" required>
+                                            <input type="text" id="date-hired" name="date_hired" class="form-control bg-white" placeholder="Date Hired" x-model="current.dateHired" required data-inputmask-placeholder="YYYY-MM-DD" data-inputmask="'alias': 'datetime'" data-inputmask-inputformat="yyyy-mm-dd">
                                             <label for="date_hired">Date Hired<span class="text-danger"> *</span></label>
                                             <div class="invalid-feedback">
                                                 This field is required.

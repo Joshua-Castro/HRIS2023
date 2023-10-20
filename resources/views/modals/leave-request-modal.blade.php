@@ -10,7 +10,7 @@
                         <div class="form-group row p-1 m-0" >
                             <div class="col-sm-12 p-0 m-0">
                                 <div class="form-floating">
-                                    <input type="text" name="leave_date" class="form-control bg-white leave-form-modal" id="leave-date" placeholder="Leave Date" x-model="currentLeave.leaveDate" required>
+                                    <input type="text" name="leave_date" class="form-control bg-white leave-form-modal" id="leave-date" placeholder="Leave Date" x-model="currentLeave.leaveDate" required data-inputmask-placeholder="YYYY-MM-DD" data-inputmask="'alias': 'datetime'" data-inputmask-inputformat="yyyy-mm-dd">
                                     <label for="last_name">Leave Date<span class="text-danger"> *</span></label>
                                     <div class="invalid-feedback">
                                         This field is required.

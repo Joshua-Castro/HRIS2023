@@ -16,11 +16,13 @@ return new class extends Migration
             $table->string('cost')->nullable();
             $table->string('title')->nullable();
             $table->string('status')->nullable();
+            $table->time('end_time')->nullable();
             $table->string('duration')->nullable();
+            $table->time('start_time')->nullable();
             $table->string('location')->nullable();
             $table->text('description')->nullable();
-            $table->dateTime('end_date_time')->nullable();
-            $table->dateTime('start_date_time')->nullable();
+            $table->date('end_date_time')->nullable();
+            $table->date('start_date_time')->nullable();
             $table->string('trainer_instructor')->nullable();
 
             $table->integer('created_by')->nullable();

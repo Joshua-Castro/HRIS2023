@@ -17,7 +17,7 @@
   <link rel="stylesheet" href="{{ asset('template/vendors/css/vendor.bundle.base.css') }}">
   <!-- endinject -->
   <link rel="stylesheet" href="{{ asset('template/vendors/font-awesome/css/font-awesome.min.css') }}" />
-  <link rel="stylesheet" href="{{ asset('template/vendors/mdi/css/materialdesignicons.min.css') }}">
+  {{-- <link rel="stylesheet" href="{{ asset('template/vendors/mdi/css/materialdesignicons.min.css') }}"> --}}
   <link rel="stylesheet" href="{{ asset('template/css/vertical-layout-light/style.css') }}">
   {{-- <link rel="shortcut icon" href="{{ asset('template/images/auth/deped-logo.jpg') }}" /> --}}
   <!-- Styles -->
@@ -25,7 +25,8 @@
   <link rel="stylesheet" href="{{ asset('template/css/select2.min.css') }}" />
   <link rel="stylesheet" href="{{ asset('template/css/select2-bootstrap-5-theme.min.css') }}" />
   <link rel="stylesheet" href="{{ asset('template/css/select2-bootstrap-5-theme.rtl.min.css') }}" />
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.47/css/bootstrap-datetimepicker.min.css">
+  <link rel="stylesheet" href="{{ asset('template/vendors/bootstrap-datepicker/bootstrap-datepicker.min.css') }}">
+  <link rel="stylesheet" href="{{ asset('template/css/bootstrap-datetimepicker.min.css') }}" />
   <link rel="stylesheet" href="{{ asset('template/css/slick.css') }}" />
   <link rel="stylesheet" href="{{ asset('template/css/filepond.css') }}" />
   <link rel="stylesheet" href="{{ asset('template/css/custom-styles.css') }}" />
@@ -181,8 +182,6 @@
   <!-- plugins:js -->
   <script src="{{ asset('template/vendors/js/vendor.bundle.base.js') }}"></script>
   <script src="{{ asset('template/vendors/moment/moment.js') }}"></script>
-  {{-- <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.1.3/js/bootstrap.min.js"></script> --}}
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.47/js/bootstrap-datetimepicker.min.js"></script>
   <script src="{{ asset('template/vendors/bootstrap-datepicker/bootstrap-datepicker.min.js') }}"></script>
   <script src="{{ asset('template/vendors/progressbar.js/progressbar.min.js') }}"></script>
   <script src="{{ asset('template/js/off-canvas.js') }}"></script>
@@ -191,6 +190,7 @@
   <script src="{{ asset('template/js/settings.js') }}"></script>
   <script src="{{ asset('template/js/todolist.js') }}"></script>
   <script src="{{ asset('template/js/jquery.cookie.js') }}" type="text/javascript"></script>
+  <script src="{{ asset('template/vendors/bootstrap-datetimepicker/datetimepicker.min.js') }}"></script>
   <script src="{{ asset('template/js/dashboard.js') }}"></script>
   <script src="{{ asset('template/js/select2.min.js') }}"></script>
   <script src="{{ asset('template/js/slick.min.js') }}"></script>
@@ -199,9 +199,9 @@
   <script src="{{ asset('template/vendors/fullcalendar/fullcalendar.min.js') }}"></script>
   <script src="{{ asset('template/js/filepond.js') }}"></script>
   <script src="{{ asset('template/js/calendar.js') }}"></script>
-  {{-- <script type="text/javascript" src="//cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.min.js"></script> --}}
+  <script src="{{ asset('template/vendors/inputmask/jquery.inputmask.bundle.js') }}"></script>
+  <script src="{{ asset('template/js/inputmask.js') }}"></script>
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-  {{-- <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script> --}}
   @stack('scripts')
   <!-- End js for this-->
 </body>

@@ -6,7 +6,7 @@
                 header      : {
                     left      : 'prev,next today',
                     center    : 'title',
-                    right     : 'month,basicWeek,basicDay,listMonth'
+                    right     : 'month,basicWeek,basicDay'
                 },
                 initialView     : 'dayGridMonth',
                 defaultDate     :   '2017-07-18',
@@ -74,8 +74,8 @@
                     },
                     {
                     title: 'Meeting',
-                    start: '2017-07-12T10:30:00',
-                    end: '2017-07-12T12:30:00'
+                    start: '2017-06-26T07:30:00',
+                    end: '2017-06-27T14:00:00'
                     },
                     {
                     title: 'Lunch',

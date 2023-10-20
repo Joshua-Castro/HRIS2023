@@ -5,6 +5,7 @@ use App\Http\Controllers\LeaveController;
 use App\Http\Controllers\EmployeeController;
 use App\Http\Controllers\FileUploadController;
 use App\Http\Controllers\AttendanceController;
+use App\Http\Controllers\TrainingController;
 
 
 /*
@@ -69,6 +70,7 @@ Route::prefix('attendance')->as('attendance.')->group(function () {
 
 // TRAINING/SEMINARS CONTROLLER ROUTES
 Route::prefix('training')->as('training.')->group(function () {
+    Route::post('/store',   [TrainingController::class, 'store'])->name('store');
 
 });
 
