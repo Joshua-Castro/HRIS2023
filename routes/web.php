@@ -70,7 +70,8 @@ Route::prefix('attendance')->as('attendance.')->group(function () {
 
 // TRAINING/SEMINARS CONTROLLER ROUTES
 Route::prefix('training')->as('training.')->group(function () {
-    Route::post('/store',   [TrainingController::class, 'store'])->name('store');
+    Route::post('/store'    ,[TrainingController::class, 'store'])->name('store');
+    Route::get('/show'      ,[TrainingController::class, 'show'])->name('show');
 
 });
 

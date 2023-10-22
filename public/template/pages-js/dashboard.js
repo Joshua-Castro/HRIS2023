@@ -473,7 +473,7 @@ function adminDashboard(userRole) {
                 url         :   route("employee.show"),
                 data        :   $('#users-search-form').serializeArray(),
             }).then((response) => {
-                var data = JSON.parse(atob(response.users));
+                var data = response.users ? JSON.parse(atob(response.users)) : "";
                 var users = data['data'],
                     navlinks = data['links'];
 

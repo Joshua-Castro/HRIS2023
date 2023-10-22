@@ -80,7 +80,7 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-sm btn-outline-danger" data-bs-dismiss="modal">Cancel</button>
-                <button type="button" class="btn btn-sm btn-outline-primary submit-btn" @click="submitTraining">Apply Filter</button>
+                <button type="button" class="btn btn-sm btn-outline-primary submit-btn" @click="submitTraining" :disabled="buttonDisabled">Submit</button>
             </div>
         </div>
     </div>

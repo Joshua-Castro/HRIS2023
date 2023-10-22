@@ -36,7 +36,6 @@ class TrainingController extends Controller
     public function store(Request $request)
     {
         try {
-
             $request->validate([
                 'trainingTitle'         =>  'required',
                 'trainingDesc'          =>  'required',
@@ -47,22 +46,50 @@ class TrainingController extends Controller
                 'trainingEndTime'       =>  'required',
             ]);
 
-            $trainingStartDate  =   !empty($request->input('trainingStartDate'))       ?    $request->input('trainingStartDate')    :   '';
-            $trainingEndDate    =   !empty($request->input('trainingEndDate'))         ?    $request->input('trainingEndDate')      :   '';
-            $trainingStartTime  =   !empty($request->input('trainingStartTime'))       ?    $request->input('trainingStartTime')    :   '';
-            $trainingEndTime    =   !empty($request->input('trainingEndTime'))         ?    $request->input('trainingEndTime')      :   '';
+            $id = !empty($request->trainingRecordId) ? $request->trainingRecordId : 0;
 
-            $startDate  =   Carbon::parse($trainingStartDate);
-            $endDate    =   Carbon::parse($trainingEndDate);
-            $endTime    =   Carbon::createFromFormat('h:i A', $trainingEndTime);
-            $startTime  =   Carbon::createFromFormat('h:i A', $trainingStartTime);
+            // INITIALIZE AND SET THE PROPER DATA TYPE OF EACH COLUMN. DATE OR TIME
+            $trainingStartDate      =   !empty($request->input('trainingStartDate'))       ?    Carbon::parse($request->input('trainingStartDate'))                         :   '';
+            $trainingEndDate        =   !empty($request->input('trainingEndDate'))         ?    Carbon::parse($request->input('trainingEndDate'))                           :   '';
+            $trainingStartTime      =   !empty($request->input('trainingStartTime'))       ?    Carbon::createFromFormat('h:i A', $request->input('trainingStartTime'))     :   '';
+            $trainingEndTime        =   !empty($request->input('trainingEndTime'))         ?    Carbon::createFromFormat('h:i A', $request->input('trainingEndTime'))       :   '';
 
-            $durationInDays     =   $startDate->diffInDays($endDate);
-            $durationInHours    =   $startTime->diffInHours($endTime);
-            $totalDays          =   $durationInDays + 1;
-            $totalHours         =   $durationInHours * $totalDays;
+            // CALCULATION TO GET THE TOTAL DAYS AND HOURS OR DURATION OF THE TRAINING
+            $durationInDays         =   $trainingStartDate->diffInDays($trainingEndDate);
+            $durationInHours        =   $trainingStartTime->diffInHours($trainingEndTime);
+            $totalDays              =   $durationInDays + 1;
+            $totalHours             =   $durationInHours * $totalDays;
 
-            dd($durationInDays, $durationInHours, $totalDays, $totalHours);
+            $data = [
+                'start_date_time'           =>  !empty($trainingStartDate)                          ?    $trainingStartDate                                         :   '',
+                'end_date_time'             =>  !empty($trainingEndDate)                            ?    $trainingEndDate                                           :   '',
+                'start_time'                =>  !empty($trainingStartTime)                          ?    $trainingStartTime                                         :   '',
+                'end_time'                  =>  !empty($trainingEndTime)                            ?    $trainingEndTime                                           :   '',
+                'location'                  =>  !empty($request->input('trainingLocation'))         ?    $request->input('trainingLocation')                        :   '',
+                'description'               =>  !empty($request->input('trainingDesc'))             ?    $request->input('trainingDesc')                            :   '',
+                'duration'                  =>  (!empty($totalDays) && !empty($totalHours))         ?    $totalDays . " Day/s and " . $totalHours . " Hour/s "      :   '',
+                'title'                     =>  !empty($request->input('trainingTitle'))            ?    $request->input('trainingTitle')                           :   '',
+                'cost'                      =>  '',
+                'status'                    =>  '',
+                'trainer_instructor'        =>  '',
+            ];
+
+            if (empty($id)) {
+                // STORE DATA TO 'trainings' TABLE
+                $data['created_at']     =   now();
+                $data['created_by']     =   Auth::id();
+
+                DB::table('trainings')->insert($data);
+
+                return response()->json(['message' => 'Successfully Added'], 200);
+            } else {
+                // UPDATE DATA WHENEVER THE $id IS NOT EMPTY
+                $data['updated_by']     =   Auth::id();
+                $data['updated_at']     =   now();
+                DB::table('trainings')->where('id', '=', $id)->update($data);
+
+                return response()->json(['message' => 'Successfully Updated'], 200);
+            }
         } catch (QueryException $e) {
             $errorMessage = $e->getMessage();
             return response()->json(['message' => $errorMessage], 500);
@@ -74,7 +101,14 @@ class TrainingController extends Controller
      */
     public function show(Training $training)
     {
-        //
+        try {
+            $data = DB::table('trainings')
+                        ->whereNull('deleted_at')
+                        ->get();
+            return response()->json(['training' => base64_encode(json_encode($data))]);
+        } catch (QueryException $e) {
+
+        }
     }
 
     /**

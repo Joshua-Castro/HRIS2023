@@ -15,9 +15,11 @@ function training() {
             trainingEndTime     :   '',
         },
 
-        trainingModal           :   '#training-modal',
-        trainingLoading         :   false,
+        trainingModal                   :   '#training-modal',
+        trainingLoading                 :   false,
         csrfToken                       :   $('meta[name="csrf-token"]').attr('content'),
+        buttonDisabled                  :   false,
+        trainingLoading                 :   false,
 
 
 
@@ -50,7 +52,8 @@ function training() {
 
         // FORM ON SUBMIT EITHER STORE | UPDATE EMPLOYEE DATA
         submitTraining : function () {
-            const trainingForm              =   $('#training-form'    ,this.trainingModal)[0];
+            this.buttonDisabled = true;
+            const trainingForm                          =   $('#training-form'    ,this.trainingModal)[0];
             this.currentTraining.trainingStartDate      =   $('input[name="training-start"]'            ,this.trainingModal).val();
             this.currentTraining.trainingEndDate        =   $('input[name="training-end"]'              ,this.trainingModal).val();
             this.currentTraining.trainingStartTime      =   $('input[name="training-start-time"]'       ,this.trainingModal).val();
@@ -61,7 +64,6 @@ function training() {
             $(trainingForm).removeClass('was-validated').addClass('was-validated');
 
             if (trainingForm.checkValidity()) {
-
                 $.ajax({
                     type        : "POST",
                     url         : route("training.store"),
@@ -76,8 +78,10 @@ function training() {
                         timer               :   1000,
                         showConfirmButton   :   false,
                     });
+                    this.buttonDisabled = false;
 
                 }).catch((error) => {
+                    this.buttonDisabled = false;
                     if (error.responseJSON && error.responseJSON.error) {
 
                     } else {
@@ -87,6 +91,24 @@ function training() {
                 });
             }
         },
+
+        // FETCH OR GET ALL TRAINING'S DATA
+        getTraining : function () {
+            this.trainingLoading = true;
+
+            $.ajax({
+                type        : "GET",
+                url         : route("training.show"),
+                data        : {
+                    _token: this.csrfToken,
+                },
+            }).then((response) => {
+                this.trainingData = response.training ? JSON.parse(atob(response.training)) : "";
+            }).catch((error) => {
+                Swal.fire('Something error! Please refrain to this error : Fetching Training','error');
+            });
+        }
+
 
     }
 }
