@@ -28,8 +28,10 @@ function leaveRequest() {
                 type        :   "GET",
                 url         :   route("leave.show.all"),
             }).then((response) => {
-                this.leaveData         = response.data;
-                this.leaveRequestCount = response.count;
+                const leaveData     = Object.keys(response)[0];
+                const leaveCount    = Object.keys(response)[1];
+                this.leaveData         = response[leaveData] ? JSON.parse(atob(response[leaveData])) : "";
+                this.leaveRequestCount = response[leaveCount];
                 this.adminLeaveLoading = false;
 
             }).catch((error) => {

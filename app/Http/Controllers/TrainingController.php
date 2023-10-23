@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Training;
+use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
@@ -67,7 +68,7 @@ class TrainingController extends Controller
                 'end_time'                  =>  !empty($trainingEndTime)                            ?    $trainingEndTime                                           :   '',
                 'location'                  =>  !empty($request->input('trainingLocation'))         ?    $request->input('trainingLocation')                        :   '',
                 'description'               =>  !empty($request->input('trainingDesc'))             ?    $request->input('trainingDesc')                            :   '',
-                'duration'                  =>  (!empty($totalDays) && !empty($totalHours))         ?    $totalDays . " Day/s and " . $totalHours . " Hour/s "      :   '',
+                'duration'                  =>  (!empty($totalDays) && !empty($totalHours))         ?    $totalDays . " Day/s. " . $durationInHours . " Hour/s a day"   :   '',
                 'title'                     =>  !empty($request->input('trainingTitle'))            ?    $request->input('trainingTitle')                           :   '',
                 'cost'                      =>  '',
                 'status'                    =>  '',
@@ -99,13 +100,31 @@ class TrainingController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Training $training)
+    public function show(Request $request)
     {
         try {
-            $data = DB::table('trainings')
+            $this->validate($request, [
+                'training-title'                =>  'nullable|string',
+                'training-pagination-hidden'    =>  'nullable|integer',
+            ]);
+
+            $trainingTitle            =   $request->input('training-title');
+            $pagination               =   $request->input('training-pagination-hidden');
+            $trainingQuery            =   Training::query();
+
+            if (!empty($trainingTitle)) {
+                $trainingQuery->where(function ($query) use ($trainingTitle) {
+                    $query->whereRaw("title like ?", ["%{$trainingTitle}%"]);
+                });
+            }
+
+            $data = $trainingQuery
+                        ->select('*')
                         ->whereNull('deleted_at')
-                        ->get();
-            return response()->json(['training' => base64_encode(json_encode($data))]);
+                        ->paginate($pagination);
+
+            $indication = Str::random(16);
+            return response()->json([$indication => base64_encode(json_encode($data))]);
         } catch (QueryException $e) {
 
         }

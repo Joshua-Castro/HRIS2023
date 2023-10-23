@@ -170,7 +170,7 @@ function attendance() {
             });
         },
 
-        // CONVERT 12 HOUR FORMAT TO 24 HOUR FORMAT
+        // CONVERT 24 HOUR FORMAT TO 12 HOUR FORMAT
         attendanceConvert24hrTo12hr : function(time) {
             // Assuming timeData is in the format "HH:mm:ss"
             const [hours, minutes, seconds] = time.split(':').map(Number);

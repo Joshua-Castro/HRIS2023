@@ -269,6 +269,7 @@ class AttendanceController extends Controller
                         'attendances.break_out',
                         'attendances.created_at',
                         )
+                    ->whereNull('attendances.deleted_at')
                     ->orderBy('attendances.created_at', 'DESC')
                     ->paginate($pagination);
 

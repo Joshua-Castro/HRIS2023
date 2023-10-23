@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Leave;
+use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
@@ -92,8 +93,15 @@ class LeaveController extends Controller
                             ->count();
 
             $count = $data->count();
+            $indication     =   Str::random(16);
+            $indication2    =   Str::random(16);
+            $indication3    =   Str::random(16);
 
-            return response()->json(['data' => $data, 'count' => $count, 'overAll' => $overAllCount]);
+            return response()->json([
+                $indication     =>  base64_encode(json_encode($data)),
+                $indication2    =>  $count,
+                $indication3    =>  $overAllCount
+            ]);
         } catch (QueryException $e) {
             $errorMessage = $e->getMessage();
             return response()->json(['error' => $errorMessage], 500);
@@ -190,7 +198,13 @@ class LeaveController extends Controller
 
             $count = $data->count();
 
-            return response()->json(['data' => $data, 'count' => $count]);
+            $indication     =   Str::random(16);
+            $indication2    =   Str::random(16);
+
+            return response()->json([
+                $indication  => base64_encode(json_encode($data)),
+                $indication2 => $count
+        ]);
         } catch (QueryException $e) {
             $errorMessage = $e->getMessage();
             return response()->json(['error' => $errorMessage], 500);

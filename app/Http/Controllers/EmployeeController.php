@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Employee;
+use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
@@ -391,9 +392,9 @@ class EmployeeController extends Controller
     {
         try {
             $request->validate([
-                'name'          =>  'nullable|string', // Allow null or string
-                'status'        =>  'nullable|in:all,Male,Female', // Allow specific values
-                'pagination'    =>  'nullable|integer', // Allow null or integer
+                'name'          =>  'nullable|string',
+                'status'        =>  'nullable|in:all,Male,Female',
+                'pagination'    =>  'nullable|integer',
             ]);
 
             $totalEmployeesCount = DB::table('employees')
@@ -458,10 +459,13 @@ class EmployeeController extends Controller
                         )
                     ->paginate($pagination);
 
+            $indication     =   Str::random(16);
+            $indication2    =   Str::random(16);
+            $indication3    =   Str::random(16);
             return response()->json([
-                'users'             =>  base64_encode(json_encode($users)),
-                'count'             =>  $totalEmployeesCount,
-                'newEmployees'      =>  $newEmployees
+                $indication         =>  base64_encode(json_encode($users)),
+                $indication2        =>  $totalEmployeesCount,
+                $indication3        =>  $newEmployees
             ]);
         } catch (QueryException $e) {
             $errorMessage = $e->getMessage();

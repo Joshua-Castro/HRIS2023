@@ -473,7 +473,10 @@ function adminDashboard(userRole) {
                 url         :   route("employee.show"),
                 data        :   $('#users-search-form').serializeArray(),
             }).then((response) => {
-                var data = response.users ? JSON.parse(atob(response.users)) : "";
+                const usersData     =   Object.keys(response)[0];
+                const count         =   Object.keys(response)[1];
+                const newEmployee   =   Object.keys(response)[2];
+                var data = response[usersData] ? JSON.parse(atob(response[usersData])) : "";
                 var users = data['data'],
                     navlinks = data['links'];
 
@@ -504,8 +507,8 @@ function adminDashboard(userRole) {
                 this.isLoading      = false;
                 this.isDisabled     = false;
                 this.employeeData   = users;
-                this.employeeCount  = response.count ? response.count : '';
-                this.newEmployees   = response.newEmployees ? response.newEmployees : '';
+                this.employeeCount  = response[count] ? response[count] : '';
+                this.newEmployees   = response[newEmployee] ? response[newEmployee] : '';
                 // DONUT CHART
                 if ($("#customerOverviewEcommerce").length) {
                     var customerOverviewEcommerceCanvas = $("#customerOverviewEcommerce").get(0).getContext("2d");
@@ -1016,9 +1019,13 @@ function adminDashboard(userRole) {
                 url         :   route("leave.show"),
                 data        :   $('#users-search-form').serializeArray(),
             }).then((response) => {
-                this.overAllLeaveCount      =   response.overAll;
-                this.leaveData              =   response.data;
-                this.leaveCount             =   response.count;
+                const data              =   Object.keys(response)[0];
+                const count             =   Object.keys(response)[1];
+                const overAll           =   Object.keys(response)[2];
+
+                this.overAllLeaveCount      =   response[overAll];
+                this.leaveData              =   response[data] ? JSON.parse(atob(response[data])) : "";
+                this.leaveCount             =   response[count];
                 this.leaveIsLoading         =   false;
 
             }).catch((error) => {
