@@ -507,8 +507,8 @@ function adminDashboard(userRole) {
                 this.isLoading      = false;
                 this.isDisabled     = false;
                 this.employeeData   = users;
-                this.employeeCount  = response[count] ? response[count] : '';
-                this.newEmployees   = response[newEmployee] ? response[newEmployee] : '';
+                this.employeeCount  = response[count]           ? response[count]           : '';
+                this.newEmployees   = response[newEmployee]     ? response[newEmployee]     : '';
                 // DONUT CHART
                 if ($("#customerOverviewEcommerce").length) {
                     var customerOverviewEcommerceCanvas = $("#customerOverviewEcommerce").get(0).getContext("2d");

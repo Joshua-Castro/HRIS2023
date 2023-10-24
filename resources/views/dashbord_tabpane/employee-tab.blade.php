@@ -34,7 +34,7 @@
                                             <div class="input-group-append">
                                                 <button id="users-search"
                                                 class="btn input-group-text btn-secondary border waves-effect form-control form-control-sm text-dark"
-                                                type="button" x-ref="usersSearchButton" @click="getEmployeeData" style="border-end-start-radius: 0px; border-start-start-radius: 0px;">Search</button>
+                                                type="button" x-ref="usersSearchButton" @click="getEmployeeData" style="border-end-start-radius: 0px; border-start-start-radius: 0px;" :disabled="isDisabled">Search</button>
                                             </div>
                                         </div>
                                     </div>
@@ -149,7 +149,7 @@
                                 </div>
                                 <div class="col-md-6">
                                     <nav>
-                                        <ul class="pagination pagination-rounded float-md-end mt-2 mb-0">
+                                        <ul class="pagination pagination-sm float-md-end mt-2 mb-0">
                                             {{-- pagination --}}
                                         </ul>
                                     </nav>

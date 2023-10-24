@@ -19,7 +19,7 @@
                         <div class="input-group me-2" style="width: 270px;">
                             <input id="training-search-keyword" type="text" class="form-control form-control-sm" name="search-keyword" placeholder="Search title here ..." x-model="trainingSearchInput">
                             <div class="input-group-append">
-                                <button id="training-search" class="btn input-group-text btn-secondary border waves-effect form-control form-control-sm text-dark" type="button" style="border-end-start-radius: 0px; border-start-start-radius: 0px;" @click="getTraining">Search</button>
+                                <button id="training-search" class="btn input-group-text btn-secondary border waves-effect form-control form-control-sm text-dark" type="button" style="border-end-start-radius: 0px; border-start-start-radius: 0px;" @click="getTraining" :disabled="buttonDisabled">Search</button>
                             </div>
                         </div>
                         <div class="col-lg-2 me-2" style="padding-top: 1px;">
@@ -99,7 +99,7 @@
                                                         Edit
                                                     </a>
                                                     <div class="dropdown-divider"></div>
-                                                    <a class="dropdown-item text-reset text-decoration-none" href="javascript:void(0);">
+                                                    <a class="dropdown-item text-reset text-decoration-none" href="javascript:void(0);" @click="removeTraining(index)">
                                                         <i class="ti-trash btn-icon-prepend me-2"></i>
                                                         Delete
                                                     </a>
@@ -110,7 +110,6 @@
                                 </template>
                             </tbody>
                         </template>
-
                     </table>
                     <div class="row gx-0">
                         <div class="col-md-6 mb-2 my-md-auto">
@@ -118,7 +117,7 @@
                         </div>
                         <div class="col-md-6">
                             <nav>
-                                <ul class="pagination pagination-rounded float-md-end mt-2 mb-0">
+                                <ul class="pagination pagination-sm float-md-end mt-2 mb-0">
                                     {{-- PAGINATION --}}
                                 </ul>
                             </nav>

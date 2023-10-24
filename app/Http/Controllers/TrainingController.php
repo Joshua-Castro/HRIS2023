@@ -149,8 +149,20 @@ class TrainingController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Training $training)
+    public function destroy(Request $request)
     {
-        //
+        try {
+            $data = DB::table('trainings')
+                ->where('id','=', $request->id)
+                ->update([
+                    'deleted_by' => Auth::id(),
+                    'deleted_at' => now(),
+                ]);
+
+            return response()->json(['message' => 'Successfully Deleted']);
+        } catch (QueryException $e) {
+            $errorMessage = $e->getMessage();
+            return response()->json(['error' => $errorMessage], 500);
+        }
     }
 }

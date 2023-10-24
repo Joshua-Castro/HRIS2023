@@ -102,6 +102,7 @@ function training() {
                 $('.training-close-btn'     ,this.trainingModal).html('Cancel');
             }
 
+            $(this.trainingForm, this.trainingModal).removeClass('was-validated');
             $(this.trainingModal).modal('show');
         },
 
@@ -147,12 +148,57 @@ function training() {
             }
         },
 
+        // REMOVE OR DELETE SPECIFIC TRAINING'S DATA
+        removeTraining : function (index) {
+            Swal.fire({
+                title               :   "Are you sure?",
+                html                :   "Delete this training? <b>" + this.trainingData[index].title + "</b>",
+                icon                :   "warning",
+                showCancelButton    :   !0,
+                confirmButtonColor  :   "#28bb4b",
+                cancelButtonColor   :   "#f34e4e",
+                confirmButtonText   :   "Yes, delete it!",
+                customClass: {
+                    icon: 'custom-swal-icon' // Apply custom class to the icon
+                  }
+              }).then(result => {
+                  if(result.isConfirmed){
+                        this.trainingLoading    = true;
+                        $.ajax({
+                            type      :   "POST",
+                            url       :   route('training.delete'),
+                            data      :   {
+                                _token: this.csrfToken,
+                                id      :   this.trainingData[index].id,
+                            },
+                        }).then((data) => {
+                            Swal.fire({
+                                        title               : data.message,
+                                        icon                : 'success',
+                                        timer               : 1000,
+                                        showConfirmButton   : false,
+                                    });
+                            this.getTraining();
+                        }).catch(err => {
+                        this.trainingLoading    = false;
+                        Swal.fire('Delete Failed. Please refresh the page and try again.','error');
+                    })
+                  }
+              });
+
+              $('.custom-swal-icon').css('margin-top', '20px');
+        },
+
         // FETCH OR GET ALL TRAINING'S DATA
         getTraining : function () {
-            this.trainingLoading = true;
+            this.trainingLoading    = true;
+            this.buttonDisabled     = true;
+
+            $('ul.pagination').empty();
 
             $('input[name="training-title"]'                     ).val(this.trainingSearchInput);
             $('input[name="training-pagination-hidden"]'         ).val(this.trainingPagination);
+            $('input[name="page"]'                               ).val(this.trainingCurrentPage);
 
             $.ajax({
                 type        : "GET",
@@ -192,8 +238,9 @@ function training() {
                         $('#training-counter').text('No Training Found!');
                     }
 
-                    this.trainingData       =   trainingData ? trainingData : "";
+                    this.trainingData       =   trainingData;
                     this.trainingLoading    =   false;
+                    this.buttonDisabled     =   false;
                     console.log(data);
 
             }).catch((error) => {

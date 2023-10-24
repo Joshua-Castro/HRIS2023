@@ -29,10 +29,11 @@ Route::get('/', function () {
 
 Auth::routes();
 
-Route::get('/home'          ,[App\Http\Controllers\HomeController::class, 'index'           ])->name('home');
-Route::get('/request'       ,[App\Http\Controllers\HomeController::class, 'request'         ])->name('request');
-Route::get('/attendance'    ,[App\Http\Controllers\HomeController::class, 'attendance'      ])->name('attendance');
-Route::get('/training'      ,[App\Http\Controllers\HomeController::class, 'training'        ])->name('training');
+Route::get('/home'                  ,[App\Http\Controllers\HomeController::class, 'index'           ])->name('home');
+Route::get('/request'               ,[App\Http\Controllers\HomeController::class, 'request'         ])->name('request');
+Route::get('/attendance'            ,[App\Http\Controllers\HomeController::class, 'attendance'      ])->name('attendance');
+Route::get('/training'              ,[App\Http\Controllers\HomeController::class, 'training'        ])->name('training');
+Route::get('/dashboard-data'        ,[App\Http\Controllers\HomeController::class, 'dashboard'       ])->name('dashboard');
 
 // EMPLOYEE CONTROLLER ROUTES
 Route::prefix('employee')->as('employee.')->group(function () {
@@ -70,7 +71,8 @@ Route::prefix('attendance')->as('attendance.')->group(function () {
 
 // TRAINING/SEMINARS CONTROLLER ROUTES
 Route::prefix('training')->as('training.')->group(function () {
-    Route::post('/store'    ,[TrainingController::class, 'store'])->name('store');
-    Route::get('/show'      ,[TrainingController::class, 'show'])->name('show');
+    Route::post('/store'       ,[TrainingController::class, 'store'     ])->name('store');
+    Route::get('/show'         ,[TrainingController::class, 'show'      ])->name('show');
+    Route::post('/delete'      ,[TrainingController::class, 'destroy'   ])->name('delete');
 });
 

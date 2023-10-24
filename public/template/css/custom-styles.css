@@ -12,6 +12,7 @@
 /* Show the delete button on hover */
 .event-wrapper:hover .delete-button {
     display: inline-block;
+    cursor: pointer;
 }
 
 .spinner-container {
