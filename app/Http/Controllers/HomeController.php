@@ -2,10 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Database\QueryException;
 
 class HomeController extends Controller
 {
@@ -26,14 +28,18 @@ class HomeController extends Controller
      */
     public function index()
     {
-        $userId    = Auth::id();
-        $userImage = DB::table('images')
-            ->where('user_id', '=', $userId)
-            ->first();
+        if (Auth::check()) {
+            $userId    = Auth::id();
+            $userImage = DB::table('images')
+                ->where('user_id', '=', $userId)
+                ->first();
 
-        $image      = $userImage ?  'storage/' . $userImage->file_path : 'template/images/default-icon.png';
+            $image      = $userImage ?  'storage/' . $userImage->file_path : 'template/images/default-icon.png';
 
-        return view('home', ['image' => $image]);
+            return view('home', ['image' => $image]);
+        } else {
+            return redirect()-> route('login');
+        }
     }
 
     /**
@@ -88,36 +94,38 @@ class HomeController extends Controller
     }
 
      /**
-     * Show the data to dashboard page.
+     * Show the training data to dashboard page in calendar as events.
      *
      */
-    public function dashboard()
+    public function trainingCalendarEvents()
     {
-       // CHECK IF THE USER IS AUTHENTICATED
+        // CHECK IF THE USER IS AUTHENTICATED
         if (Auth::check()) {
-            $events     = [];
-            $trainings  = DB::table('trainings')
-                            ->whereNull('deleted_at')
-                            ->get();
+            $events = [];
+            $trainings = DB::table('trainings')
+                ->whereNull('deleted_at')
+                ->get();
 
             foreach ($trainings as $data) {
-                $start_time             = Carbon::parse($data->start_time);
-                $end_time               = Carbon::parse($data->end_time);
+                $start_datetime = Carbon::parse($data->start_date_time . ' ' . $data->start_time);
+                $end_datetime = Carbon::parse($data->end_date_time . ' ' . $data->end_time);
 
-                $formatted_start_time   = $start_time->format('h:i A');
-                $formatted_end_time     = $end_time->format('h:i A');
+                $formatted_start_time = $start_datetime->format('h:i A');
+                $formatted_end_time = $end_datetime->format('h:i A');
 
                 $events[] = [
-                    'title' => $data->title . " (" . $formatted_start_time . " - " . $formatted_end_time . ") ",
-                    'start' => $data->start_date_time,
-                    'end'   => $data->end_date_time,
-                    'color' => $this->randomColor(),
+                    'title'     =>  $data->title . " (" . $formatted_start_time . " - " . $formatted_end_time . ") ",
+                    'start'     =>  $start_datetime->toISO8601String(),
+                    'end'       =>  $end_datetime->toISO8601String(),
+                    'color'     =>  $this->randomColor(),
                 ];
             }
-
-            return response()->json($events);
+            $indication     =   Str::random(16);
+            return response()->json([
+                $indication     =>  base64_encode(json_encode($events)),
+            ]);
         } else {
-            return redirect()->route('login');
+            return redirect()-> route('login');
         }
     }
 
@@ -125,7 +133,41 @@ class HomeController extends Controller
      * Function to generate a random color
      * in hexadecimal format.
      */
-    private function randomColor() {
+    private function randomColor()
+    {
         return '#' . str_pad(dechex(mt_rand(0, 0xFFFFFF)), 6, '0', STR_PAD_LEFT);
+    }
+
+    /**
+     * Show the employee overview data to dashboard page on chart.
+     *
+     */
+    public function employeeOverview()
+    {
+        if (Auth::check()) {
+            try {
+                $totalEmployeesCount = DB::table('employees')
+                    ->whereNull('deleted_at')
+                    ->count();
+
+                $thirtyDaysAgo = now()->subDays(30);
+                $newEmployees = DB::table('employees')
+                                ->where('date_hired', '>=', $thirtyDaysAgo)
+                                ->whereNull('deleted_at')
+                                ->count();
+
+                $indication     =   Str::random(16);
+                $indication2    =   Str::random(16);
+                return response()->json([
+                    $indication         =>  base64_encode(json_encode($newEmployees)),
+                    $indication2        =>  base64_encode(json_encode($totalEmployeesCount)),
+                ]);
+            } catch (QueryException $e) {
+                $errorMessage = $e->getMessage();
+                return response()->json(['error' => $errorMessage], 500);
+            }
+        } else {
+            return redirect()-> route('login');
+        }
     }
 }

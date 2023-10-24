@@ -29,11 +29,12 @@ Route::get('/', function () {
 
 Auth::routes();
 
-Route::get('/home'                  ,[App\Http\Controllers\HomeController::class, 'index'           ])->name('home');
-Route::get('/request'               ,[App\Http\Controllers\HomeController::class, 'request'         ])->name('request');
-Route::get('/attendance'            ,[App\Http\Controllers\HomeController::class, 'attendance'      ])->name('attendance');
-Route::get('/training'              ,[App\Http\Controllers\HomeController::class, 'training'        ])->name('training');
-Route::get('/dashboard-data'        ,[App\Http\Controllers\HomeController::class, 'dashboard'       ])->name('dashboard');
+Route::get('/home'                      ,[App\Http\Controllers\HomeController::class, 'index'                           ])->name('home');
+Route::get('/request'                   ,[App\Http\Controllers\HomeController::class, 'request'                         ])->name('request');
+Route::get('/attendance'                ,[App\Http\Controllers\HomeController::class, 'attendance'                      ])->name('attendance');
+Route::get('/training'                  ,[App\Http\Controllers\HomeController::class, 'training'                        ])->name('training');
+Route::get('/training-event'            ,[App\Http\Controllers\HomeController::class, 'trainingCalendarEvents'          ])->name('events');
+Route::get('/employee-overview'         ,[App\Http\Controllers\HomeController::class, 'employeeOverview'                ])->name('overview');
 
 // EMPLOYEE CONTROLLER ROUTES
 Route::prefix('employee')->as('employee.')->group(function () {

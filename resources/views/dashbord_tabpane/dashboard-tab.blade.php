@@ -254,6 +254,9 @@
                 <div class="card">
                     <div class="card-body">
                         <h4 class="card-title card-title-dash">Training Calendar</h4>
+                        <div class="spinner-container calendar-spinner" hidden>
+                            <div class="spinner"></div>
+                        </div>
                         {{-- <p class="text-small modern-color-999">All training/s that happening today...</p> --}}
                         <div id="calendar" class="full-calendar mt-4"></div>
                     </div>

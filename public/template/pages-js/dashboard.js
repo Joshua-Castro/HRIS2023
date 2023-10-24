@@ -474,8 +474,6 @@ function adminDashboard(userRole) {
                 data        :   $('#users-search-form').serializeArray(),
             }).then((response) => {
                 const usersData     =   Object.keys(response)[0];
-                const count         =   Object.keys(response)[1];
-                const newEmployee   =   Object.keys(response)[2];
                 var data = response[usersData] ? JSON.parse(atob(response[usersData])) : "";
                 var users = data['data'],
                     navlinks = data['links'];
@@ -507,95 +505,6 @@ function adminDashboard(userRole) {
                 this.isLoading      = false;
                 this.isDisabled     = false;
                 this.employeeData   = users;
-                this.employeeCount  = response[count]           ? response[count]           : '';
-                this.newEmployees   = response[newEmployee]     ? response[newEmployee]     : '';
-                // DONUT CHART
-                if ($("#customerOverviewEcommerce").length) {
-                    var customerOverviewEcommerceCanvas = $("#customerOverviewEcommerce").get(0).getContext("2d");
-                    var customerOverviewEcommerceData = {
-                        datasets: [{
-                            data: [
-                                1,
-                                this.newEmployees,
-                                1
-                            ],
-                            backgroundColor: [
-                                "#1E3BB3",
-                                "#00CDFF",
-                                "#00AAB7",
-                            ],
-                            borderColor: [
-                                "#fff",
-                                "#fff",
-                                "#fff",
-                            ],
-                        }],
-
-                        // THESE LABELS APPEAR IN THE LEGEND AND IN THE TOOLTIPS WHEN HOVERING DIFFERENT ARCS
-                        labels: [
-                            'Resigned Employee',
-                            'New Employee',
-                            'OJT',
-                        ]
-                    };
-                    var customerOverviewEcommerceOptions = {
-                        cutoutPercentage          :   60,
-                        animationEasing           :   "easeOutBounce",
-                        animateRotate             :   true,
-                        animateScale              :   true,
-                        responsive                :   false,
-                        maintainAspectRatio       :   true,
-                        showScale                 :   true,
-                        legend                    :   false,
-                        legendCallback    : function (chart) {
-                            var text = [];
-                            text.push('<div class="chartjs-legend"><ul>');
-                            for (var i = 0; i < chart.data.datasets[0].data.length; i++) {
-                                text.push('<li><span style="background-color:' + chart.data.datasets[0].backgroundColor[i] + '">');
-                                text.push('</span>');
-
-                                if (chart.data.labels[i]) {
-                                    text.push(chart.data.labels[i]);
-                                }
-                                text.push('</li>');
-                            }
-                            text.push('</div></ul>');
-                            return text.join("");
-                        },
-
-                    layout: {
-                        padding : {
-                            left      :   0,
-                            right     :   0,
-                            top       :   0,
-                            bottom    :   0
-                        }
-                    },
-                    tooltips: {
-                        callbacks: {
-                            title: function(tooltipItem, data) {
-                                return data['labels'][tooltipItem[0]['index']];
-                            },
-                            label: function(tooltipItem, data) {
-                                return data['datasets'][0]['data'][tooltipItem['index']];
-                            }
-                        },
-
-                        backgroundColor     :   '#fff',
-                        titleFontSize       :   14,
-                        titleFontColor      :   '#0B0F32',
-                        bodyFontColor       :   '#737F8B',
-                        bodyFontSize        :   11,
-                        displayColors       :   false
-                    }
-                    };
-                    var customerOverviewEcommerce = new Chart(customerOverviewEcommerceCanvas, {
-                        type          :   'doughnut',
-                        data          :   customerOverviewEcommerceData,
-                        options       :   customerOverviewEcommerceOptions
-                    });
-                    document.getElementById('customerOverviewEcommerce-legend').innerHTML = customerOverviewEcommerce.generateLegend();
-                }
             }).catch((error) => {
 
             })
@@ -1219,6 +1128,8 @@ function adminDashboard(userRole) {
                 this.getEmployeeAttendance();
                 this.startClock();
             }
+
+            this.dashboardData();
         },
 
         // DISPATCH EMPLOYEE DATA. USING CUSTOM EVENT SO THE DATA WILL LOAD ONLY AFTER OPENING THE TAB
@@ -1237,6 +1148,115 @@ function adminDashboard(userRole) {
                 this.paginationPage();
                 this.indication = true;
             }
+        },
+
+        // GET DATA TO DISPLAY IN DASHBOARD
+        dashboardData : function () {
+            $.ajax({
+                type        : "GET",
+                url         : route("overview"),
+                headers     : {
+                    'X-CSRF-TOKEN' : this.csrfToken
+                },
+            }).then((response) => {
+                const newEmployeeKey        =   Object.keys(response)[0];
+                const countKey              =   Object.keys(response)[1];
+                const countData             =   response[countKey]       ? JSON.parse(atob(response[countKey]))       : "";
+                const newEmployeeData       =   response[newEmployeeKey] ? JSON.parse(atob(response[newEmployeeKey])) : "";
+
+                this.employeeCount          =   countData           ? countData           : '';
+                this.newEmployees           =   newEmployeeData     ? newEmployeeData     : '';
+
+                // DONUT CHART
+                if ($("#customerOverviewEcommerce").length) {
+                    var customerOverviewEcommerceCanvas = $("#customerOverviewEcommerce").get(0).getContext("2d");
+                    var customerOverviewEcommerceData = {
+                        datasets: [{
+                            data: [
+                                1,
+                                this.newEmployees,
+                                1
+                            ],
+                            backgroundColor: [
+                                "#1E3BB3",
+                                "#00CDFF",
+                                "#00AAB7",
+                            ],
+                            borderColor: [
+                                "#fff",
+                                "#fff",
+                                "#fff",
+                            ],
+                        }],
+
+                        // THESE LABELS APPEAR IN THE LEGEND AND IN THE TOOLTIPS WHEN HOVERING DIFFERENT ARCS
+                        labels: [
+                            'Resigned Employee',
+                            'New Employee',
+                            'OJT',
+                        ]
+                    };
+                    var customerOverviewEcommerceOptions = {
+                        cutoutPercentage          :   60,
+                        animationEasing           :   "easeOutBounce",
+                        animateRotate             :   true,
+                        animateScale              :   true,
+                        responsive                :   false,
+                        maintainAspectRatio       :   true,
+                        showScale                 :   true,
+                        legend                    :   false,
+                        legendCallback    : function (chart) {
+                            var text = [];
+                            text.push('<div class="chartjs-legend"><ul>');
+                            for (var i = 0; i < chart.data.datasets[0].data.length; i++) {
+                                text.push('<li><span style="background-color:' + chart.data.datasets[0].backgroundColor[i] + '">');
+                                text.push('</span>');
+
+                                if (chart.data.labels[i]) {
+                                    text.push(chart.data.labels[i]);
+                                }
+                                text.push('</li>');
+                            }
+                            text.push('</div></ul>');
+                            return text.join("");
+                        },
+
+                    layout: {
+                        padding : {
+                            left      :   0,
+                            right     :   0,
+                            top       :   0,
+                            bottom    :   0
+                        }
+                    },
+                    tooltips: {
+                        callbacks: {
+                            title: function(tooltipItem, data) {
+                                return data['labels'][tooltipItem[0]['index']];
+                            },
+                            label: function(tooltipItem, data) {
+                                return data['datasets'][0]['data'][tooltipItem['index']];
+                            }
+                        },
+
+                        backgroundColor     :   '#fff',
+                        titleFontSize       :   14,
+                        titleFontColor      :   '#0B0F32',
+                        bodyFontColor       :   '#737F8B',
+                        bodyFontSize        :   11,
+                        displayColors       :   false
+                    }
+                    };
+                    var customerOverviewEcommerce = new Chart(customerOverviewEcommerceCanvas, {
+                        type          :   'doughnut',
+                        data          :   customerOverviewEcommerceData,
+                        options       :   customerOverviewEcommerceOptions
+                    });
+                    document.getElementById('customerOverviewEcommerce-legend').innerHTML = customerOverviewEcommerce.generateLegend();
+                }
+            }).catch((error) => {
+
+            })
         }
     }
 }
