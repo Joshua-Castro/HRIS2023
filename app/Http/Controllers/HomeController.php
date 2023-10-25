@@ -28,18 +28,14 @@ class HomeController extends Controller
      */
     public function index()
     {
-        if (Auth::check()) {
-            $userId    = Auth::id();
-            $userImage = DB::table('images')
-                ->where('user_id', '=', $userId)
-                ->first();
+        $userId    = Auth::id();
+        $userImage = DB::table('images')
+            ->where('user_id', '=', $userId)
+            ->first();
 
-            $image      = $userImage ?  'storage/' . $userImage->file_path : 'template/images/default-icon.png';
+        $image      = $userImage ?  'storage/' . $userImage->file_path : 'template/images/default-icon.png';
 
-            return view('home', ['image' => $image]);
-        } else {
-            return redirect()-> route('login');
-        }
+        return view('home', ['image' => $image]);
     }
 
     /**

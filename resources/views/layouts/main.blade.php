@@ -3,23 +3,19 @@
 <html lang="en">
 
 <head>
-  <!-- Required meta tags -->
   <meta charset="utf-8">
   <meta name="csrf-token" content="{{ csrf_token() }}">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
   <title>HRIS </title>
-  <!-- plugins:css -->
   {{-- <link rel="stylesheet" href="{{ asset('template/vendors/feather/feather.css') }}"> --}}
   <link rel="stylesheet" href="{{ asset('template/vendors/mdi/css/materialdesignicons.min.css') }}">
   <link rel="stylesheet" href="{{ asset('template/vendors/ti-icons/css/themify-icons.css') }}">
   {{-- <link rel="stylesheet" href="{{ asset('template/vendors/typicons/typicons.css') }}"> --}}
   <link rel="stylesheet" href="{{ asset('template/vendors/simple-line-icons/css/simple-line-icons.css') }}">
   <link rel="stylesheet" href="{{ asset('template/vendors/css/vendor.bundle.base.css') }}">
-  <!-- endinject -->
   <link rel="stylesheet" href="{{ asset('template/vendors/font-awesome/css/font-awesome.min.css') }}" />
   <link rel="stylesheet" href="{{ asset('template/css/vertical-layout-light/style.css') }}">
   {{-- <link rel="shortcut icon" href="{{ asset('template/images/auth/deped-logo.jpg') }}" /> --}}
-  <!-- Styles -->
   <link rel="stylesheet" href="{{ asset('template/vendors/fullcalendar/fullcalendar.min.css') }}">
   <link rel="stylesheet" href="{{ asset('template/css/select2.min.css') }}" />
   <link rel="stylesheet" href="{{ asset('template/css/select2-bootstrap-5-theme.min.css') }}" />
@@ -33,7 +29,6 @@
   <link rel="stylesheet" href="{{ asset('template/css/minimal.css') }}" />
 
   @stack('styles')
-  <!-- Scripts -->
   <script defer src="{{ asset('template/js/alpinejs@3.min.js') }}"></script>
   @routes
 </head>
@@ -149,7 +144,7 @@
                     </li>
                     <div class="collapse" id="settings">
                         <ul class="nav flex-column sub-menu">
-                            <li class="nav-item ms-4"> <a class="nav-link" href="javascript:void(0);">Profile</a></li>
+                            <li class="nav-item ms-4"> <a class="nav-link" href="{{ route('profile.index') }}">Profile</a></li>
                             <li class="nav-item ms-4"> <a class="nav-link" href="javascript:void(0);">Activity</a></li>
                             <li class="nav-item ms-4"> <a class="nav-link" href="javascript:void(0);">FAQ</a></li>
                             <li class="nav-item ms-4"> <a class="nav-link" href="{{ route('logout') }}" onclick="event.preventDefault();
@@ -162,23 +157,16 @@
             <div class="content-wrapper">
                 @yield('content')
             </div>
-            <!-- content-wrapper ends -->
-            <!-- partial:../../partials/_footer.html -->
             <footer class="footer">
                 <div class="d-sm-flex justify-content-center justify-content-sm-between">
                 <span class="text-muted text-center text-sm-left d-block d-sm-inline-block">Human Resource Information System <a href="{{ route('home') }}" target="_blank">(HRIS)</a></span>
                 <span class="float-none float-sm-right d-block mt-1 mt-sm-0 text-center">Copyright © 2023. All rights reserved.</span>
                 </div>
             </footer>
-            <!-- partial -->
             </div>
-            <!-- main-panel ends -->
         </div>
-    <!-- page-body-wrapper ends -->
     </div>
-  <!-- container-scroller -->
 
-  <!-- plugins:js -->
   <script src="{{ asset('template/vendors/js/vendor.bundle.base.js') }}"></script>
   <script src="{{ asset('template/vendors/moment/moment.js') }}"></script>
   <script src="{{ asset('template/vendors/bootstrap-datepicker/bootstrap-datepicker.min.js') }}"></script>
@@ -202,7 +190,6 @@
   <script src="{{ asset('template/js/inputmask.js') }}"></script>
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
   @stack('scripts')
-  <!-- End js for this-->
 </body>
 </html>
 

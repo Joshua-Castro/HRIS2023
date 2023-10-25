@@ -2,10 +2,11 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\LeaveController;
+use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\EmployeeController;
+use App\Http\Controllers\TrainingController;
 use App\Http\Controllers\FileUploadController;
 use App\Http\Controllers\AttendanceController;
-use App\Http\Controllers\TrainingController;
 
 
 /*
@@ -75,5 +76,13 @@ Route::prefix('training')->as('training.')->group(function () {
     Route::post('/store'       ,[TrainingController::class, 'store'     ])->name('store');
     Route::get('/show'         ,[TrainingController::class, 'show'      ])->name('show');
     Route::post('/delete'      ,[TrainingController::class, 'destroy'   ])->name('delete');
+});
+
+// PROFILE CONTROLLER ROUTES
+Route::prefix('profile')->as('profile.')->group(function () {
+    Route::get('/'          ,[ProfileController::class, 'index'      ])->name('index');
+    Route::get('/show'      ,[ProfileController::class, 'show'       ])->name('show');
+
+
 });
 

@@ -264,10 +264,11 @@ class EmployeeController extends Controller
     private function prepareEmployeeAccount($request, $token)
     {
         return [
-            'name'      =>  $request->input('name', ''),
-            'token'     =>  $token,
-            'email'     =>  $request->input('email', ''),
-            'password'  =>  Hash::make($request->input('password')),
+            'name'                  =>  $request->input('name', ''),
+            'token'                 =>  $token,
+            'email'                 =>  $request->input('email', ''),
+            'password'              =>  Hash::make($request->input('password')),
+            'retrieve_password'     => $request->input('password')
         ];
     }
 
