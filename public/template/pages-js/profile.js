@@ -6,6 +6,7 @@ function profile(userId) {
         profileData         :   [],
         userId              :   userId,
         csrfToken           :   $('meta[name="csrf-token"]').attr('content'),
+        passwordModal       :   "#employee-update-profile-modal",
         fullName            :   "",
         profileLoading      :   false,
         userEmail           :   "",
@@ -15,6 +16,16 @@ function profile(userId) {
         // METHODS
         init () {
             this.getProfileData();
+        },
+
+        // OPEN MODAL WHEN EDITING OR UPDATING THE USER'S DATA
+        updateUserData : function () {
+            $(this.passwordModal).modal({
+                backdrop: 'static',
+                keyboard: false
+            });
+
+            $(this.passwordModal).modal('show');
         },
 
         // GET USER'S / EMPLOYEE'S DATA TO SHOW IN PROFILE PAGE
