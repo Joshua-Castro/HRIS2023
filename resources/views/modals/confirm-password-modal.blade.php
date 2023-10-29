@@ -1,8 +1,6 @@
 <div class="modal fade" id="employee-update-profile-modal" tabindex="-1" role="dialog" aria-labelledby="employeeupdateprofile" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-md" role="document">
         <div class="modal-content">
-            {{-- <div class="modal-header">
-            </div> --}}
             <div class="modal-body">
                 <h1 class="modal-title text-center mb-4 fw-bold text-warning">WARNING</h1>
                 <p class="mt-2">Before changing your password, please keep the following in mind:</p>
@@ -18,12 +16,12 @@
                     </li>
                 </ul>
                 <div class="row my-2" style="padding-right: 15px; padding-left: 15px;">
-                    <input type="input" class="form-control" placeholder="PLEASE INPUT THE OLD PASSWORD: ">
+                    <input type="password" class="form-control" placeholder="PLEASE INPUT THE OLD PASSWORD: " x-model="confirmPassword">
                 </div>
                 <div class="row mt-4">
                     <div class="d-flex justify-content-end">
                         <button type="button" class="btn btn-sm btn-outline-danger" style="border-radius: 5px;" data-bs-dismiss="modal">Close</button>
-                        <button type="button" class="btn btn-sm btn-outline-primary ms-2" style="border-radius: 5px;">Confirm</button>
+                        <button type="button" class="btn btn-sm btn-outline-primary ms-2" style="border-radius: 5px;" @click="confirmPasswordValidate">Confirm</button>
                     </div>
                 </div>
             </div>

@@ -80,7 +80,7 @@
                             <p class="mb-0 mt-3 font-weight-semibold">{{ Auth::user()->name }}</p>
                             <p class="fw-light text-muted mb-0">{{ Auth::user()->email }}</p>
                         </div>
-                        <a class="dropdown-item"><i class="dropdown-item-icon ti ti-user text-primary me-3" style="font-size: 18px;"></i> Profile</a>
+                        <a class="dropdown-item" href="{{ route('profile.index') }}"><i class="dropdown-item-icon ti ti-user text-primary me-3" style="font-size: 18px;"></i> Profile</a>
                         <a class="dropdown-item"><i class="dropdown-item-icon ti ti-pencil-alt text-primary me-3" style="font-size: 18px;"></i> Activity</a>
                         <a class="dropdown-item"><i class="dropdown-item-icon ti ti-help text-primary me-3" style="font-size: 18px;"></i> FAQ</a>
                         <a class="dropdown-item" href="{{ route('logout') }}" onclick="event.preventDefault();

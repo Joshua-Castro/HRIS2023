@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Database\QueryException;
 
@@ -117,5 +118,36 @@ class ProfileController extends Controller
     public function destroy(string $id)
     {
         //
+    }
+
+    /**
+     * Update the profile of
+     * each employee when they change it
+     */
+    public function updateInfo(Request $request)
+    {
+        try {
+            $userId         = !empty($request->input('user_id'))        ?   $request->input('user_id')      : "";
+            $userPassword   = !empty($request->input('password'))       ?   $request->input('password')     : "";
+            $userName       = !empty($request->input('username'))       ?   $request->input('username')     : "";
+
+            $data = [
+                'email'                 =>  $userName,
+                'retrieve_password'     =>  $userPassword,
+                'password'              =>  Hash::make($userPassword),
+                'updated_at'            =>  now()
+            ];
+
+            DB::table('users')
+                ->where('id', '=', $userId)
+                ->update($data);
+
+            return response()->json(['message' => 'Successfully Updated'], 200);
+
+        } catch (QueryException $e) {
+            $errorMessage = $e->getMessage();
+            return response()->json(['error' => $errorMessage], 500);
+        }
+
     }
 }

@@ -10,10 +10,7 @@
                         <template x-if="profileLoading">
                             <div>
                                 <div class="row justify-content-center placeholder-glow">
-                                    {{-- <img src="..." class="card-img-top" alt="..."> --}}
                                     <img src="#" alt="profile" class="rounded-circle mb-3 placeholder" style="width: 180px; height: 170px;">
-                                    {{-- <span class="text-center placeholder mx-4"></span>
-                                    <span class="text-center placeholder" style="font-size: 16px; font-weight: inherit; color:rgb(177, 177, 177)" x-text="profileData.employee_no"></span> --}}
                                     <hr class="mt-4" style="width: 90%;">
                                 </div>
                                 <h6 class="header-title mb-4 ms-3 fw-bold text-center">GOVERNMENT INFORMATION</h6>
@@ -67,35 +64,35 @@
                                 <div class="row justify-content-between">
                                     <div class="col-lg-4">
                                         <div class="col-lg-12 mt-1">
-                                            <span class="ms-4" style="font-size: 16px; font-weight: inherit;">GSIS NUMBER </span>
+                                            <span class="ms-4" style="font-size: 14px; font-weight: inherit;">GSIS NUMBER </span>
                                         </div>
                                         <div class="col-lg-12 mt-1">
-                                            <span class="ms-4" style="font-size: 16px; font-weight: inherit;">PHILHEALTH NUMBER </span>
+                                            <span class="ms-4" style="font-size: 14px; font-weight: inherit;">PHILHEALTH NUMBER </span>
                                         </div>
                                         <div class="col-lg-12 mt-1">
-                                            <span class="ms-4" style="font-size: 16px; font-weight: inherit;">PAGIBIG NUMBER </span>
+                                            <span class="ms-4" style="font-size: 14px; font-weight: inherit;">PAGIBIG NUMBER </span>
                                         </div>
                                     </div>
                                     <div class="col-lg-4 text-center">
                                         <div class="col-lg-12 mt-1">
-                                            <span style="font-size: 16px; font-weight: 900;">: </span>
+                                            <span style="font-size: 14px; font-weight: 900;">: </span>
                                         </div>
                                         <div class="col-lg-12 mt-1">
-                                            <span style="font-size: 16px; font-weight: 900;">: </span>
+                                            <span style="font-size: 14px; font-weight: 900;">: </span>
                                         </div>
                                         <div class="col-lg-12 mt-1">
-                                            <span style="font-size: 16px; font-weight: 900;">: </span>
+                                            <span style="font-size: 14px; font-weight: 900;">: </span>
                                         </div>
                                     </div>
                                     <div class="col-lg-4">
                                         <div class="col-lg-12 mt-1" style="margin-left: -25px;">
-                                            <span style="font-size: 16px; font-weight: inherit;" x-text="profileData.gsis"></span>
+                                            <span style="font-size: 14px; font-weight: inherit;" x-text="profileData.gsis"></span>
                                         </div>
                                         <div class="col-lg-12 mt-1" style="margin-left: -25px;">
-                                            <span style="font-size: 16px; font-weight: inherit;" x-text="profileData.phil_health"></span>
+                                            <span style="font-size: 14px; font-weight: inherit;" x-text="profileData.phil_health"></span>
                                         </div>
                                         <div class="col-lg-12 mt-1" style="margin-left: -25px;">
-                                            <span style="font-size: 16px; font-weight: inherit;" x-text="profileData.pag_ibig"></span>
+                                            <span style="font-size: 14px; font-weight: inherit;" x-text="profileData.pag_ibig"></span>
                                         </div>
                                     </div>
 
@@ -268,7 +265,7 @@
                                         <div class="form-group row p-1 m-0">
                                             <div class="col-sm-12 p-0 m-0">
                                                 <div class="form-floating">
-                                                    <input type="text" name="email" class="form-control " placeholder="Username" autocomplete="email" x-model="userEmail" disabled>
+                                                    <input type="text" name="email" class="form-control update-profile-username" placeholder="Username" autocomplete="email" x-model="userEmail" :disabled="inputBehavior" required>
                                                     <label for="email">Username</label>
                                                 </div>
                                             </div>
@@ -278,7 +275,7 @@
                                         <div class="form-group row p-1 m-0">
                                             <div class="col-sm-12 p-0 m-0">
                                                 <div class="d-flex flex-row form-floating position-relative">
-                                                    <input type="password" name="password" class="form-control" placeholder="Password" autocomplete="new-password" x-model="userPassword" disabled>
+                                                    <input type="password" name="password" class="form-control update-profile-password" placeholder="Password" autocomplete="new-password" x-model="userPassword" :disabled="inputBehavior" required>
                                                     <label for="password">Password</label>
                                                 </div>
                                             </div>
@@ -286,7 +283,8 @@
                                     </div>
                                 </div>
                                 <div class="row mt-2 g-0 mx-1">
-                                    <button type="button" class="btn btn-sm btn-outline-primary" style="border-radius: 5px;" @click="updateUserData">Edit</button>
+                                    <button type="button" class="btn btn-sm btn-outline-primary update-profile-btn" style="border-radius: 5px;" @click="updateUserData" :hidden="editBtn">Edit</button>
+                                    <button type="button" class="btn btn-sm btn-outline-primary update-profile-btn" style="border-radius: 5px;" @click="submitUpdatePassword" :hidden="submitBtn">Submit</button>
                                 </div>
                             </form>
                         </div>
