@@ -72,8 +72,7 @@
                 </div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-sm btn-outline-danger" data-bs-dismiss="modal">Cancel</button>
-                {{-- <button type="button" class="btn btn-sm btn-outline-primary submit-btn" @click="submitRequest">Submit</button> --}}
+                <button type="button" class="btn btn-sm btn-outline-danger" data-bs-dismiss="modal" style="border-radius: 5px;">Cancel</button>
             </div>
         </form>
       </div>

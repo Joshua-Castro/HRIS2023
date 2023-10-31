@@ -51,9 +51,9 @@
                             </div>
                         </div>
                         <div class="d-flex justify-content-between">
-                            <button type="button" @click="clearImage" class="btn btn-danger btn-sm mt-4 upload-picture-btn" :disabled="!imageUrl">Remove Uploaded Picture</button>
+                            <button type="button" @click="clearImage" class="btn btn-danger btn-sm mt-4 upload-picture-btn" :disabled="!imageUrl" style="border-radius: 5px;">Remove Uploaded Picture</button>
                             <input type="file" id="fileInput" x-ref="fileInputHidden" style="display: none;" accept="image/*" @change="fileChosen($event)" />
-                            <button type="button" @click="openFilePicker" class="btn btn-success btn-sm mt-4 upload-picture-btn">Upload Profile Picture</button>
+                            <button type="button" @click="openFilePicker" class="btn btn-success btn-sm mt-4 upload-picture-btn" style="border-radius: 5px;">Upload Profile Picture</button>
                         </div>
                     </div>
                 </div>
@@ -110,7 +110,6 @@
                                 <div class="form-group row p-1 m-0" >
                                     <div class="col-sm-12 p-0 m-0">
                                         <div class="form-floating">
-                                            {{-- <input type="text" name="last_promotion" class="form-control" placeholder="Last Promotion" x-model="current.lastPromotion" required> --}}
                                             <input type="text" id="last-promotion" name="last_promotion" class="form-control bg-white" placeholder="Last Promotion" x-model="current.lastPromotion" required data-inputmask-placeholder="YYYY-MM-DD" data-inputmask="'alias': 'datetime'" data-inputmask-inputformat="yyyy-mm-dd">
                                             <label for="last_promotion">Last Promotion<span class="text-danger"> *</span></label>
                                             <div class="invalid-feedback">
@@ -340,8 +339,8 @@
                 </div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-sm btn-outline-danger" data-bs-dismiss="modal">Cancel</button>
-                <button type="button" class="btn btn-sm btn-outline-primary submit-btn" @click="submit" :disabled="isDisabled">Submit</button>
+                <button type="button" class="btn btn-sm btn-outline-danger" data-bs-dismiss="modal" style="border-radius: 5px;">Cancel</button>
+                <button type="button" class="btn btn-sm btn-outline-primary submit-btn" @click="submit" :disabled="isDisabled" style="border-radius: 5px;">Submit</button>
             </div>
         </form>
       </div>

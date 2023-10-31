@@ -98,7 +98,9 @@ function adminDashboard(userRole) {
         searchName                      :   '',
         imageUrl                        :   '',
         filterName                      :   '',
+        leaveCounterText                :   '',
         pagination                      :   10,
+        leaveCurrentPage                :   1,
         page                            :   1,
         employeeCount                   :   0,
         leaveCount                      :   0,
@@ -171,6 +173,128 @@ function adminDashboard(userRole) {
                 width: $(this).data('width') ? $(this).data('width') : $(this).hasClass('w-100') ? '100%' : 'style',
                 dropdownParent: $('#salary-grade').closest('.form-floating') // SET THE DROPDOWN PARENT TO THE CLOSEST FORM-GROUP CONTAINER
             });
+
+            const props = this;
+
+            if ($('#calendar').length) {
+                $('.calendar-spinner').removeAttr('hidden');
+                $.ajax({
+                    type : "GET",
+                    url  : route('events'),
+                }).then((response) => {
+                    const eventKey        =   Object.keys(response)[0];
+                    const events          =   response[eventKey] ? JSON.parse(atob(response[eventKey])) : "";
+
+                    $('#calendar').fullCalendar({
+                        header      : {
+                            left      : 'prev,next today',
+                            center    : 'title',
+                            right     : 'month,basicWeek,basicDay'
+                        },
+                        timezone        :   'UTC',
+                        initialView     :   'dayGridMonth',
+                        defaultDate     :   new Date(),
+                        navLinks        :   true,
+                        editable        :   false,
+                        eventLimit      :   true,
+                        events          :   events,
+                        // events : [{
+                        //     title: 'All Day Event',
+                        //     start: '2017-07-08'
+                        //     },
+                        //     {
+                        //     title: 'Long Event',
+                        //     start: '2017-07-01',
+                        //     end: '2017-07-07',
+                        //     description: 'This is an all-day event.',
+                        //     color: '#FF5733'
+                        //     },
+                        //     {
+                        //     id: 999,
+                        //     title: 'Repeating Event',
+                        //     start: '2017-07-09T16:00:00',
+                        //     end: '2017-07-09T19:00:00'
+                        //     },
+                        //     {
+                        //     id: 999,
+                        //     title: 'Repeating Event',
+                        //     start: '2017-07-16T16:00:00'
+                        //     },
+                        //     {
+                        //     title: 'Conference',
+                        //     start: '2017-07-11',
+                        //     end: '2017-07-13'
+                        //     },
+                        //     {
+                        //     title: 'Meeting',
+                        //     start: '2017-06-26T07:30:00',
+                        //     end: '2017-06-27T14:00:00'
+                        //     },
+                        //     {
+                        //     title: 'Lunch',
+                        //     start: '2017-07-12T12:00:00'
+                        //     },
+                        //     {
+                        //     title: 'Meeting',
+                        //     start: '2017-07-12T14:30:00'
+                        //     },
+                        //     {
+                        //     title: 'Happy Hour',
+                        //     start: '2017-07-12T17:30:00'
+                        //     },
+                        //     {
+                        //     title: 'Dinner',
+                        //     start: '2017-07-12T20:00:00'
+                        //     },
+                        //     {
+                        //     title: 'Birthday Party',
+                        //     start: '2017-07-13T07:00:00'
+                        //     },
+                        //     {
+                        //     title: 'Click for Google',
+                        //     url: 'http://google.com/',
+                        //     start: '2017-07-28'
+                        //     }
+                        // ],
+                        eventRender : function(event, element) {
+                            if (props.userRole === 1) {
+                                // CREATE A WRAPPER ELEMENT TO HOLD THE EVENT TITLE AND DELETE BUTTON
+                                var wrapper         = document.createElement('div');
+                                wrapper.className   = 'event-wrapper';
+
+                                // CREATE THE DELETE BUTTON ELEMENT
+                                var deleteButton            =   document.createElement('span');
+                                deleteButton.className      =   'delete-button me-2';
+                                deleteButton.innerHTML      =   '❌';
+
+                                // CREATE THE EVENT TITLE ELEMENT
+                                var title           =   document.createElement('span');
+                                title.className     =   'event-title';
+                                title.innerHTML     =   event.title;
+
+                                // APPEND THE DELETE BUTTON AND EVENT TITLE TO THE WRAPPER
+                                wrapper.appendChild(deleteButton);
+                                wrapper.appendChild(title);
+
+                                // REPLACE THE EVENT'S CONTENT WITH THE WRAPPER
+                                element.find('.fc-content').html(wrapper);
+
+                                // HANDLE EVENT DELETION ON BUTTON CLICK
+                                $(deleteButton).on('click', function() {
+                                // HANDLE EVENT DELETION HERE (REMOVE THE EVENT).
+                                // YOU'LL NEED TO MAKE AN AJAX REQUEST TO DELETE THE EVENT ON THE SERVER.
+                                console.log('Event deleted:', event.title);
+                                $('#calendar').fullCalendar('removeEvents', event._id); // REMOVE THE EVENT FROM THE CALENDAR.
+                                });
+                            }
+                        },
+                        // event1Color : '#3B71CA',
+                    })
+                    $('.spinner-container').attr('hidden', true);
+                }).catch((error) => {
+
+                });
+            }
 
             const now       =   new Date();
             const month     =   String(now.getMonth() + 1).padStart(2, '0'); // Months are 0-based
@@ -922,24 +1046,68 @@ function adminDashboard(userRole) {
         // GET EMPLOYEE LEAVE REQUEST (USER/EMPLOYEE VIEW)
         getLeaveRequest : function () {
             this.leaveIsLoading = true;
+            $('ul.pagination').empty();
+            $('input[name="page"]').val(this.leaveCurrentPage);
 
             $.ajax({
                 type        :   "GET",
                 url         :   route("leave.show"),
-                data        :   $('#users-search-form').serializeArray(),
+                data        :   $('#employee-leave-form').serializeArray(),
             }).then((response) => {
-                const data              =   Object.keys(response)[0];
+                const dataKey           =   Object.keys(response)[0];
                 const count             =   Object.keys(response)[1];
                 const overAll           =   Object.keys(response)[2];
+                const data              =   response[dataKey] ? JSON.parse(atob(response[dataKey])) : "";
+
+                var leave = data['data'],
+                    navlinks = data['links'];
+
+                if (data['total']) {
+                    // PAGINATION LINKS
+                    $.each(navlinks, function (i, link) {
+                        var nav = '';
+
+                        nav += '<li class="page-item' + (link['active'] ? ' active' : '') + (!link['url'] ? ' disabled' : '') + '">';
+                        nav += '<a class="page-link" href="' + link['url'] + '">' + link['label'] + '</a>';
+                        nav += '</li>';
+
+                        $('ul.pagination').append(nav);
+                    });
+
+                    if (data['from']) {
+                        this.leaveCounterText = 'Showing ' + data['from'] + ' to ' + data['to'] + ' of ' + data['total'] + ' Account/s';
+                        // $('#leave-counter').text('Showing ' + data['from'] + ' to ' + data['to'] + ' of ' + data['total'] + ' Account/s');
+                    } else {
+                        $('.pagination a[href="' + data['first_page_url'] + '"]').trigger('click');
+                    }
+                } else {
+                    this.leaveCounterText = 'No Leave Found!';
+                    $('#leave-counter').text('No Leave Found!');
+                }
 
                 this.overAllLeaveCount      =   response[overAll];
-                this.leaveData              =   response[data] ? JSON.parse(atob(response[data])) : "";
+                this.leaveData              =   leave;
                 this.leaveCount             =   response[count];
                 this.leaveIsLoading         =   false;
 
             }).catch((error) => {
 
             })
+        },
+
+        // PAGINATION PAGE ON THE TABLE LEAVE REQUEST DATA
+        leavePaginationPage : function () {
+            var component = this;
+
+            $(document).on('click', '.pagination a', function (e) {
+                e.preventDefault();
+                var page = $(this).attr('href').split('page=')[1];
+
+                component.leaveCurrentPage = page;
+
+                // Call the getLeaveRequest method using the component reference
+                component.getLeaveRequest();
+            });
         },
 
         // GET EMPLOYEE FILES (USER/EMPLOYEE VIEW)
@@ -1100,7 +1268,6 @@ function adminDashboard(userRole) {
                     date : requestDate
                 }
             }).then((response) => {
-                this.attendanceMonitoringLoading    = false;
                 this.fetchAttendance                = response.attendance ? response.attendance : [];
                 if (this.fetchAttendance.length > 0) {
                     const attendance = this.fetchAttendance[0];
@@ -1109,7 +1276,7 @@ function adminDashboard(userRole) {
                     attendance.break_in     = attendance.break_in   ? this.convert24hrTo12hr(attendance.break_in)   : '';
                     attendance.clock_out    = attendance.clock_out  ? this.convert24hrTo12hr(attendance.clock_out)  : '';
                 }
-
+                this.attendanceMonitoringLoading    = false;
             }).catch((error) => {
                 if (error.responseJSON && error.responseJSON.error) {
 
@@ -1126,6 +1293,7 @@ function adminDashboard(userRole) {
                 this.getLeaveRequest();
                 this.dailyAttendance();
                 this.getEmployeeAttendance();
+                this.leavePaginationPage();
                 this.startClock();
             }
 

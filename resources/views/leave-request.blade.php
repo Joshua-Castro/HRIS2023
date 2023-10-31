@@ -58,13 +58,13 @@
                                                 <td><p class="dark-text fs-14" x-text="rows.leave_type"></p></td>
                                                 <td>
                                                     <template x-if="rows.status == 'Pending'">
-                                                        <div class="badge badge-warning" x-text="rows.status"></div>
+                                                        <div class="badge badge-warning" x-text="rows.status" style="border-radius: 5px;"></div>
                                                     </template>
                                                     <template x-if="rows.status == 'Accepted'">
-                                                        <div class="badge badge-success" x-text="rows.status"></div>
+                                                        <div class="badge badge-success" x-text="rows.status" style="border-radius: 5px;"></div>
                                                     </template>
                                                     <template x-if="rows.status == 'Declined'">
-                                                        <div class="badge badge-danger" x-text="rows.status"></div>
+                                                        <div class="badge badge-danger" x-text="rows.status" style="border-radius: 5px;"></div>
                                                     </template>
                                                 </td>
                                                 <template x-if="rows.status === 'Pending'">

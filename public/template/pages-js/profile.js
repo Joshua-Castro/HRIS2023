@@ -115,11 +115,11 @@ function profile(userId) {
                 },
             }).then((response) => {
                 const profileKey        =   Object.keys(response)[0];
-                this.profileData        =   response[profileKey] ? JSON.parse(atob(response[profileKey])) : [];
+                this.profileData        =   response[profileKey]            ? JSON.parse(atob(response[profileKey]))    :   [];
                 const wholeName         =   this.profileData.first_name + " " + (this.profileData.middle_name ? this.profileData.middle_name : "") + " " + this.profileData.last_name;
-                this.fullName           =   wholeName ? wholeName : this.profileData.maiden_name;
-                this.userEmail          =   this.profileData.userEmail ? this.profileData.userEmail : "";
-                this.userPassword       =   this.profileData.userPassword ? this.profileData.userPassword : "";
+                this.fullName           =   wholeName                       ? wholeName                                 :   this.profileData.maiden_name;
+                this.userEmail          =   this.profileData.userEmail      ? this.profileData.userEmail                :   "";
+                this.userPassword       =   this.profileData.userPassword   ? this.profileData.userPassword             :   "";
                 this.profileLoading     =   false;
             }).catch((error) => {
                 Swal.fire('Something error!','Please try again! Please refrain to this error : Fetching Profile');

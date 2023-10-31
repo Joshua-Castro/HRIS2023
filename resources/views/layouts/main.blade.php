@@ -128,13 +128,13 @@
                                 <span class="menu-title">Attendance</span>
                             </a>
                         </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ route('training') }}">
+                                <i class="ti ti-briefcase ms-3 me-4" style="font-size: 20px;"></i>
+                                <span class="menu-title">Trainings</span>
+                            </a>
+                        </li>
                     @endif
-                    <li class="nav-item">
-                        <a class="nav-link" href="{{ route('training') }}">
-                            <i class="ti ti-briefcase ms-3 me-4" style="font-size: 20px;"></i>
-                            <span class="menu-title">Trainings</span>
-                        </a>
-                    </li>
                     <li class="nav-item">
                         <a class="nav-link" data-bs-toggle="collapse" href="#settings" aria-expanded="false" aria-controls="settings">
                             <i class="ti ti-settings ms-3 me-4" style="font-size: 20px;"></i>
@@ -185,7 +185,6 @@
   <script src="{{ asset('template/js/Chart.roundedBarCharts.js') }}"></script>
   <script src="{{ asset('template/vendors/fullcalendar/fullcalendar.min.js') }}"></script>
   <script src="{{ asset('template/js/filepond.js') }}"></script>
-  <script src="{{ asset('template/js/calendar.js') }}"></script>
   <script src="{{ asset('template/vendors/inputmask/jquery.inputmask.bundle.js') }}"></script>
   <script src="{{ asset('template/js/inputmask.js') }}"></script>
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>

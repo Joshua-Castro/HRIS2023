@@ -157,15 +157,19 @@
             <div class="col-lg-6 d-flex flex-column">
                 <div class="row flex-grow">
                     <div class="col-12 col-lg-4 col-lg-12 grid-margin stretch-card">
-                        <div class="card">
+                        <div class="card" style="max-height: 600px; height: 520px;">
                             <div class="card-body">
-                                <div class="d-flex justify-content-between align-items-start">
-                                    <div>
+                                <div class="row">
+                                    <form id="employee-leave-form" class="d-none">
+                                        <input type="hidden" name="employee-leave-pagination-hidden">
+                                        <input type="hidden" name="page">
+                                    </form>
+                                    <div class="col-md-6">
                                         <h4 class="card-title card-title-dash">Leave Requests</h4>
-                                        <p class="text-small modern-color-999">See all of your Leave Request here...</p>
+                                            <p class="text-small modern-color-999">See all of your Leave Request here...</p>
                                     </div>
-                                    <div>
-                                        <button class="btn btn-sm btn-outline-primary employee-btn mt-2" style="border-radius: 5px;" @click="createRequest">Request</button>
+                                    <div class="col-md-6 d-flex justify-content-end">
+                                        <button class="btn btn-sm btn-outline-primary form-control form-control-sm fw-bold" style="border-radius: 5px; width: 100px;" @click="createRequest">Request</button>
                                     </div>
                                 </div>
                                 <div class="row">
@@ -206,13 +210,13 @@
                                                                 <td><p class="dark-text fs-14" x-text="rows.day_type"></p></td>
                                                                 <td>
                                                                     <template x-if="rows.status == 'Pending'">
-                                                                        <div class="badge badge-warning" x-text="rows.status"></div>
+                                                                        <div class="badge badge-warning" x-text="rows.status" style="border-radius: 5px;"></div>
                                                                     </template>
                                                                     <template x-if="rows.status == 'Accepted'">
-                                                                        <div class="badge badge-success" x-text="rows.status"></div>
+                                                                        <div class="badge badge-success" x-text="rows.status" style="border-radius: 5px;"></div>
                                                                     </template>
                                                                     <template x-if="rows.status == 'Declined'">
-                                                                        <div class="badge badge-danger" x-text="rows.status"></div>
+                                                                        <div class="badge badge-danger" x-text="rows.status" style="border-radius: 5px;"></div>
                                                                     </template>
                                                                 </td>
                                                                 <td class="text-center" style="padding-top: 18px;">
@@ -247,6 +251,28 @@
                                                 </tbody>
                                             </template>
                                         </table>
+                                        <div class="row gx-0" style="margin-left: -4px;">
+                                            <div class="col-md-6 mb-2 my-md-auto">
+                                                <template x-if="leaveIsLoading">
+                                                    <p class="placeholder-glow">
+                                                        <span class="placeholder col-6"></span>
+                                                    </p>
+                                                </template>
+                                                <template x-if="!leaveIsLoading && leaveData.length > 0">
+                                                    <p class="m-0 mt-2" x-text="leaveCounterText"></p>
+                                                </template>
+                                                <template x-if="!leaveIsLoading && leaveData.length === 0">
+                                                    <p class="m-0 mt-2" x-text="leaveCounterText"></p>
+                                                </template>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <nav>
+                                                    <ul class="pagination pagination-sm float-md-end mt-2 mb-0" style="margin-right: -4px;">
+                                                        {{-- PAGINATION --}}
+                                                    </ul>
+                                                </nav>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -313,6 +339,24 @@
                                         </template>
                                     </table>
                                 </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-12 d-flex flex-column">
+                <div class="row flex-grow">
+                    <div class="col-12 grid-margin stretch-card">
+                        <div class="card">
+                            <div class="card-body">
+                                <h4 class="card-title card-title-dash">Training Calendar</h4>
+                                <div class="spinner-container calendar-spinner" hidden>
+                                    <div class="spinner"></div>
+                                </div>
+                                {{-- <p class="text-small modern-color-999">All training/s that happening today...</p> --}}
+                                <div id="calendar" class="full-calendar mt-4"></div>
                             </div>
                         </div>
                     </div>

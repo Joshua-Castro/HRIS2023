@@ -85,14 +85,16 @@ class LeaveController extends Controller
                     ->where('user_id', '=', $userId)
                     ->whereNull('deleted_at')
                     ->orderBy('created_at', 'desc')
-                    ->get();
+                    ->paginate(5);
 
             $overAllCount = DB::table('leaves')
                             ->select('*')
                             ->whereNull('deleted_at')
                             ->count();
 
-            $count = $data->count();
+            $count = DB::table('leaves')
+                    ->where('user_id', '=', $userId)
+                    ->count();
             $indication     =   Str::random(16);
             $indication2    =   Str::random(16);
             $indication3    =   Str::random(16);

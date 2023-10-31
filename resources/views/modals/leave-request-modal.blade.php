@@ -78,8 +78,8 @@
                 </div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-sm btn-outline-danger" data-bs-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-sm btn-outline-primary submit-btn" @click="submitRequest">Submit</button>
+                <button type="button" class="btn btn-sm btn-outline-danger" data-bs-dismiss="modal" style="border-radius: 5px;">Close</button>
+                <button type="button" class="btn btn-sm btn-outline-primary submit-btn" @click="submitRequest" style="border-radius: 5px;">Submit</button>
             </div>
         </form>
       </div>
