@@ -60,7 +60,7 @@
                 <div class="col-md-12 col-lg-8 mt-2">
                     <div class="modal-body">
                         <h4 class="header-title mb-2 mt-4">Employee Information</h4>
-                        <div class="row mt-1">
+                        <div class="row mt-1 gx-0">
                             <div class="col-12 col-md-7">
                                 <div class="form-group row p-1 m-0" >
                                     <div class="col-sm-12 p-0 m-0">
@@ -71,28 +71,62 @@
                                     </div>
                                 </div>
                             </div>
-
-                            <div class="col-12 col-md-5">
-                                <div class="form-group row p-1 m-0" >
-                                    <div class="col-sm-12 p-0 m-0">
-                                        <div class="form-floating">
-                                            <select class="form-select" name="gender" x-model="current.gender" required>
-                                                <option value="">Select</option>
-                                                <option value="Male">Male</option>
-                                                <option value="Female">Female</option>
-                                            </select>
-                                            <label for="gender">Gender</label>
-                                            <div class="invalid-feedback">
-                                                This field is required.
+                            @if(auth()->user()->role == 1)
+                                <div class="col-12 col-md-3">
+                                    <div class="form-group row p-1 m-0" >
+                                        <div class="col-sm-12 p-0 m-0">
+                                            <div class="form-floating">
+                                                <select class="form-select" name="gender" x-model="current.gender" required>
+                                                    <option value="">Select</option>
+                                                    <option value="Male">Male</option>
+                                                    <option value="Female">Female</option>
+                                                </select>
+                                                <label for="gender">Gender</label>
+                                                <div class="invalid-feedback">
+                                                    This field is required.
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
-                            </div>
-
-
+                                <div class="col-12 col-md-2">
+                                    <div class="form-group row p-1 m-0" >
+                                        <div class="col-sm-12 p-0 m-0">
+                                            <div class="form-floating">
+                                                <select class="form-select" name="role" x-model="current.role" required>
+                                                    <option value="">Select</option>
+                                                    <option value="2">HR</option>
+                                                    <option value="3">Employee</option>
+                                                </select>
+                                                <label for="role">Role</label>
+                                                <div class="invalid-feedback">
+                                                    This field is required.
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            @else
+                                <div class="col-12 col-md-5">
+                                    <div class="form-group row p-1 m-0" >
+                                        <div class="col-sm-12 p-0 m-0">
+                                            <div class="form-floating">
+                                                <select class="form-select" name="gender" x-model="current.gender" required>
+                                                    <option value="">Select</option>
+                                                    <option value="Male">Male</option>
+                                                    <option value="Female">Female</option>
+                                                </select>
+                                                <label for="gender">Gender</label>
+                                                <div class="invalid-feedback">
+                                                    This field is required.
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            @endif
                         </div>
-                        <div class="row mt-1">
+                        <div class="row mt-1 gx-0">
                             <div class="col-12 col-md-4">
                                 <div class="form-group row p-1 m-0" >
                                     <div class="col-sm-12 p-0 m-0">
@@ -133,7 +167,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="row mt-1">
+                        <div class="row mt-1 gx-0">
                             <div class="col-12 col-md-3">
                                 <div class="form-group row p-1 m-0" >
                                     <div class="col-sm-12 p-0 m-0">
@@ -184,7 +218,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="row mt-1 mb-4">
+                        <div class="row mt-1 mb-4 gx-0">
                             <div class="col-12 col-md-4">
                                 <div class="form-group row p-1 m-0" >
                                     <div class="col-sm-12 p-0 m-0">
@@ -258,7 +292,7 @@
                             </div>
                         </div>
                         <h4 class="header-title mb-2">Benefits Information</h4>
-                        <div class="row mt-1 mb-4">
+                        <div class="row mt-1 mb-4 gx-0">
                             <div class="col-12 col-md-4">
                                 <div class="form-group row p-1 m-0" >
                                     <div class="col-sm-12 p-0 m-0">
@@ -300,7 +334,7 @@
                             </div>
                         </div>
                         <h4 class="header-title mb-2 account-information">Account Information</h4>
-                        <div class="row mt-1 mb-4 account-information">
+                        <div class="row mt-1 mb-4 account-information gx-0">
                             <div class="col-12 col-md-6">
                                 <div class="form-group row p-1 m-0" >
                                     <div class="col-sm-12 p-0 m-0">

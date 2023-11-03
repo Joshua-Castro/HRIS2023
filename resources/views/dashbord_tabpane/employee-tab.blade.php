@@ -1,4 +1,4 @@
-@if(auth()->user()->is_admin == 1)
+@if(auth()->user()->role == 1 or auth()->user()->role == 2)
 @push('styles')
     <style>
         .filepond--credits {

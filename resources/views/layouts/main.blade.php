@@ -55,7 +55,7 @@
             <ul class="navbar-nav">
                 <li class="nav-item font-weight-semibold d-none d-lg-block ms-0">
                 <h1 class="welcome-text">Good Day, <span class="text-black fw-bold">{{ Auth::user()->name ?? Auth::user()->email }}</span></h1>
-                @if(auth()->user()->is_admin == 1)
+                @if(auth()->user()->role == 1 or auth()->user()->role == 2)
                 <h3 class="welcome-sub-text">All details about your employees are here... </h3>
                 @else
                 <h3 class="welcome-sub-text">All details about your work benefits are here... </h3>
@@ -81,7 +81,7 @@
                             <p class="fw-light text-muted mb-0">{{ Auth::user()->email }}</p>
                         </div>
                         <a class="dropdown-item" href="{{ route('profile.index') }}"><i class="dropdown-item-icon ti ti-user text-primary me-3" style="font-size: 18px;"></i> Profile</a>
-                        <a class="dropdown-item"><i class="dropdown-item-icon ti ti-pencil-alt text-primary me-3" style="font-size: 18px;"></i> Activity</a>
+                        <a class="dropdown-item" href="{{ route('activities') }}"><i class="dropdown-item-icon ti ti-pencil-alt text-primary me-3" style="font-size: 18px;"></i> Activity</a>
                         <a class="dropdown-item"><i class="dropdown-item-icon ti ti-help text-primary me-3" style="font-size: 18px;"></i> FAQ</a>
                         <a class="dropdown-item" href="{{ route('logout') }}" onclick="event.preventDefault();
                             document.getElementById('logout-form').submit();">
@@ -109,7 +109,7 @@
                         </a>
                     </li>
 
-                    @if (auth()->user()->is_admin == 1)
+                    @if (auth()->user()->role == 1 or auth()->user()->role == 2)
                         <li class="nav-item">
                             <a class="nav-link" data-bs-toggle="collapse" href="#requests" aria-expanded="false" aria-controls="requests">
                                 <i class="ti ti-agenda ms-3 me-4" style="font-size: 20px;"></i>
@@ -145,7 +145,7 @@
                     <div class="collapse" id="settings">
                         <ul class="nav flex-column sub-menu">
                             <li class="nav-item ms-4"> <a class="nav-link" href="{{ route('profile.index') }}">Profile</a></li>
-                            <li class="nav-item ms-4"> <a class="nav-link" href="javascript:void(0);">Activity</a></li>
+                            <li class="nav-item ms-4"> <a class="nav-link" href="{{ route('activities') }}">Activity</a></li>
                             <li class="nav-item ms-4"> <a class="nav-link" href="javascript:void(0);">FAQ</a></li>
                             <li class="nav-item ms-4"> <a class="nav-link" href="{{ route('logout') }}" onclick="event.preventDefault();
                                 document.getElementById('logout-form').submit();">Logout</a></li>

@@ -3,6 +3,7 @@
 namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
+use App\Services\LogService;
 use App\Services\ManualCascadeDeleteService;
 
 class AppServiceProvider extends ServiceProvider
@@ -14,6 +15,10 @@ class AppServiceProvider extends ServiceProvider
     {
         $this->app->singleton(ManualCascadeDeleteService::class, function ($app) {
             return new ManualCascadeDeleteService();
+        });
+
+        $this->app->singleton(LogService::class, function ($app) {
+            return new LogService();
         });
 
         if ($this->app->environment('local')) {

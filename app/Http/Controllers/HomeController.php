@@ -166,4 +166,24 @@ class HomeController extends Controller
             return redirect()-> route('login');
         }
     }
+
+    /**
+     * Show the logs
+     * in Developer side or Super admin side
+     */
+    public function activities()
+    {
+        try {
+            $userId    = Auth::id();
+            $userImage = DB::table('images')
+                ->where('user_id', '=', $userId)
+                ->first();
+
+            $image      = $userImage ?  'storage/' . $userImage->file_path : 'template/images/default-icon.png';
+            return view('activities', ['image' => $image]);
+        } catch (QueryException $e) {
+            $errorMessage = $e->getMessage();
+            return response()->json(['error' => $errorMessage], 500);
+        }
+    }
 }

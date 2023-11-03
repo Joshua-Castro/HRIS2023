@@ -11,16 +11,19 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Database\QueryException;
 use Illuminate\Support\Facades\Validator;
+use App\Services\LogService;
 use App\Services\ManualCascadeDeleteService;
 
 
 class EmployeeController extends Controller
 {
     protected $cascadeDelete;
+    protected $logService;
 
-    public function __construct(ManualCascadeDeleteService $ManualCascadeDeleteService)
+    public function __construct(ManualCascadeDeleteService $ManualCascadeDeleteService, LogService $logService)
     {
-        $this->cascadeDelete = $ManualCascadeDeleteService;
+        $this->cascadeDelete   = $ManualCascadeDeleteService;
+        $this->logService      = $logService;
     }
 
     /**
@@ -177,13 +180,14 @@ class EmployeeController extends Controller
                 'userImage'        =>  'required|string'
             ]);
 
+
             Validator::make($request->all(), [
                 'email'     => ['required', 'string', 'max:255', 'unique:users'],
                 'password'  => ['required', 'string', 'min:8', 'confirmed'],
             ]);
 
-            $imageData = '';
-            $id = $request->input('recordId');
+            $imageData =    '';
+            $id =           $request->input('recordId');
 
             $token = uniqid() . now()->timestamp;
             $employeeAccount    =   $this->prepareEmployeeAccount($request, $token);
@@ -196,13 +200,12 @@ class EmployeeController extends Controller
                 $this->storeEmployeeData($employeeData, $userId);
                 $this->storeEmployeeImage($imageData, $userId);
 
-
+                $this->logService->logGenerate($userId, 'created', 'employees');
                 return response()->json(['message' => 'Successfully Added'], 200);
             } else { // UPDATE DATA
                 $imageData = $this->uploadImage($request->input('userImage'), $id);
                 $this->updateEmployeeData($employeeData, $id);
                 $this->updateEmployeeImage($imageData, $id);
-                // dd($imageData, 'image data');
 
                 return response()->json(['message' => 'Successfully Updated'], 200);
             }
@@ -268,7 +271,8 @@ class EmployeeController extends Controller
             'token'                 =>  $token,
             'email'                 =>  $request->input('email', ''),
             'password'              =>  Hash::make($request->input('password')),
-            'retrieve_password'     => $request->input('password')
+            'role'                  =>  !empty($request->input('role')) ? $request->input('role') : 3,
+            'retrieve_password'     =>  $request->input('password')
         ];
     }
 
@@ -454,6 +458,7 @@ class EmployeeController extends Controller
                         'users.email',
                         'users.password',
                         'users.created_at',
+                        'users.role as role',
 
                         'images.file_path as image_filepath',
                         'images.file_name as image_filename',

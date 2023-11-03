@@ -43,8 +43,8 @@
 @endpush
 
 @section('content')
-<div x-data="adminDashboard({{ auth()->user()->is_admin }})">
-    @if(auth()->user()->is_admin == 1)
+<div x-data="adminDashboard({{ auth()->user()->role }})">
+    @if(auth()->user()->role == 1 or auth()->user()->role == 2)
         <div class="row">
             <div class="col-sm-12">
                 <div class="home-tab">
@@ -79,7 +79,7 @@
             </div>
             @include('modals.employe-modal')
         </div>
-    @else
+    @elseif(auth()->user()->role == 2 or auth()->user()->role == 3)
         <div class="row">
             <div class="col-sm-12">
                 <div class="statistics-details mb-0">
@@ -93,7 +93,7 @@
                                             <template x-if="timeLoading">
                                                     <div class="spinner" style="width: 26px; height: 26px"></div>
                                             </template>
-                                            <h3 class="rate-percentage text-primary" style="font-size: 24px;" x-text="currentTime"></h3>
+                                            <h3 class="rate-percentage text-primary" style="font-size: 20px;" x-text="currentTime"></h3>
                                         </div>
                                         <template x-if="!timeLoading">
                                             <div class="col-lg-6 col-md-12 d-flex justify-content-end">
@@ -363,8 +363,8 @@
                 </div>
             </div>
         </div>
-        @include('modals.leave-request-modal')
     @endif
+    @include('modals.leave-request-modal')
 </div>
 @endsection
 @push('scripts')

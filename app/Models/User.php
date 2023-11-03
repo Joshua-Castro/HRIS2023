@@ -22,7 +22,7 @@ class User extends Authenticatable
         'token',
         'email',
         'password',
-        'is_admin',
+        'role',
         'retrieve_password'
     ];
 

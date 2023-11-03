@@ -15,7 +15,7 @@ class IsAdmin
      */
     public function handle(Request $request, Closure $next): Response
     {
-        if (auth()->user()->is_admin == 1) {
+        if (auth()->user()->role == 1 || auth()->user()->role == 2) {
             return $next($request);
         } else {
             return redirect('home')->with('error', 'Sorry! You have no access on this side');

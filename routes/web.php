@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\LogController;
 use App\Http\Controllers\LeaveController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\EmployeeController;
@@ -36,6 +37,7 @@ Route::get('/attendance'                ,[App\Http\Controllers\HomeController::c
 Route::get('/training'                  ,[App\Http\Controllers\HomeController::class, 'training'                        ])->name('training');
 Route::get('/training-event'            ,[App\Http\Controllers\HomeController::class, 'trainingCalendarEvents'          ])->name('events');
 Route::get('/employee-overview'         ,[App\Http\Controllers\HomeController::class, 'employeeOverview'                ])->name('overview');
+Route::get('/activities'                ,[App\Http\Controllers\HomeController::class, 'activities'                      ])->name('activities');
 
 // EMPLOYEE CONTROLLER ROUTES
 Route::prefix('employee')->as('employee.')->group(function () {
@@ -84,4 +86,6 @@ Route::prefix('profile')->as('profile.')->group(function () {
     Route::get('/show'              ,[ProfileController::class, 'show'             ])->name('show');
     Route::post('/update-info'      ,[ProfileController::class, 'updateInfo'       ])->name('update.info');
 });
+
+// ACTIVITIES OR LOGS CONTROLLER ROUTES
 

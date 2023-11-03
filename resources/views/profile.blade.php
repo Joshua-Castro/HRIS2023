@@ -55,14 +55,14 @@
                         <template x-if="!profileLoading">
                             <div>
                                 <div class="row justify-content-center">
-                                    <img src="{{ asset($image) }}" alt="profile" class="rounded-circle mb-3" style="width: 210px; height: 170px;">
+                                    <img src="{{ asset($image) }}" alt="profile" class="rounded-circle mb-3" style="width: 200px; height: 170px;">
                                     <span class="text-center" style="font-size: 28px; font-weight: 900;" x-text="fullName"></span>
                                     <span class="text-center" style="font-size: 16px; font-weight: inherit; color:rgb(177, 177, 177)" x-text="profileData.employee_no"></span>
                                     <hr class="mt-4" style="width: 90%;">
                                 </div>
                                 <h6 class="header-title mb-4 ms-3 fw-bold text-center">GOVERNMENT INFORMATION</h6>
                                 <div class="row justify-content-between">
-                                    <div class="col-lg-4">
+                                    <div class="col-lg-5">
                                         <div class="col-lg-12 mt-1">
                                             <span class="ms-4" style="font-size: 14px; font-weight: inherit;">GSIS NUMBER </span>
                                         </div>
@@ -73,7 +73,7 @@
                                             <span class="ms-4" style="font-size: 14px; font-weight: inherit;">PAGIBIG NUMBER </span>
                                         </div>
                                     </div>
-                                    <div class="col-lg-4 text-center">
+                                    <div class="col-lg-2 text-center">
                                         <div class="col-lg-12 mt-1">
                                             <span style="font-size: 14px; font-weight: 900;">: </span>
                                         </div>
@@ -84,14 +84,14 @@
                                             <span style="font-size: 14px; font-weight: 900;">: </span>
                                         </div>
                                     </div>
-                                    <div class="col-lg-4">
-                                        <div class="col-lg-12 mt-1" style="margin-left: -25px;">
+                                    <div class="col-lg-5">
+                                        <div class="col-lg-12 mt-1" style="margin-left: 25px;">
                                             <span style="font-size: 14px; font-weight: inherit;" x-text="profileData.gsis"></span>
                                         </div>
-                                        <div class="col-lg-12 mt-1" style="margin-left: -25px;">
+                                        <div class="col-lg-12 mt-1" style="margin-left: 25px;">
                                             <span style="font-size: 14px; font-weight: inherit;" x-text="profileData.phil_health"></span>
                                         </div>
-                                        <div class="col-lg-12 mt-1" style="margin-left: -25px;">
+                                        <div class="col-lg-12 mt-1" style="margin-left: 25px;">
                                             <span style="font-size: 14px; font-weight: inherit;" x-text="profileData.pag_ibig"></span>
                                         </div>
                                     </div>

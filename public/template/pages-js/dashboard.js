@@ -36,6 +36,7 @@ function adminDashboard(userRole) {
             confirmPassword         :       '',
             userId                  :       '',
             userImage               :       '',
+            role                    :       '',
         },
 
         disableFields           :   [
@@ -257,7 +258,7 @@ function adminDashboard(userRole) {
                         //     }
                         // ],
                         eventRender : function(event, element) {
-                            if (props.userRole === 1) {
+                            if (props.userRole === 1 || props.userRole === 2) {
                                 // CREATE A WRAPPER ELEMENT TO HOLD THE EVENT TITLE AND DELETE BUTTON
                                 var wrapper         = document.createElement('div');
                                 wrapper.className   = 'event-wrapper';
@@ -338,6 +339,7 @@ function adminDashboard(userRole) {
                 name            :   '',
                 email           :   '',
                 password        :   '',
+                role            :   '',
             };
 
             // SET TIME OUT FOR SELECT2 AFTER INITIALIZING THE VALUE TO SHOW IT IN THE UI.
@@ -405,6 +407,7 @@ function adminDashboard(userRole) {
                 confirmPassword     :   this.employeeData[index].password,
                 userId              :   this.employeeData[index].user_id,
                 userImage           :   this.employeeData[index].image_filepath,
+                role                :   this.employeeData[index].role,
             };
 
             // SET TIME OUT FOR SELECT2 AFTER INITIALIZING THE VALUE TO SHOW IT IN THE UI.
@@ -1289,7 +1292,7 @@ function adminDashboard(userRole) {
 
         // GET ALL FETCH TO LOAD IN DOM ONCE
         getAllInitialization : function () {
-            if (this.userRole != 1) {
+            if (this.userRole != 1 || this.userRole != 2) {
                 this.getLeaveRequest();
                 this.dailyAttendance();
                 this.getEmployeeAttendance();

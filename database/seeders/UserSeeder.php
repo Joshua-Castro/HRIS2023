@@ -15,28 +15,28 @@ class UserSeeder extends Seeder
     public function run(): void
     {
         User::create([
-            'name'                  => 'Admin',
+            'name'                  => 'SuperAdmin',
             'token'                 => uniqid() . now()->timestamp,
-            'email'                 => 'admin',
-            'is_admin'              => '1',
+            'email'                 => 'superadmin@admin.com',
+            'role'                  => '1',
             'retrieve_password'     => 'admin1234',
             'password'              => Hash::make('admin1234'),
         ]);
 
         User::create([
-            'name'                  => 'Admin2',
+            'name'                  => 'SuperAdmin2',
             'token'                 => uniqid() . now()->timestamp,
-            'email'                 => 'admin2',
-            'is_admin'              => '1',
+            'email'                 => 'superadmin2@admin.com',
+            'role'                  => '1',
             'retrieve_password'     => 'admin1234',
             'password'              => Hash::make('admin1234'),
         ]);
 
         User::create([
-            'name'                  => 'Admin3',
+            'name'                  => 'SuperAdmin3',
             'token'                 => uniqid() . now()->timestamp,
-            'email'                 => 'admin3',
-            'is_admin'              => '1',
+            'email'                 => 'superadmin3@admin.com',
+            'role'                  => '1',
             'retrieve_password'     => 'admin1234',
             'password'              => Hash::make('admin1234'),
         ]);
