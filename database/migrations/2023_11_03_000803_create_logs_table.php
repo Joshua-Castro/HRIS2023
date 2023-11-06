@@ -18,6 +18,9 @@ return new class extends Migration
             $table->text('message')->nullable();
             $table->string('creator_name')->nullable();
             $table->string('action')->nullable();
+            $table->integer('user_id')->nullable();
+            $table->integer('employee_id')->nullable();
+
 
             $table->integer('created_by')->nullable();
             $table->integer('updated_by')->nullable();

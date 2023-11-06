@@ -11,10 +11,12 @@ class Log extends Model
     use HasFactory, SoftDeletes;
     protected $fillable = [
         'activity',
-        'creator_name',
-        'message',
         'description',
+        'message',
+        'creator_name',
         'action',
+        'user_id',
+        'employee_id',
         'created_by',
         'created_by',
         'updated_by',

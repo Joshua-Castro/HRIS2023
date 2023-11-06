@@ -22,8 +22,8 @@ class EmployeeController extends Controller
 
     public function __construct(ManualCascadeDeleteService $ManualCascadeDeleteService, LogService $logService)
     {
-        $this->cascadeDelete   = $ManualCascadeDeleteService;
-        $this->logService      = $logService;
+        $this->cascadeDelete   = $ManualCascadeDeleteService; // DELETE ALSO THE RELATED TABLES ['images','file_uploads','users']
+        $this->logService      = $logService; // LOGS ALL THE ACTION THAT HAS BEEN TAKEN
     }
 
     /**
@@ -41,119 +41,6 @@ class EmployeeController extends Controller
     {
         //
     }
-
-    // /**
-    //  * Store a newly created resource in storage.
-    //  */
-    // public function store(Request $request)
-    // {
-    //     $request->validate([
-    //         'lastName'         =>  'required',
-    //         'firstName'        =>  'required',
-    //         'position'         =>  'required',
-    //         'lastPromotion'    =>  'required',
-    //         'stationCode'      =>  'required',
-    //         'controlNumber'    =>  'required',
-    //         'employeeNumber'   =>  'required',
-    //         'schoolCode'       =>  'required',
-    //         'itemNumber'       =>  'required',
-    //         'employeeStatus'   =>  'required',
-    //         'salaryGrade'      =>  'required',
-    //         'dateHired'        =>  'required',
-    //         'sss'              =>  'required',
-    //         'pagIbig'          =>  'required',
-    //         'philHealth'       =>  'required',
-    //         'userImage'        =>  'required|string'
-    //     ]);
-
-    //     // DECODE THE BASE64 IMAGE DATA TO SAVE IN DATABASE
-    //     $base64Image    =   $request->input('userImage');
-    //     $decodedImage   =   base64_decode(preg_replace('#^data:image/\w+;base64,#i', '', $base64Image));
-
-    //     // GENERATE UNIQUE FILE NAME FOR THE IMAGE
-    //     $fileName       =   time() . '_' . uniqid() . '.png';
-
-    //     // SAVE THE IMAGE TO STORAGE OR PUBLIC DIRECTORY
-    //     $filePath = public_path('images/' . $fileName);
-    //     file_put_contents($filePath, $decodedImage);
-
-    //     try {
-    //         Validator::make($request->all(), [
-    //             // 'name'      => ['required', 'string', 'max:255'],
-    //             'email'     => ['required', 'string', 'max:255', 'unique:users'],
-    //             'password'  => ['required', 'string', 'min:8', 'confirmed'],
-    //         ]);
-
-    //         $id = !empty($request->recordId) ? $request->recordId : 0;
-
-    //         $employeeAccount    =   [
-    //             'name'              =>      $request->name,
-    //             'email'             =>      $request->email,
-    //             'password'          =>      Hash::make($request->password),
-    //         ];
-
-    //         $data = [
-    //             'last_name'             =>      !empty($request->lastName)             ?   $request->lastName             :  '',
-    //             'first_name'            =>      !empty($request->firstName)            ?   $request->firstName            :  '',
-    //             'middle_name'           =>      !empty($request->middleName)           ?   $request->middleName           :  '',
-    //             'gender'                =>      !empty($request->gender)               ?   $request->gender               :  '',
-    //             'maiden_name'           =>      !empty($request->maidenName)           ?   $request->maidenName           :  '',
-    //             'position'              =>      !empty($request->position)             ?   $request->position             :  '',
-    //             'last_promotion'        =>      !empty($request->lastPromotion)        ?   $request->lastPromotion        :  '',
-    //             'station_code'          =>      !empty($request->stationCode)          ?   $request->stationCode          :  '',
-    //             'control_no'            =>      !empty($request->controlNumber)        ?   $request->controlNumber        :  '',
-    //             'employee_no'           =>      !empty($request->employeeNumber)       ?   $request->employeeNumber       :  '',
-    //             'school_code'           =>      !empty($request->schoolCode)           ?   $request->schoolCode           :  '',
-    //             'item_number'           =>      !empty($request->itemNumber)           ?   $request->itemNumber           :  '',
-    //             'employment_status'     =>      !empty($request->employeeStatus)       ?   $request->employeeStatus       :  '',
-    //             'salary_grade'          =>      !empty($request->salaryGrade)          ?   $request->salaryGrade          :  '',
-    //             'date_hired'            =>      !empty($request->dateHired)            ?   $request->dateHired            :  '',
-    //             'sss'                   =>      !empty($request->sss)                  ?   $request->sss                  :  '',
-    //             'pag_ibig'              =>      !empty($request->pagIbig)              ?   $request->pagIbig              :  '',
-    //             'phil_health'           =>      !empty($request->philHealth)           ?   $request->philHealth           :  '',
-    //         ];
-
-    //         // Store the file path or URL in your database
-    //         $imageData = [
-    //             'file_name' => $fileName,
-    //             'file_path' => '/images/' . $fileName,
-    //         ];
-
-    //         if (empty($id)) { // CREATE OR STORE DATA
-    //                 // STORE NEWLY CREATED EMPLOYEE'S ACCOUNT TO USERS TABLE
-    //                 $employeeAccount['created_at'] = now();
-    //                 $userId = DB::table('users')->insertGetId($employeeAccount);
-
-    //                 // STORE EMPLOYEE'S DATA TO EMPLOYEES TABLE
-    //                 $data['created_by'] = Auth::id();
-    //                 $data['created_at'] = now();
-    //                 $data['user_id']    = $userId;
-    //                 DB::table('employees')->insert($data);
-
-    //                 // STORE EMPLOYEE || USER IMAGE TO IMAGES TABLE
-    //                 $imageData['created_by']    =   Auth::id();
-    //                 $imageData['created_at']    =   now();
-    //                 $imageData['user_id']       =   $userId;
-    //                 DB::table('images')->insert($imageData);
-
-    //                 return response()->json(['message' => 'Successfully Added'], 200);
-    //         } else { // UPDATE DATA
-    //             // UPDATE USER ACCOUNT IF NEEDED
-    //             $employeeAccount['updated_at'] = now();
-    //             DB::table('users')->where('id','=', $request->userId)->update($employeeAccount);
-
-    //             // UPDATE EMPLOYEE DATA WHEN THEY WANT TO CHANGE IN THEIR PREFERENCES
-    //             $data['updated_by'] = Auth::id();
-    //             $data['updated_at'] = now();
-    //             DB::table('employees')->where('id','=',$id)->update($data);
-
-    //             return response()->json(['message' => 'Successfully Updated'],200);
-    //         }
-    //     } catch (QueryException $e) {
-    //         $errorMessage = $e->getMessage();
-    //         return response()->json(['error' => $errorMessage], 500);
-    //     }
-    // }
 
     /**
      * Store a newly created resource in storage.
@@ -186,8 +73,8 @@ class EmployeeController extends Controller
                 'password'  => ['required', 'string', 'min:8', 'confirmed'],
             ]);
 
-            $imageData =    '';
-            $id =           $request->input('recordId');
+            $imageData  =   '';
+            $id         =   $request->input('recordId');
 
             $token = uniqid() . now()->timestamp;
             $employeeAccount    =   $this->prepareEmployeeAccount($request, $token);
@@ -207,6 +94,7 @@ class EmployeeController extends Controller
                 $this->updateEmployeeData($employeeData, $id);
                 $this->updateEmployeeImage($imageData, $id);
 
+                $this->logService->logGenerate($id, 'updated', 'employees');
                 return response()->json(['message' => 'Successfully Updated'], 200);
             }
         } catch (QueryException $e) {
@@ -501,15 +389,16 @@ class EmployeeController extends Controller
     public function destroy(Request $request)
     {
         try {
+            $id   = !empty($request->id) ? $request->id : "";
             $data = DB::table('employees')
-                ->where('id','=', $request->id)
+                ->where('id','=', $id)
                 ->update([
                     'deleted_by' => Auth::id(),
                     'deleted_at' => now(),
                 ]);
 
             $this->cascadeDelete->delete($request);
-
+            $this->logService->logGenerate($id, 'deleted', 'employees');
             return response()->json(['message' => 'Successfully Deleted']);
         } catch (QueryException $e) {
             $errorMessage = $e->getMessage();
