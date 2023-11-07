@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\FileUpload;
 use Illuminate\Http\Request;
+use App\Services\LogService;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
@@ -11,6 +12,13 @@ use Illuminate\Database\QueryException;
 
 class FileUploadController extends Controller
 {
+    protected $logService;
+
+    public function __construct(LogService $logService)
+    {
+        $this->logService      = $logService; // LOGS ALL THE ACTION THAT HAS BEEN TAKEN
+    }
+
     /**
      * Display a listing of the resource.
      */
@@ -71,6 +79,7 @@ class FileUploadController extends Controller
                 'filepond' => 'required|array',
             ]);
 
+            $employeeId = $request->input('employee_id');
             $files      = $request->file('filepond');
             $fileData   = [];
             foreach ($files as $file) {
@@ -80,7 +89,7 @@ class FileUploadController extends Controller
                 $path       =   $fileName ? 'uploads/tmp/' . $token . $fileName : '';
 
                 $fileData[] = [
-                    'employee_id'       =>  $request->input('employee_id'),
+                    'employee_id'       =>  $employeeId,
                     'file_path'         =>  $path,
                     'file_name'         =>  $fileName,
                     'file_unique_id'    =>  $fileId,
@@ -91,6 +100,9 @@ class FileUploadController extends Controller
 
             // PERFORM BATCH INSERT TO AVOID LOOP QUERY
             DB::table('file_uploads')->insert($fileData);
+            foreach ($fileData as $file) {
+                $this->logService->logGenerate($employeeId, 'created', 'file-uploads', $file['file_path']);
+            }
 
             return response()->json(['message' => 'Files uploaded successfully']);
         } catch (QueryException $e) {
@@ -150,6 +162,7 @@ class FileUploadController extends Controller
                 ->where('employee_id', $employeeId)
                 ->delete();
 
+            $this->logService->logGenerate($employeeId, 'deleted', 'file-uploads', $file->file_path);
             return response()->json(['message' => 'Successfully Removed!']);
         } catch (QueryException $e) {
             $errorMessage = $e->getMessage();
