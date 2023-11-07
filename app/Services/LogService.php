@@ -20,28 +20,16 @@ class LogService
                 $table   = !empty($module) ? $module : "";
                 $action  = !empty($method) ? $method : "";
                 switch ($table) {
-                    case ('employees') :
+                    case 'employees' :
                         $logByiD        =   Auth::id(); // ID OF THE ONE THAT CREATED THE NEW EMPLOYEE OR USER DATA
-                        $userId         =   !empty($request) ? $request : ""; // ID OF THE NEWLY CREATED EMPLOYEE OR USER DATA
+                        $userId         =   !empty($request) ? $request : ""; // ID OF THE NEWLY CREATED EMPLOYEE DATA
                         $fullName       =   "";
                         $message        =   "";
                         $description    =   "";
+                        $userData       =   "";
                         $logByUserData  =   DB::table('employees')
                                                 ->select('*')
                                                 ->where('user_id', '=', $logByiD)
-                                                ->first();
-
-                        $userData       =   DB::table('employees as e')
-                                                ->select(
-                                                    'e.id as employee_id',
-                                                    'e.last_name',
-                                                    'e.first_name',
-                                                    'e.middle_name',
-
-                                                    'u.id as userId'
-                                                )
-                                                ->leftJoin('users as u', 'u.id', '=', 'e.user_id')
-                                                ->where('e.user_id', '=', $userId)
                                                 ->first();
 
                         // CHECK IF THE SUPER ADMIN CREATED THE HR EMPLOYEE OR JUST EMPLOYEE ONLY
@@ -56,21 +44,52 @@ class LogService
                         }
 
                         switch ($action) {
-                            case ('created') :
+                            case 'created' :
                                 $message    =   'a new user and employee data.';
+                                $userData       =   DB::table('employees as e')
+                                                ->select(
+                                                    'e.id as employee_id',
+                                                    'e.last_name',
+                                                    'e.first_name',
+                                                    'e.middle_name',
+
+                                                    'u.id as user_id'
+                                                )
+                                                ->leftJoin('users as u', 'u.id', '=', 'e.user_id')
+                                                ->where('u.id', '=', $userId)
+                                                ->first();
                             break;
 
-                            case ('updated') :
+                            case 'updated' :
                                 $message    =   'a employee data.';
+                                $userData       =   DB::table('users as u')
+                                                ->select(
+                                                    'e.id as employee_id',
+                                                    'e.last_name',
+                                                    'e.first_name',
+                                                    'e.middle_name',
+
+                                                    'u.id as user_id'
+                                                )
+                                                ->leftJoin('employees as e', 'e.user_id', '=', 'u.id')
+                                                ->where('e.id', '=', $userId)
+                                                ->first();
                             break;
 
-                            case ('deleted') :
+                            case 'deleted' :
                                 $message    =   'a user and employee data.';
-                            break;
-                            default:
-                                // CODE TO HANDLE DEFAULT CASE (IF NONE OF THE ABOVE CASES MATCH)
-                                // YOU CAN SET A DEFAULT MESSAGE OR PERFORM SOME FALLBACK ACTIONS
-                                $message = 'Unknown action.';
+                                $userData       =   DB::table('users as u')
+                                                ->select(
+                                                    'e.id as employee_id',
+                                                    'e.last_name',
+                                                    'e.first_name',
+                                                    'e.middle_name',
+
+                                                    'u.id as user_id'
+                                                )
+                                                ->leftJoin('employees as e', 'e.user_id', '=', 'u.id')
+                                                ->where('e.id', '=', $userId)
+                                                ->first();
                             break;
                         }
 
@@ -83,7 +102,7 @@ class LogService
                             'message'       =>  $message,
                             'creator_name'  =>  $fullName,
                             'action'        =>  !empty($action)                     ?   $action                     :   "",
-                            'user_id'       =>  !empty($userId)                     ?   $userId                     :   "",
+                            'user_id'       =>  !empty($userData->user_id)          ?   $userData->user_id                     :   "",
                             'employee_id'   =>  !empty($userData->employee_id)      ?   $userData->employee_id      :   "",
                             'created_by'    =>  $logByiD,
                             'created_at'    =>  now(),

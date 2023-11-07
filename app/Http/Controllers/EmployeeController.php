@@ -390,6 +390,7 @@ class EmployeeController extends Controller
     {
         try {
             $id   = !empty($request->id) ? $request->id : "";
+            $this->logService->logGenerate($id, 'deleted', 'employees');
             $data = DB::table('employees')
                 ->where('id','=', $id)
                 ->update([
@@ -398,7 +399,6 @@ class EmployeeController extends Controller
                 ]);
 
             $this->cascadeDelete->delete($request);
-            $this->logService->logGenerate($id, 'deleted', 'employees');
             return response()->json(['message' => 'Successfully Deleted']);
         } catch (QueryException $e) {
             $errorMessage = $e->getMessage();
