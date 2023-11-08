@@ -81,7 +81,9 @@
                             <p class="fw-light text-muted mb-0">{{ Auth::user()->email }}</p>
                         </div>
                         <a class="dropdown-item" href="{{ route('profile.index') }}"><i class="dropdown-item-icon ti ti-user text-primary me-3" style="font-size: 18px;"></i> Profile</a>
-                        <a class="dropdown-item" href="{{ route('activities') }}"><i class="dropdown-item-icon ti ti-pencil-alt text-primary me-3" style="font-size: 18px;"></i> Activity</a>
+                        @if (auth()->user()->role == 1)
+                            <a class="dropdown-item" href="{{ route('activities') }}"><i class="dropdown-item-icon ti ti-pencil-alt text-primary me-3" style="font-size: 18px;"></i> Activity</a>
+                        @endif
                         <a class="dropdown-item"><i class="dropdown-item-icon ti ti-help text-primary me-3" style="font-size: 18px;"></i> FAQ</a>
                         <a class="dropdown-item" href="{{ route('logout') }}" onclick="event.preventDefault();
                             document.getElementById('logout-form').submit();">
@@ -145,7 +147,9 @@
                     <div class="collapse" id="settings">
                         <ul class="nav flex-column sub-menu">
                             <li class="nav-item ms-4"> <a class="nav-link" href="{{ route('profile.index') }}">Profile</a></li>
-                            <li class="nav-item ms-4"> <a class="nav-link" href="{{ route('activities') }}">Activity</a></li>
+                            @if (auth()->user()->role == 1)
+                                <li class="nav-item ms-4"> <a class="nav-link" href="{{ route('activities') }}">Activity</a></li>
+                            @endif
                             <li class="nav-item ms-4"> <a class="nav-link" href="javascript:void(0);">FAQ</a></li>
                             <li class="nav-item ms-4"> <a class="nav-link" href="{{ route('logout') }}" onclick="event.preventDefault();
                                 document.getElementById('logout-form').submit();">Logout</a></li>

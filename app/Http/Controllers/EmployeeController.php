@@ -91,7 +91,7 @@ class EmployeeController extends Controller
                 return response()->json(['message' => 'Successfully Added'], 200);
             } else { // UPDATE DATA
                 $imageData = $this->uploadImage($request->input('userImage'), $id);
-                $this->updateEmployeeData($employeeData, $id);
+                $this->updateEmployeeData($employeeData, $id, $request->role);
                 $this->updateEmployeeImage($imageData, $id);
 
                 $this->logService->logGenerate($id, 'updated', 'employees');
@@ -266,12 +266,18 @@ class EmployeeController extends Controller
     /**
      * Update Employee Data from employees table.
      */
-    private function updateEmployeeData($employeeData, $id)
+    private function updateEmployeeData($employeeData, $id, $role = null)
     {
         try {
             $employeeData['updated_by']     =  Auth::id();
             $employeeData['updated_at']     =  now();
+            $userId = DB::table('employees')
+                        ->select('user_id')
+                        ->where('id', '=', $id)
+                        ->value('user_id');
+
             DB::table('employees')->where('id', '=', $id)->update($employeeData);
+            DB::table('users')->where('id', '=', $userId)->update(['role' => $role]);
         } catch (QueryException $e) {
             $errorMessage = $e->getMessage();
             return response()->json(['error' => $errorMessage], 500);

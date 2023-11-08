@@ -17,9 +17,7 @@ class LogService
     {
         try {
             DB::beginTransaction();
-
                 $logByiD = Auth::id();
-
                 $logByUserData = DB::table('employees')
                     ->select('*')
                     ->where('user_id', '=', $logByiD)
