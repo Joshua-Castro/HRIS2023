@@ -31,14 +31,13 @@ class LogService
                         ->value('name');
 
                 switch ($module) {
-                    case 'employees':
+                    case 'employees' :
                         $action     =   !empty($method) ? $method : "";
                         $userId     =   !empty($request) ? $request : "";
-                        $message    =   '';
+                        $message    =   $action === 'created' ? 'a new user and employee data.' : ($action === 'deleted' ? 'an employee data.' : 'an employee data.');
                         $userData   =   null;
 
                         if ($action === 'created') {
-                            $message    = 'a new user and employee data.';
                             $userData   = DB::table('employees as e')
                                             ->select(
                                                 'e.id as employee_id',
@@ -51,7 +50,6 @@ class LogService
                                             ->where('u.id', '=', $userId)
                                             ->first();
                         } elseif ($action === 'updated' || $action === 'deleted') {
-                            $message    = 'an employee data.';
                             $userData   = DB::table('users as u')
                                             ->select(
                                                 'e.id as employee_id',
@@ -65,7 +63,7 @@ class LogService
                                             ->first();
                         }
 
-                        $description = " " . $action . " " . $message;
+                        $description = " " . $action . " " . $message . " The employee id is: " . $userData->employee_id;
 
                         $data = [
                             'activity'          =>  $action,
@@ -82,7 +80,7 @@ class LogService
                         DB::table('logs')->insert($data);
                     break;
 
-                    case 'file-uploads':
+                    case 'file-uploads' :
                         $employeeId     =   !empty($request) ? $request : "";
                         $message        =   '';
                         $userData       =   null;
@@ -121,6 +119,12 @@ class LogService
 
                         DB::table('logs')->insert($data);
                     break;
+
+                    case 'leave' :
+
+                    break;
+
+
                 }
             DB::commit();
         } catch (QueryException $e) {

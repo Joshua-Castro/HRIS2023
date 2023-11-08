@@ -12,6 +12,8 @@ function activity() {
             this.fetchLogs();
         },
 
+        // REFRESH OR RELOAD THE FETCH
+
         // FETCH LOGS DATA TO DISPLAY IN THE ACTIVITY PAGE
         fetchLogs : function () {
             var component = this;

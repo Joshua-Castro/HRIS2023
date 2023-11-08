@@ -5,11 +5,18 @@ namespace App\Http\Controllers;
 use App\Models\Leave;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
+use App\Services\LogService;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 
 class LeaveController extends Controller
 {
+    protected $logService;
+
+    public function __construct(LogService $logService)
+    {
+        $this->logService      = $logService; // LOGS ALL THE ACTION THAT HAS BEEN TAKEN
+    }
     /**
      * Display a listing of the resource.
      */
@@ -50,18 +57,18 @@ class LeaveController extends Controller
 
             if (empty($id)) {
                 // CREATE OR STORE DATA
-                $data['status']     = 'Pending';
-                $data['created_by'] = Auth::id();
-                $data['created_at'] = now();
-                $data['user_id']    = Auth::id();
+                $data['status']         =   'Pending';
+                $data['created_by']     =   Auth::id();
+                $data['created_at']     =   now();
+                $data['user_id']        =   Auth::id();
 
                 DB::table('leaves')->insert($data);
 
                 return response()->json(['message' => 'Successfully Added'], 200);
             } else {
                 // UPDATE DATA
-                $data['updated_by'] = Auth::id();
-                $data['updated_at'] = now();
+                $data['updated_by']     =   Auth::id();
+                $data['updated_at']     =   now();
                 DB::table('leaves')->where('id','=',$id)->update($data);
 
                 return response()->json(['message' => 'Successfully Updated'],200);
