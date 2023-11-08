@@ -59,7 +59,8 @@ function adminDashboard(userRole) {
             'pagibig_benefits',
             'phil_health_benefits',
             'email',
-            'password'
+            'password',
+            'role'
         ],
 
         leaveData               :   [],

@@ -3,6 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\Models\Log;
+use Illuminate\Support\Str;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Database\QueryException;
+
 use Illuminate\Http\Request;
 
 class LogController extends Controller
@@ -36,7 +42,35 @@ class LogController extends Controller
      */
     public function show(Log $log)
     {
-        //
+        try {
+            $logs = DB::table('logs as l')
+                    ->select(
+                        'l.activity',
+                        'l.description',
+                        'l.message',
+                        'l.creator_name',
+                        'l.action',
+                        'l.user_id',
+                        'l.employee_id',
+                        'l.created_by',
+                        'l.created_at',
+
+                        'i.file_path as image_filepath',
+                        'i.file_name as image_filename',
+                    )
+                    ->leftJoin('images as i', 'i.user_id', '=', 'l.created_by')
+                    ->whereNull('l.deleted_by')
+                    ->orderBy('l.created_at', 'DESC')
+                    ->get();
+
+            $indication     =   Str::random(16);
+            return response()->json([
+                $indication         =>  base64_encode(json_encode($logs)),
+            ]);
+        } catch (QueryException $e) {
+            $errorMessage = $e->getMessage();
+            return response()->json(['error' => $errorMessage], 500);
+        }
     }
 
     /**

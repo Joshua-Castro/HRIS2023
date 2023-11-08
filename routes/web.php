@@ -88,4 +88,7 @@ Route::prefix('profile')->as('profile.')->group(function () {
 });
 
 // ACTIVITIES OR LOGS CONTROLLER ROUTES
+Route::prefix('log')->as('log.')->group(function () {
+    Route::get('/show',     [LogController::class, 'show'             ])->name('show');
+});
 

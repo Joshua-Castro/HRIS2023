@@ -24,7 +24,7 @@ class LogService
                     ->first();
 
                 $fullName = !empty($logByUserData)
-                    ? $logByUserData->first_name . " " . ($logByUserData->middle_name ? $logByUserData->middle_name : " ") . $logByUserData->last_name
+                    ? $logByUserData->first_name . " " . ($logByUserData->middle_name ? $logByUserData->middle_name : " ") . " " .$logByUserData->last_name
                     : DB::table('users')
                         ->select('name')
                         ->where('id', '=', $logByiD)
@@ -65,7 +65,7 @@ class LogService
                                             ->first();
                         }
 
-                        $description = $fullName . " " . $action . " " . $message;
+                        $description = " " . $action . " " . $message;
 
                         $data = [
                             'activity'          =>  $action,
@@ -105,7 +105,7 @@ class LogService
                                         ->where('e.id', '=', $employeeId)
                                         ->first();
 
-                        $description = $fullName . " " . $method . " " . $message . $userData->employee_no . ". The file path: " . $filePath;
+                        $description = " " . $method . " " . $message . $userData->employee_no . ". The file path: " . $filePath;
 
                         $data = [
                             'activity'      =>  $method,
