@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\LogController;
+use App\Http\Controllers\HomeController;
 use App\Http\Controllers\LeaveController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\EmployeeController;
@@ -31,13 +32,14 @@ Route::get('/', function () {
 
 Auth::routes();
 
-Route::get('/home'                      ,[App\Http\Controllers\HomeController::class, 'index'                           ])->name('home');
-Route::get('/leave-request'             ,[App\Http\Controllers\HomeController::class, 'leaveRequest'                    ])->name('request')->middleware('checkUserRole:1,2');
-Route::get('/attendance'                ,[App\Http\Controllers\HomeController::class, 'attendance'                      ])->name('attendance')->middleware('checkUserRole:1,2');
-Route::get('/training'                  ,[App\Http\Controllers\HomeController::class, 'training'                        ])->name('training')->middleware('checkUserRole:1,2');
-Route::get('/training-event'            ,[App\Http\Controllers\HomeController::class, 'trainingCalendarEvents'          ])->name('events');
-Route::get('/employee-overview'         ,[App\Http\Controllers\HomeController::class, 'employeeOverview'                ])->name('overview');
-Route::get('/activities'                ,[App\Http\Controllers\HomeController::class, 'activities'                      ])->name('activities')->middleware('checkUserRole:1');
+Route::get('/home'                      ,[HomeController::class, 'index'                           ])->name('home');
+Route::get('/training-event'            ,[HomeController::class, 'trainingCalendarEvents'          ])->name('events');
+Route::get('/employee-overview'         ,[HomeController::class, 'employeeOverview'                ])->name('overview');
+Route::get('/payroll'                   ,[HomeController::class, 'payroll'                         ])->name('payroll');
+Route::get('/attendance'                ,[HomeController::class, 'attendance'                      ])->name('attendance')->middleware('checkUserRole:1,2');
+Route::get('/leave-request'             ,[HomeController::class, 'leaveRequest'                    ])->name('request')->middleware('checkUserRole:1,2');
+Route::get('/training'                  ,[HomeController::class, 'training'                        ])->name('training')->middleware('checkUserRole:1,2');
+Route::get('/activities'                ,[HomeController::class, 'activities'                      ])->name('activities')->middleware('checkUserRole:1');
 
 // EMPLOYEE CONTROLLER ROUTES
 Route::prefix('employee')->as('employee.')->group(function () {
@@ -48,11 +50,11 @@ Route::prefix('employee')->as('employee.')->group(function () {
 
 // FILE UPLOAD CONTROLLER ROUTES
 Route::prefix('file-upload')->as('file.')->group(function () {
-    Route::post('/store/{token}'                ,[FileUploadController::class, 'store'           ])->name('store');
-    Route::post('/upload'                       ,[FileUploadController::class, 'upload'          ])->name('upload');
-    Route::delete('/delete'                     ,[FileUploadController::class, 'delete'          ])->name('delete');
-    Route::post('/revert'                       ,[FileUploadController::class, 'revert'          ])->name('revert');
     Route::get('/show'                          ,[FileUploadController::class, 'getAll'          ])->name('show');
+    Route::post('/upload'                       ,[FileUploadController::class, 'upload'          ])->name('upload');
+    Route::post('/revert'                       ,[FileUploadController::class, 'revert'          ])->name('revert');
+    Route::post('/store/{token}'                ,[FileUploadController::class, 'store'           ])->name('store');
+    Route::delete('/delete'                     ,[FileUploadController::class, 'delete'          ])->name('delete');
 });
 
 // LEAVE CONTROLLER ROUTES
@@ -67,17 +69,17 @@ Route::prefix('leave')->as('leave.')->group(function () {
 // ATTENDANCE CONTROLLER ROUTES
 Route::prefix('attendance')->as('attendance.')->group(function () {
     Route::get('/show'                      ,[AttendanceController::class, 'show'                ])->name('show');
-    Route::post('/store'                    ,[AttendanceController::class, 'store'               ])->name('store');
     Route::get('/daily-attendance'          ,[AttendanceController::class, 'dailyAttendance'     ])->name('daily');
     Route::get('/get-attendace'             ,[AttendanceController::class, 'attendanceRecord'    ])->name('record');
     Route::get('/get-all-attendace'         ,[AttendanceController::class, 'getAllAttendance'    ])->name('all');
+    Route::post('/store'                    ,[AttendanceController::class, 'store'               ])->name('store');
 });
 
 // TRAINING/SEMINARS CONTROLLER ROUTES
 Route::prefix('training')->as('training.')->group(function () {
     Route::post('/store'       ,[TrainingController::class, 'store'     ])->name('store');
-    Route::get('/show'         ,[TrainingController::class, 'show'      ])->name('show');
     Route::post('/delete'      ,[TrainingController::class, 'destroy'   ])->name('delete');
+    Route::get('/show'         ,[TrainingController::class, 'show'      ])->name('show');
 });
 
 // PROFILE CONTROLLER ROUTES
@@ -90,5 +92,9 @@ Route::prefix('profile')->as('profile.')->group(function () {
 // ACTIVITIES OR LOGS CONTROLLER ROUTES
 Route::prefix('log')->as('log.')->group(function () {
     Route::get('/show',     [LogController::class, 'show'             ])->name('show');
+});
+
+Route::prefix('payroll')->as('payroll.')->group(function () {
+
 });
 

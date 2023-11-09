@@ -110,6 +110,12 @@
                             <span class="menu-title">Dashboard</span>
                         </a>
                     </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="javascript:void(0);">
+                            <i class="ti ti-wallet ms-3 me-4" style="font-size: 20px;"></i>
+                            <span class="menu-title">Payroll</span>
+                        </a>
+                    </li>
 
                     @if (auth()->user()->role == 1 or auth()->user()->role == 2)
                         <li class="nav-item">
@@ -174,7 +180,7 @@
   <script src="{{ asset('template/vendors/js/vendor.bundle.base.js') }}"></script>
   <script src="{{ asset('template/vendors/moment/moment.js') }}"></script>
   <script src="{{ asset('template/vendors/bootstrap-datepicker/bootstrap-datepicker.min.js') }}"></script>
-  <script src="{{ asset('template/vendors/progressbar.js/progressbar.min.js') }}"></script>
+  {{-- <script src="{{ asset('template/vendors/progressbar.js/progressbar.min.js') }}"></script> --}}
   <script src="{{ asset('template/js/off-canvas.js') }}"></script>
   <script src="{{ asset('template/js/hoverable-collapse.js') }}"></script>
   <script src="{{ asset('template/js/template.js') }}"></script>

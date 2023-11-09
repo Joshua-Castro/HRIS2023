@@ -134,7 +134,7 @@
                             <div class="card-body">
                                 <div>
                                 <p class="card-title card-title-dash font-weight-medium">WFH Requests</p>
-                                <h3 class="rate-percentage d-flex justify-content-between align-items-center">SOON<span class="text-danger text-medium d-flex align-items-center"><i class="mdi mdi-trending-down me-2 icon-md"></i></span></h3>
+                                <h3 class="rate-percentage d-flex justify-content-between">SOON</h3>
                                 </div>
                             </div>
                             </div>
@@ -144,7 +144,7 @@
                                 <div class="card-body">
                                     <div>
                                     <p class="card-title card-title-dash font-weight-medium">Overtime Requests</p>
-                                    <h3 class="rate-percentage d-flex justify-content-between">SOON<span class="text-success text-medium d-flex align-items-center"><i class="mdi mdi-trending-up me-2 icon-md"></i></span></h3>
+                                    <h3 class="rate-percentage d-flex justify-content-between">SOON</h3>
                                     </div>
                                 </div>
                             </div>
