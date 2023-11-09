@@ -85,13 +85,13 @@
                                         </div>
                                     </div>
                                     <div class="col-lg-5">
-                                        <div class="col-lg-12 mt-1" style="margin-left: 25px;">
+                                        <div class="col-lg-12 mt-1" style="margin-left: 60px;">
                                             <span style="font-size: 14px; font-weight: inherit;" x-text="profileData.gsis"></span>
                                         </div>
-                                        <div class="col-lg-12 mt-1" style="margin-left: 25px;">
+                                        <div class="col-lg-12 mt-1" style="margin-left: 60px;">
                                             <span style="font-size: 14px; font-weight: inherit;" x-text="profileData.phil_health"></span>
                                         </div>
-                                        <div class="col-lg-12 mt-1" style="margin-left: 25px;">
+                                        <div class="col-lg-12 mt-1" style="margin-left: 60px;">
                                             <span style="font-size: 14px; font-weight: inherit;" x-text="profileData.pag_ibig"></span>
                                         </div>
                                     </div>

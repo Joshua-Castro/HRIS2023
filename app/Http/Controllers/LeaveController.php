@@ -17,6 +17,7 @@ class LeaveController extends Controller
     {
         $this->logService      = $logService; // LOGS ALL THE ACTION THAT HAS BEEN TAKEN
     }
+
     /**
      * Display a listing of the resource.
      */
@@ -62,8 +63,8 @@ class LeaveController extends Controller
                 $data['created_at']     =   now();
                 $data['user_id']        =   Auth::id();
 
-                DB::table('leaves')->insert($data);
-
+                $createdLeaveId = DB::table('leaves')->insertGetId($data);
+                $this->logService->logGenerate(Auth::id(), 'created', 'leaves', null, $createdLeaveId);
                 return response()->json(['message' => 'Successfully Added'], 200);
             } else {
                 // UPDATE DATA
@@ -71,6 +72,7 @@ class LeaveController extends Controller
                 $data['updated_at']     =   now();
                 DB::table('leaves')->where('id','=',$id)->update($data);
 
+                $this->logService->logGenerate(Auth::id(), 'updated', 'leaves', null, $id);
                 return response()->json(['message' => 'Successfully Updated'],200);
             }
 
@@ -157,13 +159,15 @@ class LeaveController extends Controller
     public function destroy(Request $request)
     {
         try {
+            $id = !empty($request->id) ? $request->id : "";
             $data = DB::table('leaves')
-            ->where('id','=', $request->id)
-            ->update([
-                'deleted_by' => Auth::id(),
-                'deleted_at' => now(),
-            ]);
+                ->where('id','=', $id)
+                ->update([
+                    'deleted_by' => Auth::id(),
+                    'deleted_at' => now(),
+                ]);
 
+            $this->logService->logGenerate(Auth::id(), 'deleted', 'leaves', null, $id);
             return response()->json(['message' => 'Successfully Deleted']);
         } catch (QueryException $e) {
             $errorMessage = $e->getMessage();
@@ -200,7 +204,7 @@ class LeaveController extends Controller
                         'e.salary_grade',
                         )
                     ->leftJoin('employees as e', 'e.user_id', '=', 'l.user_id')
-                    ->whereNull('l.deleted_at')
+                    // ->whereNull('l.deleted_at')
                     ->whereNull('e.deleted_at')
                     ->orderBy('l.created_at', 'desc')
                     ->get();

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Attendance;
 use App\Models\Employee;
 use Illuminate\Http\Request;
+use App\Services\LogService;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
@@ -15,6 +16,13 @@ use function Symfony\Component\HttpKernel\DataCollector\getMessage;
 
 class AttendanceController extends Controller
 {
+    protected $logService;
+
+    public function __construct(LogService $logService)
+    {
+        $this->logService      = $logService; // LOGS ALL THE ACTION THAT HAS BEEN TAKEN
+    }
+
     /**
      * Display a listing of the resource.
      */
@@ -94,7 +102,7 @@ class AttendanceController extends Controller
                 ->first();
 
             if ($attendance === null) {
-                DB::table('attendances')->insert([
+                $attendanceId = DB::table('attendances')->insertGetId([
                     'user_id'       =>  $userId,
                     'employee_id'   =>  $employeeId,
                     $column         =>  $time,
@@ -102,7 +110,14 @@ class AttendanceController extends Controller
                     'created_by'    =>  Auth::id()
                 ]);
 
+                $requestDataLogs = [
+                    'employee_id'   => $data['employee_id'],
+                    'time'          => $time,
+                    'attendance_id' => $attendanceId
+                ];
+
                 $action = $column === 'clock_in' ? 'Clock In!' : '';
+                $this->logService->logGenerate($requestDataLogs, 'clocked in', 'attendances');
                 return response()->json(['message' => 'Successfully ' . $action]);
             } else {
                 DB::table('attendances')
@@ -113,17 +128,26 @@ class AttendanceController extends Controller
                         'updated_by'    =>  Auth::id()
                     ]);
 
+                $requestDataLogs = [
+                    'employee_id'   => $data['employee_id'],
+                    'time'          => $time,
+                    'attendance_id' => $attendance->id
+                ];
+
                 switch ($column) {
                     case 'break_out' :
                         $action = 'Break Out!';
+                        $this->logService->logGenerate($requestDataLogs, 'break out', 'attendances');
                         return response()->json(['message' => 'Successfully ' . $action]);
                     break;
                     case 'break_in' :
                         $action = 'Break In!';
+                        $this->logService->logGenerate($requestDataLogs, 'break in', 'attendances');
                         return response()->json(['message' => 'Successfully ' . $action]);
                     break;
                     case 'clock_out' :
                         $action = 'Clock Out!';
+                        $this->logService->logGenerate($requestDataLogs, 'clocked out', 'attendances');
                         return response()->json(['message' => 'Successfully ' . $action]);
                     break;
                 }

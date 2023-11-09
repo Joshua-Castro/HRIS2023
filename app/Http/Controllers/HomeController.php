@@ -43,7 +43,7 @@ class HomeController extends Controller
      *
      * @return \Illuminate\Contracts\Support\Renderable
      */
-    public function request()
+    public function leaveRequest()
     {
         $userId    = Auth::id();
         $userImage = DB::table('images')

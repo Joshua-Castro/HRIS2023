@@ -32,12 +32,12 @@ Route::get('/', function () {
 Auth::routes();
 
 Route::get('/home'                      ,[App\Http\Controllers\HomeController::class, 'index'                           ])->name('home');
-Route::get('/request'                   ,[App\Http\Controllers\HomeController::class, 'request'                         ])->name('request');
-Route::get('/attendance'                ,[App\Http\Controllers\HomeController::class, 'attendance'                      ])->name('attendance');
-Route::get('/training'                  ,[App\Http\Controllers\HomeController::class, 'training'                        ])->name('training');
+Route::get('/leave-request'             ,[App\Http\Controllers\HomeController::class, 'leaveRequest'                    ])->name('request')->middleware('checkUserRole:1,2');
+Route::get('/attendance'                ,[App\Http\Controllers\HomeController::class, 'attendance'                      ])->name('attendance')->middleware('checkUserRole:1,2');
+Route::get('/training'                  ,[App\Http\Controllers\HomeController::class, 'training'                        ])->name('training')->middleware('checkUserRole:1,2');
 Route::get('/training-event'            ,[App\Http\Controllers\HomeController::class, 'trainingCalendarEvents'          ])->name('events');
 Route::get('/employee-overview'         ,[App\Http\Controllers\HomeController::class, 'employeeOverview'                ])->name('overview');
-Route::get('/activities'                ,[App\Http\Controllers\HomeController::class, 'activities'                      ])->name('activities');
+Route::get('/activities'                ,[App\Http\Controllers\HomeController::class, 'activities'                      ])->name('activities')->middleware('checkUserRole:1');
 
 // EMPLOYEE CONTROLLER ROUTES
 Route::prefix('employee')->as('employee.')->group(function () {

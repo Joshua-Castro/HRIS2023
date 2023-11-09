@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Database\QueryException;
 use Illuminate\Support\Facades\Storage;
@@ -13,7 +14,7 @@ class LogService
      * Put the activities on
      * Logs table
      */
-    public function logGenerate($request, $method, $module, $path = null)
+    public function logGenerate($request, $method, $module, $path = null, $leaveId = null)
     {
         try {
             DB::beginTransaction();
@@ -82,15 +83,8 @@ class LogService
 
                     case 'file-uploads' :
                         $employeeId     =   !empty($request) ? $request : "";
-                        $message        =   '';
-                        $userData       =   null;
+                        $message        =   $action === 'created' ? 'a new file to an employee: ' : 'a file from an employee: ';
                         $filePath       =   $path;
-
-                        if ($method === 'created') {
-                            $message = 'a new file to an employee: ';
-                        } elseif ($method === 'deleted') {
-                            $message = 'a file from an employee: ';
-                        }
 
                         $userData = DB::table('employees as e')
                                         ->select(
@@ -120,8 +114,76 @@ class LogService
                         DB::table('logs')->insert($data);
                     break;
 
-                    case 'leave' :
+                    case 'leaves' :
+                        $action     =   !empty($method) ? $method : "";
+                        $userId     =   !empty($request) ? $request : "";
+                        $leave = DB::table('leaves')
+                                        ->where('id', '=', $leaveId)
+                                        ->first();
+                        $message    =   $action === 'created' ? 'file a leave request.' : ($action === 'deleted' ? ($leave->status === 'Pending' ? 'cancelled a leave request.' : 'deleted a leave request.') : 'updated a leave request.');
 
+                        $userData = DB::table('employees as e')
+                                        ->select(
+                                            'e.id as employee_id',
+                                            'e.employee_no',
+                                            'e.user_id',
+                                            'u.id as user_id'
+                                        )
+                                        ->leftJoin('users as u', 'u.id', '=', 'e.user_id')
+                                        ->where('u.id', '=', $userId)
+                                        ->first();
+
+                        $description = " " . $message . " Leave request ID is: " . $leaveId;
+
+                        $data = [
+                            'activity'      =>  $action,
+                            'description'   =>  $description,
+                            'message'       =>  $message . " Leave request ID is: " . $leaveId,
+                            'creator_name'  =>  $fullName,
+                            'action'        =>  $action,
+                            'user_id'       =>  optional($userData)->user_id,
+                            'employee_id'   =>  optional($userData)->employee_id,
+                            'created_by'    =>  $logByiD,
+                            'created_at'    =>  now(),
+                        ];
+
+                        DB::table('logs')->insert($data);
+                    break;
+
+                    case 'attendances' :
+                        $attendance = DB::table('attendances')
+                                        ->where('id', '=', $request['attendance_id'])
+                                        ->first();
+                        $action         =   !empty($method) ? $method : "";
+                        $employeeId     =   !empty($request) ? $request['employee_id'] : "";
+                        $message        =   "Successfully " . $action . " at: " . Carbon::parse($request['time'])->format('h:i:s A') . " on " . Carbon::parse($attendance->created_at)->format('m/d/Y');
+
+                        $userData = DB::table('employees as e')
+                                        ->select(
+                                            'e.id as employee_id',
+                                            'e.employee_no',
+                                            'e.user_id',
+                                            'u.id as user_id'
+                                        )
+                                        ->leftJoin('users as u', 'u.id', '=', 'e.user_id')
+                                        ->where('e.id', '=', $employeeId)
+                                        ->first();
+
+                        $description = " " . $message;
+
+                        $data = [
+                            'activity'      =>  $action,
+                            'description'   =>  $description,
+                            'message'       =>  $message,
+                            'creator_name'  =>  $fullName,
+                            'action'        =>  $action,
+                            'user_id'       =>  optional($userData)->user_id,
+                            'employee_id'   =>  optional($userData)->employee_id,
+                            'created_by'    =>  $logByiD,
+                            'created_at'    =>  now(),
+                        ];
+
+                        DB::table('logs')->insert($data);
                     break;
 
 
