@@ -47,28 +47,33 @@ class LeaveController extends Controller
         ]);
 
         try {
-            $id = !empty($request->leaveRecordId) ? $request->leaveRecordId : 0;
+            $id         = !empty($request->leaveRecordId) ? $request->leaveRecordId : 0;
+            $userId     = Auth::id();
+            $employeeId = DB::table('employees')
+                            ->where('user_id', '=', $userId)
+                            ->first();
 
             $data = [
-                'leave_date'             =>      !empty($request->leaveDate)            ?   $request->leaveDate             :  '',
-                'leave_type'             =>      !empty($request->leaveType)            ?   $request->leaveType             :  '',
-                'day_type'               =>      !empty($request->dayType)              ?   $request->dayType               :  '',
-                'reason'                 =>      !empty($request->reason)               ?   $request->reason                :  '',
+                'employee_id'            =>      !empty($request->employeeId)         ?   $request->employeeId            :  '',
+                'leave_date'             =>      !empty($request->leaveDate)          ?   $request->leaveDate             :  '',
+                'leave_type'             =>      !empty($request->leaveType)          ?   $request->leaveType             :  '',
+                'day_type'               =>      !empty($request->dayType)            ?   $request->dayType               :  '',
+                'reason'                 =>      !empty($request->reason)             ?   $request->reason                :  '',
             ];
 
             if (empty($id)) {
                 // CREATE OR STORE DATA
                 $data['status']         =   'Pending';
-                $data['created_by']     =   Auth::id();
+                $data['created_by']     =   $userId;
                 $data['created_at']     =   now();
-                $data['user_id']        =   Auth::id();
+                $data['user_id']        =   $userId;
 
                 $createdLeaveId = DB::table('leaves')->insertGetId($data);
                 $this->logService->logGenerate(Auth::id(), 'created', 'leaves', null, $createdLeaveId);
                 return response()->json(['message' => 'Successfully Added'], 200);
             } else {
                 // UPDATE DATA
-                $data['updated_by']     =   Auth::id();
+                $data['updated_by']     =   $userId;
                 $data['updated_at']     =   now();
                 DB::table('leaves')->where('id','=',$id)->update($data);
 
@@ -104,14 +109,19 @@ class LeaveController extends Controller
             $count = DB::table('leaves')
                     ->where('user_id', '=', $userId)
                     ->count();
+
+            $leaveType = DB::table('leave_types')->get();
+
             $indication     =   Str::random(16);
             $indication2    =   Str::random(16);
             $indication3    =   Str::random(16);
+            $indication4    =   Str::random(16);
 
             return response()->json([
                 $indication     =>  base64_encode(json_encode($data)),
                 $indication2    =>  $count,
-                $indication3    =>  $overAllCount
+                $indication3    =>  $overAllCount,
+                $indication4    =>  $leaveType
             ]);
         } catch (QueryException $e) {
             $errorMessage = $e->getMessage();
@@ -134,16 +144,34 @@ class LeaveController extends Controller
     public function update(Request $request, Leave $leave)
     {
         try {
-            $data = DB::table('leaves')
-                ->where('id', '=', $request->id)
-                ->update([
-                    'status'            =>  $request->status,
-                    'decline_reason'    =>  $request->reason
-                ]);
+            $id         =   $request->id;
+            $status     =   $request->status;
+            $reason     =   $request->reason;
+            $userId     =   Auth::id();
 
-            if ($request->status === 'Accepted') {
+            $data       = DB::table('leaves')
+                            ->where('id', '=', $id)
+                            ->update([
+                                'status'            =>  $status,
+                                'decline_reason'    =>  $reason,
+                                'approver_id'       =>  $userId
+                            ]);
+
+            if ($status === 'Accepted') {
+                $leaveData = DB::table('leaves')
+                                ->select('*')
+                                ->where('id', '=', $id)
+                                ->first();
+
+                $attendanceData = [
+                    'user_id'           =>  !empty($leaveData->user_id)         ?   $leaveData->user_id         :   "",
+                    'employee_id'       =>  !empty($leaveData->employee_id)     ?   $leaveData->employee_id     :   "",
+                    'notes'             =>  "File a $leaveData->leave_type on $leaveData->leave_date. ($leaveData->day_type)",
+                ];
+
+                DB::table('attendances')->insert($attendanceData);
                 return response()->json(['message' => 'Successfully Accepted']);
-            } else if ($request->status === 'Declined') {
+            } else if ($status === 'Declined') {
                 return response()->json(['message' => 'Successfully Declined']);
             }
         } catch (QueryException $e) {
@@ -204,7 +232,6 @@ class LeaveController extends Controller
                         'e.salary_grade',
                         )
                     ->leftJoin('employees as e', 'e.user_id', '=', 'l.user_id')
-                    // ->whereNull('l.deleted_at')
                     ->whereNull('e.deleted_at')
                     ->orderBy('l.created_at', 'desc')
                     ->get();

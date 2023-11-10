@@ -11,6 +11,7 @@ class Leave extends Model
     use HasFactory, SoftDeletes;
     protected $fillable = [
         'user_id',
+        'employee_id',
         'leave_date',
         'leave_type',
         'day_type',

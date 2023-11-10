@@ -14,11 +14,13 @@ return new class extends Migration
         Schema::create('leaves', function (Blueprint $table) {
             $table->id();
 
+            $table->integer('employee_id')->nullable();
             $table->integer('user_id')->nullable();
             $table->string('leave_date')->nullable();
-            $table->string('leave_type')->nullable();
+            $table->integer('leave_type')->nullable();
             $table->string('day_type')->nullable();
             $table->string('status')->nullable();
+            $table->string('approver_id')->nullable();
             $table->text('reason')->nullable();
             $table->text('decline_reason')->nullable();
 

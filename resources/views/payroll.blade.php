@@ -145,6 +145,35 @@
                 </div>
             </div>
         </div>
+        <div class="row">
+            <div class="col-lg-8 d-flex flex-column">
+                <div class="row flex-grow">
+                    <div class="col-12 col-lg-4 col-lg-12 grid-margin stretch-card">
+                        <div class="card">
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <h4 class="card-title card-title-dash">Employee Attendance Details</h4>
+                                        <p class="text-small modern-color-999">Choose the attendance of the employee to generate payroll...</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-4 d-flex flex-column">
+                <div class="row flex-grow">
+                    <div class="col-12 col-lg-4 col-lg-12 grid-margin stretch-card">
+                        <div class="card">
+                            <div class="card-body">
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
 @endsection

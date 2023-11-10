@@ -73,6 +73,7 @@ function adminDashboard(userRole) {
             dayType         :   '',
             reason          :   '',
         },
+        leaveType               :   [],
 
         userRole                        :   userRole,
         dateToday                       :   '',
@@ -1061,6 +1062,7 @@ function adminDashboard(userRole) {
                 const dataKey           =   Object.keys(response)[0];
                 const count             =   Object.keys(response)[1];
                 const overAll           =   Object.keys(response)[2];
+                const leaveType         =   Object.keys(response)[3];
                 const data              =   response[dataKey] ? JSON.parse(atob(response[dataKey])) : "";
 
                 var leave = data['data'],
@@ -1092,6 +1094,7 @@ function adminDashboard(userRole) {
                 this.overAllLeaveCount      =   response[overAll];
                 this.leaveData              =   leave;
                 this.leaveCount             =   response[count];
+                this.leaveType              =   leaveType;
                 this.leaveIsLoading         =   false;
 
             }).catch((error) => {
