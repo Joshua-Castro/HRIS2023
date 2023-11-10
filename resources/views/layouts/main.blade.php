@@ -111,7 +111,7 @@
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="javascript:void(0);">
+                        <a class="nav-link" href="{{ route('payroll') }}">
                             <i class="ti ti-wallet ms-3 me-4" style="font-size: 20px;"></i>
                             <span class="menu-title">Payroll</span>
                         </a>

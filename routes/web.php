@@ -5,6 +5,7 @@ use App\Http\Controllers\LogController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\LeaveController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\PayrollController;
 use App\Http\Controllers\EmployeeController;
 use App\Http\Controllers\TrainingController;
 use App\Http\Controllers\FileUploadController;
@@ -95,6 +96,6 @@ Route::prefix('log')->as('log.')->group(function () {
 });
 
 Route::prefix('payroll')->as('payroll.')->group(function () {
-
+    Route::get('/show', [PayrollController::class, 'show'])->name('show');
 });
 

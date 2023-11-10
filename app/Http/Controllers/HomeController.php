@@ -23,8 +23,6 @@ class HomeController extends Controller
 
     /**
      * Show the application dashboard.
-     *
-     * @return \Illuminate\Contracts\Support\Renderable
      */
     public function index()
     {
@@ -40,8 +38,6 @@ class HomeController extends Controller
 
     /**
      * Show the request page.
-     *
-     * @return \Illuminate\Contracts\Support\Renderable
      */
     public function leaveRequest()
     {
@@ -57,8 +53,6 @@ class HomeController extends Controller
 
     /**
      * Show the attendance page.
-     *
-     * @return \Illuminate\Contracts\Support\Renderable
      */
     public function attendance()
     {
@@ -74,8 +68,6 @@ class HomeController extends Controller
 
     /**
      * Show the trainings page.
-     *
-     * @return \Illuminate\Contracts\Support\Renderable
      */
     public function training()
     {
@@ -91,7 +83,6 @@ class HomeController extends Controller
 
      /**
      * Show the training data to dashboard page in calendar as events.
-     *
      */
     public function trainingCalendarEvents()
     {
@@ -136,7 +127,6 @@ class HomeController extends Controller
 
     /**
      * Show the employee overview data to dashboard page on chart.
-     *
      */
     public function employeeOverview()
     {
@@ -181,6 +171,25 @@ class HomeController extends Controller
 
             $image      = $userImage ?  'storage/' . $userImage->file_path : 'template/images/default-icon.png';
             return view('activities', ['image' => $image]);
+        } catch (QueryException $e) {
+            $errorMessage = $e->getMessage();
+            return response()->json(['error' => $errorMessage], 500);
+        }
+    }
+
+    /**
+     * Show the payroll page
+     */
+    public function payroll()
+    {
+        try {
+            $userId    = Auth::id();
+            $userImage = DB::table('images')
+                ->where('user_id', '=', $userId)
+                ->first();
+
+            $image      = $userImage ?  'storage/' . $userImage->file_path : 'template/images/default-icon.png';
+            return view('payroll', ['image' => $image]);
         } catch (QueryException $e) {
             $errorMessage = $e->getMessage();
             return response()->json(['error' => $errorMessage], 500);
