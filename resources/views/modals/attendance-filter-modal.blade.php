@@ -26,8 +26,8 @@
                 </div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-sm btn-outline-danger" data-bs-dismiss="modal">Cancel</button>
-                <button type="button" class="btn btn-sm btn-outline-primary submit-btn" @click="getAllAttendance" :disabled="attendanceLoading">Apply Filter</button>
+                <button type="button" class="btn btn-sm btn-outline-danger" data-bs-dismiss="modal" style="border-radius: 5px;">Cancel</button>
+                <button type="button" class="btn btn-sm btn-outline-primary submit-btn" @click="getAllAttendance" :disabled="attendanceLoading" style="border-radius: 5px;">Apply Filter</button>
             </div>
         </div>
     </div>
