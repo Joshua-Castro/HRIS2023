@@ -49,7 +49,9 @@ class AttendanceController extends Controller
             $userId     =   $request->user_id      ?    $request->user_id       :   '';
             $type       =   $request->type         ?    $request->type          :   '';
 
-            $employee   =   DB::table('employees')->where('user_id', '=', $userId)->first();
+            $employee   =   DB::table('employees')
+                                ->where('user_id', '=', $userId)
+                                ->first();
             $data = [
                 'user_id'                   =>  !empty($userId)         ?   $userId         :   '',
                 'employee_id'               =>  !empty($employee->id)   ?   $employee->id   :   '',
@@ -103,11 +105,12 @@ class AttendanceController extends Controller
 
             if ($attendance === null) {
                 $attendanceId = DB::table('attendances')->insertGetId([
-                    'user_id'       =>  $userId,
-                    'employee_id'   =>  $employeeId,
-                    $column         =>  $time,
-                    'created_at'    =>  $now,
-                    'created_by'    =>  Auth::id()
+                    'user_id'               =>  $userId,
+                    'employee_id'           =>  $employeeId,
+                    $column                 =>  $time,
+                    'created_at'            =>  $now,
+                    'attendance_date'       =>  date('Y-m-d', strtotime($now)),
+                    'created_by'            =>  Auth::id()
                 ]);
 
                 $requestDataLogs = [
@@ -127,6 +130,25 @@ class AttendanceController extends Controller
                         'updated_at'    =>  $now,
                         'updated_by'    =>  Auth::id()
                     ]);
+
+                if ($column == 'clock_out') {
+                    // SOLVE THE TOTAL HOURS AND SAVE TO THE DATABASE
+                    $attendanceClockInData = DB::table('attendances')
+                                                ->select('*')
+                                                ->where('id', $attendance->id)
+                                                ->first();
+
+                    $totalWorkingHours = Carbon::parse($time)->diffInHours(Carbon::parse($attendanceClockInData->clock_in));
+
+                    DB::table('attendances')
+                        ->where('id', $attendance->id)
+                        ->update([
+                            $column         =>  $time,
+                            'total_hours'   =>  $totalWorkingHours,
+                            'updated_at'    =>  $now,
+                            'updated_by'    =>  Auth::id()
+                        ]);
+                }
 
                 $requestDataLogs = [
                     'employee_id'   => $data['employee_id'],
@@ -201,8 +223,8 @@ class AttendanceController extends Controller
 
             $dailyAttendance = DB::table('attendances')
                     ->where('user_id', $user->id)
-                    ->whereDate('created_at', '>=', $today->startOfDay())
-                    ->whereDate('created_at', '<=', $today->endOfDay())
+                    ->whereDate('attendance_date', '>=', $today->startOfDay())
+                    ->whereDate('attendance_date', '<=', $today->endOfDay())
                     ->first();
 
             return response()->json(['message' => 'Daily Attendance : ', 'dailyAttendance' => $dailyAttendance]);
@@ -228,7 +250,7 @@ class AttendanceController extends Controller
             $attendance = DB::table('attendances')
                     ->where('user_id', $user->id)
                     ->whereNull('deleted_at')
-                    ->whereDate('created_at', 'LIKE', $validatedData['date'] . '%')
+                    ->whereDate('attendance_date', 'LIKE', $validatedData['date'] . '%')
                     ->get();
 
             return response()->json(['message' => 'Fetched Attendance', 'attendance' => $attendance]);
@@ -292,9 +314,10 @@ class AttendanceController extends Controller
                         'attendances.break_in',
                         'attendances.break_out',
                         'attendances.created_at',
+                        'attendances.attendance_date',
                         )
                     ->whereNull('attendances.deleted_at')
-                    ->orderBy('attendances.created_at', 'DESC')
+                    ->orderBy('attendances.attendance_date', 'DESC')
                     ->paginate($pagination);
 
             return response()->json(['attendance' => $data]);

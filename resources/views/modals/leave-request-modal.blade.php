@@ -24,19 +24,12 @@
                             <div class="col-sm-12 p-0 m-0">
                                 <div class="form-floating">
                                     <select class="form-select leave-form-modal" name="leave_type" x-model="currentLeave.leaveType" required>
-                                        {{-- <template x-if="(leaveType ?? []).length == 0"> --}}
-                                            <option value="">Select</option>
-                                        {{-- </template> --}}
+                                        <option value="">Select</option>
                                         <template x-if="(leaveType ?? []).length > 0">
-                                            <template x-for="(rows, index) in leaveType">
-                                                <option value="rows.id" x-text="rows.description"></option>
+                                            <template x-for="leave in leaveType">
+                                                <option :value="leave.id" x-text="leave.description"></option>
                                             </template>
                                         </template>
-                                        {{-- <option value="Emergency/Sick Leave">Emergency/Sick Leave</option>
-                                        <option value="Parental Leave">Parental Leave</option>
-                                        <option value="Paternity Leave">Paternity Leave</option>
-                                        <option value="Vacation Leave">Vacation Leave</option>
-                                        <option value="Birthday Leave">Birthday Leave</option> --}}
                                     </select>
                                     <label for="leave_type">Leave Type</label>
                                     <div class="invalid-feedback">

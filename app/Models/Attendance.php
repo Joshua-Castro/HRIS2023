@@ -10,15 +10,16 @@ class Attendance extends Model
 {
     use HasFactory, SoftDeletes;
     protected $fillable = [
-        'user_id',
-        'employee_id',
-        'clock_in',
-        'clock_out',
-        'break_in',
-        'break_out',
-        'total_hours',
-        'total_overtime_hours',
+        'notes',
         'status',
-        'notes'
+        'user_id',
+        'clock_in',
+        'break_in',
+        'clock_out',
+        'break_out',
+        'employee_id',
+        'total_hours',
+        'attendance_date',
+        'total_overtime_hours',
     ];
 }

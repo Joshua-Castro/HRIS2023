@@ -73,12 +73,11 @@
                                                     </div>
                                                 </div>
                                             </td>
-                                            <td x-text="moment(rows.created_at).format('YYYY-MM-DD / dddd').toUpperCase()"></td>
+                                            <td x-text="moment(rows.attendance_date).format('YYYY-MM-DD / dddd').toUpperCase()"></td>
                                             <td x-text="rows.clock_in"></td>
                                             <td x-text="rows.break_out"></td>
                                             <td x-text="rows.break_in"></td>
                                             <td x-text="rows.clock_out"></td>
-                                            {{-- <td class="text-center">SAMPLE</td> --}}
                                         </tr>
                                     </template>
                                 </template>

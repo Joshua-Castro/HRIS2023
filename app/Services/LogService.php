@@ -82,6 +82,7 @@ class LogService
                     break;
 
                     case 'file-uploads' :
+                        $action         =   !empty($method) ? $method : "";
                         $employeeId     =   !empty($request) ? $request : "";
                         $message        =   $action === 'created' ? 'a new file to an employee: ' : 'a file from an employee: ';
                         $filePath       =   $path;

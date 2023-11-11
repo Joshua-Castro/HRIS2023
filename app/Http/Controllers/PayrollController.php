@@ -4,6 +4,10 @@ namespace App\Http\Controllers;
 
 use App\Models\Payroll;
 use Illuminate\Http\Request;
+use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Database\QueryException;
 
 class PayrollController extends Controller
 {
@@ -34,9 +38,36 @@ class PayrollController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Payroll $payroll)
+    public function show(Request $request, Payroll $payroll)
     {
-        //
+        try {
+            $validatedData = $request->validate([
+                'dateFrom' => 'required|date_format:Y-m-d',
+                'dateTo' => 'required|date_format:Y-m-d',
+            ]);
+
+            $employeeId     =   !empty($request->employeeId)            ?   $request->employeeId            :   "";
+            $dateFrom       =   !empty($validatedData['dateFrom'])      ?   Carbon::parse($validatedData['dateFrom'])      :   "";
+            $dateTo         =   !empty($validatedData['dateTo'])        ?   Carbon::parse($validatedData['dateTo'])        :   "";
+
+            $employeeAttendance = DB::table('attendances as a')
+                                ->select(
+                                    'a.clock_in',
+                                    'a.clock_out',
+                                    'a.break_in',
+                                    'a.break_out',
+                                    'a.total_hours',
+                                    'a.attendance_date',
+                                )
+                                ->where('a.employee_id', '=', $employeeId)
+                                ->whereDate('a.attendance_date', '>=', $dateFrom)
+                                ->whereDate('a.attendance_date', '<=', $dateTo)
+                                ->get();
+
+        } catch (QueryException $e) {
+            $errorMessage = $e->getMessage();
+            return response()->json(['error' => $errorMessage], 500);
+        }
     }
 
     /**

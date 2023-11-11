@@ -22,6 +22,7 @@ return new class extends Migration
             $table->decimal('total_hours', 5, 2)->nullable();
             $table->decimal('total_overtime_hours', 5, 2)->nullable();
             $table->string('status')->nullable();
+            $table->date('attendance_date')->nullable();
             $table->text('notes')->nullable();
 
             $table->integer('created_by')->nullable();

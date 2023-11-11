@@ -40,7 +40,7 @@ class LeaveController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'leaveDate'     =>  'required',
+            'leaveDate'     =>  'required|date_format:Y-m-d',
             'leaveType'     =>  'required',
             'dayType'       =>  'required',
             'reason'        =>  'required',
@@ -51,10 +51,10 @@ class LeaveController extends Controller
             $userId     = Auth::id();
             $employeeId = DB::table('employees')
                             ->where('user_id', '=', $userId)
-                            ->first();
+                            ->value('id');
 
             $data = [
-                'employee_id'            =>      !empty($request->employeeId)         ?   $request->employeeId            :  '',
+                'employee_id'            =>      !empty($employeeId)                  ?   $employeeId                     :  '',
                 'leave_date'             =>      !empty($request->leaveDate)          ?   $request->leaveDate             :  '',
                 'leave_type'             =>      !empty($request->leaveType)          ?   $request->leaveType             :  '',
                 'day_type'               =>      !empty($request->dayType)            ?   $request->dayType               :  '',
@@ -63,10 +63,10 @@ class LeaveController extends Controller
 
             if (empty($id)) {
                 // CREATE OR STORE DATA
-                $data['status']         =   'Pending';
-                $data['created_by']     =   $userId;
-                $data['created_at']     =   now();
-                $data['user_id']        =   $userId;
+                $data['status']                 =   'Pending';
+                $data['created_by']             =   $userId;
+                $data['created_at']             =   now();
+                $data['user_id']                =   $userId;
 
                 $createdLeaveId = DB::table('leaves')->insertGetId($data);
                 $this->logService->logGenerate(Auth::id(), 'created', 'leaves', null, $createdLeaveId);
@@ -94,12 +94,24 @@ class LeaveController extends Controller
     {
         try {
             $userId = Auth::id();
-            $data = DB::table('leaves')
-                    ->select('*')
-                    ->where('user_id', '=', $userId)
-                    ->whereNull('deleted_at')
-                    ->orderBy('created_at', 'desc')
-                    ->paginate(5);
+
+            $data = DB::table('leaves as l')
+                        ->select(
+                            'l.id',
+                            'l.user_id',
+                            'l.leave_date',
+                            'l.leave_type as lt_id',
+                            'l.day_type',
+                            'l.status',
+                            'l.reason',
+
+                            'lt.description as leave_type',
+                            )
+                        ->leftJoin('leave_types as lt', 'lt.id', '=', 'l.leave_type')
+                        ->where('user_id', '=', $userId)
+                        ->whereNull('l.deleted_at')
+                        ->orderBy('l.created_at', 'desc')
+                        ->paginate(5);
 
             $overAllCount = DB::table('leaves')
                             ->select('*')
@@ -110,7 +122,9 @@ class LeaveController extends Controller
                     ->where('user_id', '=', $userId)
                     ->count();
 
-            $leaveType = DB::table('leave_types')->get();
+            $leaveType = DB::table('leave_types')
+                            ->select('*')
+                            ->get();
 
             $indication     =   Str::random(16);
             $indication2    =   Str::random(16);
@@ -121,7 +135,7 @@ class LeaveController extends Controller
                 $indication     =>  base64_encode(json_encode($data)),
                 $indication2    =>  $count,
                 $indication3    =>  $overAllCount,
-                $indication4    =>  $leaveType
+                $indication4    =>  base64_encode(json_encode($leaveType))
             ]);
         } catch (QueryException $e) {
             $errorMessage = $e->getMessage();
@@ -164,6 +178,8 @@ class LeaveController extends Controller
                                 ->first();
 
                 $attendanceData = [
+                    'attendance_date'   =>  !empty($leaveData->leave_date)      ?   $leaveData->leave_date      :   "",
+                    'created_at'        =>  now(),
                     'user_id'           =>  !empty($leaveData->user_id)         ?   $leaveData->user_id         :   "",
                     'employee_id'       =>  !empty($leaveData->employee_id)     ?   $leaveData->employee_id     :   "",
                     'notes'             =>  "File a $leaveData->leave_type on $leaveData->leave_date. ($leaveData->day_type)",
@@ -216,10 +232,12 @@ class LeaveController extends Controller
                         'l.id',
                         'l.user_id',
                         'l.leave_date',
-                        'l.leave_type',
+                        'l.leave_type as lt_id',
                         'l.day_type',
                         'l.status',
                         'l.reason',
+
+                        'lt.description as leave_type',
 
                         'e.last_name',
                         'e.first_name',
@@ -232,6 +250,7 @@ class LeaveController extends Controller
                         'e.salary_grade',
                         )
                     ->leftJoin('employees as e', 'e.user_id', '=', 'l.user_id')
+                    ->leftJoin('leave_types as lt', 'lt.id', '=', 'l.leave_type')
                     ->whereNull('e.deleted_at')
                     ->orderBy('l.created_at', 'desc')
                     ->get();

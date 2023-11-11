@@ -1062,8 +1062,9 @@ function adminDashboard(userRole) {
                 const dataKey           =   Object.keys(response)[0];
                 const count             =   Object.keys(response)[1];
                 const overAll           =   Object.keys(response)[2];
-                const leaveType         =   Object.keys(response)[3];
-                const data              =   response[dataKey] ? JSON.parse(atob(response[dataKey])) : "";
+                const leaveTypeKey      =   Object.keys(response)[3];
+                const data              =   response[dataKey]       ? JSON.parse(atob(response[dataKey]))       : "";
+                const leaveTypeData     =   response[leaveTypeKey]  ? JSON.parse(atob(response[leaveTypeKey]))  : "";
 
                 var leave = data['data'],
                     navlinks = data['links'];
@@ -1094,7 +1095,7 @@ function adminDashboard(userRole) {
                 this.overAllLeaveCount      =   response[overAll];
                 this.leaveData              =   leave;
                 this.leaveCount             =   response[count];
-                this.leaveType              =   leaveType;
+                this.leaveType              =   leaveTypeData;
                 this.leaveIsLoading         =   false;
 
             }).catch((error) => {
@@ -1432,6 +1433,6 @@ function adminDashboard(userRole) {
             }).catch((error) => {
 
             })
-        }
+        },
     }
 }
