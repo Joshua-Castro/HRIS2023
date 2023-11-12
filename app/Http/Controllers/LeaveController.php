@@ -172,9 +172,19 @@ class LeaveController extends Controller
                             ]);
 
             if ($status === 'Accepted') {
-                $leaveData = DB::table('leaves')
-                                ->select('*')
-                                ->where('id', '=', $id)
+                $leaveData = DB::table('leaves as l')
+                                ->select(
+                                    'l.id as leave_id',
+                                    'l.user_id as user_id',
+                                    'l.employee_id as employee_id',
+                                    'l.leave_date as leave_date',
+                                    'l.day_type as day_type',
+
+                                    'lt.id as leave_type_id',
+                                    'lt.description as leave_type',
+                                    )
+                                ->leftJoin('leave_types as lt', 'lt.id', '=', 'l.leave_type')
+                                ->where('l.id', '=', $id)
                                 ->first();
 
                 $attendanceData = [

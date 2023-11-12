@@ -93,4 +93,34 @@ class PayrollController extends Controller
     {
         //
     }
+
+    /**
+     * Get attendance record
+     * of the employee that will generate the
+     * payroll
+     */
+    public function getEmployeeAttendance(Request $request)
+    {
+        try {
+            $validatedData = $request->validate([
+                'dateFrom' => 'required|date_format:Y-m-d',
+                'dateTo'   => 'required|date_format:Y-m-d',
+            ]);
+
+            $employeeId = !empty($request->employeeId) ? $request->employeeId : "";
+
+            $attendanceData = DB::table('attendances')
+                                    ->select('*')
+                                    ->where('employee_id', '=', $employeeId)
+                                    ->whereDate('attendance_date', '>=', $request->dateFrom)
+                                    ->whereDate('attendance_date', '<=', $request->dateTo)
+                                    ->paginate(5);
+
+            return response()->json(['attendance' => $attendanceData]);
+        } catch (QueryException $e) {
+            $errorMessage = $e->getMessage();
+            return response()->json(['error' => $errorMessage], 500);
+
+        }
+    }
 }

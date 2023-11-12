@@ -3,14 +3,18 @@
 function payroll() {
     return {
         // PROPERTIES
-        payrollData      :       [],
-        inputTimer                      :   null,
-        searchEmployee                  :   '',
-        employeePayrollData             :   [],
-        filter                          :   'all',
-        pagination                      :   5,
-        page                            :   1,
-        loadingPayroll                  :   false,
+        inputTimer                          :   null,
+        searchEmployee                      :   '',
+        employeeId                          :   '',
+        employeePayrollData                 :   [],
+        attendancePayrollData               :   [],
+        filter                              :   'all',
+        pagination                          :   5,
+        page                                :   1,
+        attendancePage                      :   1,
+        loadingPayroll                      :   false,
+        attendanceDetailsLoading            :   false,
+        hideRow                             :   true,
 
         // METHOD
         init () {
@@ -34,7 +38,9 @@ function payroll() {
             }).attr("readonly", "readonly").datepicker("setDate", today);
 
             this.getEmployeeDataPayroll();
+            // this.getAttendanceDetails();
             this.paginationPage();
+            this.paginationPageAttendance();
         },
 
         // SEARCH SPECIFIC NAME OF EMPLOYEE ON EMPLOYEE TABLE
@@ -65,7 +71,7 @@ function payroll() {
         // FETCH DATA ON DATABASE AND DISPLAY ON TABLE EMPLOYEE DATA
         getEmployeeDataPayroll : function () {
             this.loadingPayroll = true;
-            $('ul.employee-payroll').empty();
+            $('ul.employee-payroll-pagination').empty();
 
             $('input[name="name"]'          ).val(this.searchEmployee);
             $('input[name="status"]'        ).val(this.filter);
@@ -128,9 +134,80 @@ function payroll() {
             });
         },
 
+        // PAGINATION PAGE ON THE TABLE EMPLOYEE DATA
+        paginationPageAttendance : function () {
+            var component = this;
+
+            $(document).on('click', '.attendance-payroll-pagination a', function (e) {
+                e.preventDefault();
+                var page = $(this).attr('href').split('page=')[1];
+
+                component.attendancePage = page;
+
+                // Call the getAttendanceDetails method using the component reference
+                component.getAttendanceDetails(component.employeeId);
+            });
+        },
+
         // GENERATE PAYROLL
         generatePayroll : function (index, employeeId) {
-            console.log(index + " " + employeeId);
+            this.hideRow = false;
+            this.getAttendanceDetails(employeeId);
+        },
+
+        // GET THE ATTENDANCE OF THE EMPLOYEE TO GENERATE ITS PAYROLL
+        getAttendanceDetails : function (employeeId) {
+            $('ul.attendance-payroll-pagination').empty();
+            this.employeeId = employeeId;
+            this.attendanceDetailsLoading = true;
+
+            $('input[name="attendance-page"]'           ).val(this.attendancePage);
+            $('input[name="dateFrom"]'                  ).val($('#payroll-date-from').val());
+            $('input[name="dateTo"]'                    ).val($('#payroll-date-to').val());
+            $('input[name="employeeId"]'                ).val(employeeId);
+
+            $.ajax({
+                type        :   "GET",
+                url         :   route("payroll.employee.attendance"),
+                data        :   $('#payroll-attendance-form').serializeArray(),
+            }).then((response) => {
+                var data                =   response.attendance;
+                var attendanceData      =   data['data'],
+                    navlinks            =   data['links'];
+
+                    if (data['total']) {
+                        // PAGINATION LINKS
+                        $.each(navlinks, function (i, link) {
+                            var nav = '';
+
+                            nav += '<li class="page-item' + (link['active'] ? ' active' : '') + (!link['url'] ? ' disabled' : '') + '">';
+                            nav += '<a class="page-link" href="' + link['url'] + '">' + link['label'] + '</a>';
+                            nav += '</li>';
+
+                            $('ul.attendance-payroll-pagination').append(nav);
+                        });
+
+                        if (data['from']) {
+
+                            $('#attendance-payroll-counter').text('Showing ' + data['from'] + ' to ' + data['to'] + ' of ' + data['total'] + ' Attendance/s');
+
+                        } else {
+                            $('.attendance-payroll-pagination a[href="' + data['first_page_url'] + '"]').trigger('click');
+                        }
+                    } else {
+                        $('#attendance-payroll-counter').text('No Attendance Found!');
+                    }
+
+                    this.attendancePayrollData      =   attendanceData;
+                    this.attendanceDetailsLoading   =   false;
+            }).catch((error) => {
+                if (error.responseJSON && error.responseJSON.errors) {
+
+                } else {
+                    // Handle other error scenarios
+                    // ...
+                }
+            });
         },
 
     }

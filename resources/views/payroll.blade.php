@@ -109,7 +109,7 @@
                 </div>
             </div>
         </div>
-        <div class="row">
+        <div class="row" :hidden="hideRow">
             <div class="col-lg-8 d-flex flex-column">
                 <div class="row flex-grow">
                     <div class="col-12 col-lg-4 col-lg-12 grid-margin stretch-card">
@@ -121,6 +121,12 @@
                                         <p class="text-small modern-color-999">Choose the attendance of the employee to generate payroll...</p>
                                     </div>
                                     <div class="col-md-6 d-flex justify-content-end">
+                                        <form id="payroll-attendance-form" class="d-none">
+                                            <input type="hidden" name="attendance-page">
+                                            <input type="hidden" name="employeeId">
+                                            <input type="hidden" name="dateFrom">
+                                            <input type="hidden" name="dateTo">
+                                        </form>
                                         <input type="text" id="payroll-date-from" name="payroll-date-from" class="form-control form-control-sm bg-white me-2" placeholder="Date From :">
                                         <input type="text" id="payroll-date-to" name="payroll-date-to" class="form-control form-control-sm bg-white" placeholder="Date To :">
                                     </div>
@@ -134,47 +140,60 @@
                                             <th class="text-center">Break Out</th>
                                             <th class="text-center">Break In</th>
                                             <th class="text-center">Clock Out</th>
+                                            <th class="text-center">Notes</th>
                                             <th class="text-center">Total Working Hours</th>
                                             <th class="text-center">OT Hours</th>
                                         </tr>
                                     </thead>
-                                    <tbody>
-                                        @for ($i = 0; $i < 5; $i++)
-                                            {{-- Your content here --}}
-                                            {{-- <p>This is iteration {{ $i + 1 }}</p> --}}
+                                    <template x-if="attendanceDetailsLoading">
+                                        <tbody>
                                             <tr>
-                                                <td>SAMPLE DATA</td>
-                                                <td class="text-center">SAMPLE DATA</td>
-                                                <td class="text-center">SAMPLE DATA</td>
-                                                <td class="text-center">SAMPLE DATA</td>
-                                                <td class="text-center">SAMPLE DATA</td>
-                                                <td class="text-center">SAMPLE DATA</td>
-                                                <td class="text-center">SAMPLE DATA</td>
+                                                <td class="text-center" colspan="8">
+                                                    <div class="spinner-container">
+                                                        <div class="spinner"></div>
+                                                    </div>
+                                                </td>
                                             </tr>
-                                        @endfor
-                                    </tbody>
+                                        </tbody>
+                                    </template>
+                                    <template x-if="!attendanceDetailsLoading">
+                                        <template x-for="(rows, indexData) in attendancePayrollData">
+                                            <tbody>
+                                                <tr class="p-0">
+                                                    <td x-text="rows.attendance_date"></td>
+                                                    <td class="text-center py-0" x-text="(rows.clock_in  ? rows.clock_in  : '-')"></td>
+                                                    <td class="text-center py-0" x-text="(rows.break_out ? rows.break_out : '-')"></td>
+                                                    <td class="text-center py-0" x-text="(rows.break_in  ? rows.break_in  : '-')"></td>
+                                                    <td class="text-center py-0" x-text="(rows.clock_out ? rows.clock_out : '-')"></td>
+                                                    <td class="text-center py-0 text-wrap" x-text="(rows.notes ? rows.notes : '-')"></td>
+                                                    <td class="text-center py-0" x-text="(rows.total_hours ? rows.total_hours : '-')"></td>
+                                                    <td class="text-center py-0" x-text="(rows.total_overtime_hours ? rows.total_overtime_hours : '-')"></td>
+                                                </tr>
+                                            </tbody>
+                                        </template>
+                                    </template>
                                     <thead>
                                         <tr>
-                                            <th colspan="5"></th>
-                                            <th class="text-center">Total Hours</th>
-                                            <th class="text-center">Total OT Hours</th>
+                                            <th colspan="6"></th>
+                                            <th class="text-center py-0">Total Hours</th>
+                                            <th class="text-center py-0">Total OT Hours</th>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         <tr>
-                                            <td colspan="5"></td>
-                                            <td class="text-center">SAMPLE DATA</td>
-                                            <td class="text-center">SAMPLE DATA</td>
+                                            <td colspan="6"></td>
+                                            <td class="text-center py-0">SAMPLE DATA</td>
+                                            <td class="text-center py-0">SAMPLE DATA</td>
                                         </tr>
                                     </tbody>
                                     </table>
                                     <div class="row gx-0">
                                         <div class="col-md-6 mb-2 my-md-auto">
-                                            <p id="employee-counter" class="m-0">No accounts to display</p>
+                                            <p id="attendance-payroll-counter" class="m-0">No accounts to display</p>
                                         </div>
                                         <div class="col-md-6">
                                             <nav>
-                                                <ul class="pagination pagination-sm float-md-end mt-2 mb-0">
+                                                <ul class="attendance-payroll-pagination pagination pagination-sm float-md-end mt-2 mb-0">
                                                     {{-- pagination --}}
                                                 </ul>
                                             </nav>

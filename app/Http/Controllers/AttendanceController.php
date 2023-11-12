@@ -242,7 +242,6 @@ class AttendanceController extends Controller
     {
         try {
             $user = Auth::user();
-            // $date = $request->date ? $request->date : '';
             $validatedData = $request->validate([
                 'date' => 'required|date_format:Y-m-d',
             ]);
