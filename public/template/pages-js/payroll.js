@@ -15,6 +15,7 @@ function payroll() {
         loadingPayroll                      :   false,
         attendanceDetailsLoading            :   false,
         hideRow                             :   false,
+        totalHours                          :   '',
 
         // METHOD
         init () {
@@ -153,7 +154,7 @@ function payroll() {
         generatePayroll : function (index, employeeId) {
             if (this.employeeId != employeeId) {
                 this.hideRow = true;
-                this.getAttendanceDetails(employeeId);
+                this.getAttendanceDetails(employeeId, index);
 
                 // SCROLL TO THE BOTTOM
                 $('html, body').animate({
@@ -163,7 +164,7 @@ function payroll() {
         },
 
         // GET THE ATTENDANCE OF THE EMPLOYEE TO GENERATE ITS PAYROLL
-        getAttendanceDetails : function (employeeId) {
+        getAttendanceDetails : function (employeeId, index) {
             $('ul.attendance-payroll-pagination').empty();
             this.employeeId = employeeId;
             this.attendanceDetailsLoading = true;
@@ -205,8 +206,14 @@ function payroll() {
                         $('#attendance-payroll-counter').text('No Attendance Found!');
                     }
 
+
+                    var component = this;
                     this.attendancePayrollData      =   attendanceData;
                     this.attendanceDetailsLoading   =   false;
+                    this.attendancePayrollData[index].forEach(function (employee) {
+                        component.totalHours += parseFloat(employee.total_hours) || 0; // Ensure the value is a number
+                    });
+                    console.log(component.totalHours);
             }).catch((error) => {
                 if (error.responseJSON && error.responseJSON.errors) {
 

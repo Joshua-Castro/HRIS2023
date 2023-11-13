@@ -157,29 +157,36 @@
                                         </tbody>
                                     </template>
                                     <template x-if="!attendanceDetailsLoading">
-                                        <template x-for="(rows, indexData) in attendancePayrollData">
-                                            <tbody>
-                                                <tr class="p-0">
-                                                    <td x-text="rows.attendance_date"></td>
-                                                    <td class="text-center py-0" x-text="(rows.clock_in  ? rows.clock_in  : '-')"></td>
-                                                    <td class="text-center py-0" x-text="(rows.break_out ? rows.break_out : '-')"></td>
-                                                    <td class="text-center py-0" x-text="(rows.break_in  ? rows.break_in  : '-')"></td>
-                                                    <td class="text-center py-0" x-text="(rows.clock_out ? rows.clock_out : '-')"></td>
-                                                    <td class="text-center py-0 text-wrap" x-text="(rows.notes ? rows.notes : '-')"></td>
-                                                    <td class="text-center py-0" x-text="(rows.total_hours ? rows.total_hours : '-')"></td>
-                                                    <td class="text-center py-0" x-text="(rows.total_overtime_hours ? rows.total_overtime_hours : '-')"></td>
+                                        <tbody>
+                                            <template x-if="(attendancePayrollData ?? []).length == 0">
+                                                <tr class="text-center">
+                                                    <td class="" colspan="8"><i class="fa fa-info-circle"></i> There is no attendance record.</td>
                                                 </tr>
-                                            </tbody>
-                                        </template>
+                                            </template>
+                                            <template x-if="(attendancePayrollData ?? []).length > 0">
+                                                <template x-for="(rows, indexData) in attendancePayrollData">
+                                                    <tr class="p-0">
+                                                        <td x-text="rows.attendance_date"></td>
+                                                        <td class="text-center py-0" x-text="(rows.clock_in  ? rows.clock_in  : '-')"></td>
+                                                        <td class="text-center py-0" x-text="(rows.break_out ? rows.break_out : '-')"></td>
+                                                        <td class="text-center py-0" x-text="(rows.break_in  ? rows.break_in  : '-')"></td>
+                                                        <td class="text-center py-0" x-text="(rows.clock_out ? rows.clock_out : '-')"></td>
+                                                        <td class="text-center py-0 text-wrap" x-text="(rows.notes ? rows.notes : '-')"></td>
+                                                        <td class="text-center py-0" x-text="(rows.total_hours ? rows.total_hours : '-')"></td>
+                                                        <td class="text-center py-0" x-text="(rows.total_overtime_hours ? rows.total_overtime_hours : '-')"></td>
+                                                    </tr>
+                                                </template>
+                                            </template>
+                                        </tbody>
                                     </template>
-                                    <thead>
+                                    <thead x-show="(attendancePayrollData ?? []).length > 0">
                                         <tr>
                                             <th colspan="6"></th>
                                             <th class="text-center py-0">Total Hours</th>
                                             <th class="text-center py-0">Total OT Hours</th>
                                         </tr>
                                     </thead>
-                                    <tbody>
+                                    <tbody x-show="(attendancePayrollData ?? []).length > 0">
                                         <tr>
                                             <td colspan="6"></td>
                                             <td class="text-center py-0">SAMPLE DATA</td>

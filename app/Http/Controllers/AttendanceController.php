@@ -138,7 +138,8 @@ class AttendanceController extends Controller
                                                 ->where('id', $attendance->id)
                                                 ->first();
 
-                    $totalWorkingHours = Carbon::parse($time)->diffInHours(Carbon::parse($attendanceClockInData->clock_in));
+                    $diffInMinutes = Carbon::parse($time)->diffInMinutes(Carbon::parse($attendanceClockInData->clock_in));
+                    $totalWorkingHours = number_format($diffInMinutes / 60, 2);
 
                     DB::table('attendances')
                         ->where('id', $attendance->id)
