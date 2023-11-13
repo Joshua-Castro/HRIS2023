@@ -114,6 +114,7 @@ class PayrollController extends Controller
                                     ->where('employee_id', '=', $employeeId)
                                     ->whereDate('attendance_date', '>=', $request->dateFrom)
                                     ->whereDate('attendance_date', '<=', $request->dateTo)
+                                    ->orderBy('attendance_date', 'ASC')
                                     ->paginate(5);
 
             return response()->json(['attendance' => $attendanceData]);

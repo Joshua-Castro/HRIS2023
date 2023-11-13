@@ -109,7 +109,7 @@
                 </div>
             </div>
         </div>
-        <div class="row" :hidden="hideRow">
+        <div class="row" x-show="hideRow">
             <div class="col-lg-8 d-flex flex-column">
                 <div class="row flex-grow">
                     <div class="col-12 col-lg-4 col-lg-12 grid-margin stretch-card">

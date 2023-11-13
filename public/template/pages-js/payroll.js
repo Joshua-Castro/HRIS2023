@@ -14,7 +14,7 @@ function payroll() {
         attendancePage                      :   1,
         loadingPayroll                      :   false,
         attendanceDetailsLoading            :   false,
-        hideRow                             :   true,
+        hideRow                             :   false,
 
         // METHOD
         init () {
@@ -151,8 +151,15 @@ function payroll() {
 
         // GENERATE PAYROLL
         generatePayroll : function (index, employeeId) {
-            this.hideRow = false;
-            this.getAttendanceDetails(employeeId);
+            if (this.employeeId != employeeId) {
+                this.hideRow = true;
+                this.getAttendanceDetails(employeeId);
+
+                // SCROLL TO THE BOTTOM
+                $('html, body').animate({
+                    scrollTop: $(document).height()
+                }, 1000); // ADJUST THE ANIMATION SPEED HERE
+            }
         },
 
         // GET THE ATTENDANCE OF THE EMPLOYEE TO GENERATE ITS PAYROLL
