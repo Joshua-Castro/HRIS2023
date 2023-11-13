@@ -151,10 +151,10 @@ function payroll() {
         },
 
         // GENERATE PAYROLL
-        generatePayroll : function (index, employeeId) {
+        generatePayroll : function (employeeId) {
             if (this.employeeId != employeeId) {
                 this.hideRow = true;
-                this.getAttendanceDetails(employeeId, index);
+                this.getAttendanceDetails(employeeId);
 
                 // SCROLL TO THE BOTTOM
                 $('html, body').animate({
@@ -164,10 +164,11 @@ function payroll() {
         },
 
         // GET THE ATTENDANCE OF THE EMPLOYEE TO GENERATE ITS PAYROLL
-        getAttendanceDetails : function (employeeId, index) {
+        getAttendanceDetails : function (employeeId) {
             $('ul.attendance-payroll-pagination').empty();
             this.employeeId = employeeId;
             this.attendanceDetailsLoading = true;
+            var component = this;
 
             $('input[name="attendance-page"]'           ).val(this.attendancePage);
             $('input[name="dateFrom"]'                  ).val($('#payroll-date-from').val());
@@ -206,13 +207,16 @@ function payroll() {
                         $('#attendance-payroll-counter').text('No Attendance Found!');
                     }
 
-
-                    var component = this;
                     this.attendancePayrollData      =   attendanceData;
+                    if (this.attendancePayrollData.length > 0) {
+                        component.totalHours = 0;
+                        this.attendancePayrollData.forEach(function (employee) {
+                            component.totalHours += parseFloat(employee.total_hours) || 0; // Ensure the value is a number
+                        });
+                    } else {
+                        component.totalHours = 0;
+                    }
                     this.attendanceDetailsLoading   =   false;
-                    this.attendancePayrollData[index].forEach(function (employee) {
-                        component.totalHours += parseFloat(employee.total_hours) || 0; // Ensure the value is a number
-                    });
                     console.log(component.totalHours);
             }).catch((error) => {
                 if (error.responseJSON && error.responseJSON.errors) {

@@ -48,7 +48,7 @@
                                     <th>Salary Grade</th>
                                     <th>Employment Status</th>
                                     <th>Position</th>
-                                    <th class="text-center">Action</th>
+                                    <th class="text-center">Payslip</th>
                                 </tr>
                             </thead>
                             <template x-if="loadingPayroll">
@@ -81,7 +81,7 @@
                                                 <td><p class="dark-text fs-14" x-text="rows.employment_status"></p></td>
                                                 <td><p class="dark-text fs-14" x-text="rows.position"></p></td>
                                                 <td class="text-center">
-                                                    <div class="badge badge-outline-primary btn btn-sm btn-outline-primary" style="border-radius: 5px;" @click="generatePayroll(indexData, rows.employee_id)">
+                                                    <div class="badge badge-outline-primary btn btn-sm btn-outline-primary" style="border-radius: 5px;" @click="generatePayroll(rows.employee_id)">
                                                         <i class="ti-write btn-icon-prepend me-2"></i>
                                                         Generate
                                                     </div>
@@ -189,7 +189,7 @@
                                     <tbody x-show="(attendancePayrollData ?? []).length > 0">
                                         <tr>
                                             <td colspan="6"></td>
-                                            <td class="text-center py-0">SAMPLE DATA</td>
+                                            <td class="text-center py-0" x-text="totalHours ? totalHours : '-'"></td>
                                             <td class="text-center py-0">SAMPLE DATA</td>
                                         </tr>
                                     </tbody>
@@ -217,7 +217,10 @@
                     <div class="col-12 col-lg-4 col-lg-12 grid-margin stretch-card">
                         <div class="card">
                             <div class="card-body">
-
+                                <div class="col-md-12">
+                                    <h4 class="card-title card-title-dash">Payroll Computation</h4>
+                                    <p class="text-small modern-color-999">Estimated computation base on the employee attendance...</p>
+                                </div>
                             </div>
                         </div>
                     </div>
