@@ -7,5 +7,6 @@ Route::prefix('attendance')->as('attendance.')->group(function () {
     Route::get('/daily-attendance'          ,[AttendanceController::class, 'dailyAttendance'     ])->name('daily');
     Route::get('/get-attendace'             ,[AttendanceController::class, 'attendanceRecord'    ])->name('record');
     Route::get('/get-all-attendace'         ,[AttendanceController::class, 'getAllAttendance'    ])->name('all');
+    Route::post('/update'                   ,[AttendanceController::class, 'update'              ])->name('update');
     Route::post('/store'                    ,[AttendanceController::class, 'store'               ])->name('store');
 });

@@ -196,7 +196,30 @@ class AttendanceController extends Controller
      */
     public function update(Request $request, Attendance $attendance)
     {
-        //
+        try {
+            // dd(date('H:i:s', strtotime($request->clockIn)), date('H:i:s', strtotime($request->breakOut)), date('H:i:s', strtotime($request->breakIn)), date('H:i:s', strtotime($request->clockOut)));
+            $data = [
+                'clock_in'     =>   !empty($request->clockIn)     ?   date('H:i:s', strtotime($request->clockIn))    :   '',
+                'break_out'    =>   !empty($request->breakOut)    ?   date('H:i:s', strtotime($request->breakOut))   :   '',
+                'break_in'     =>   !empty($request->breakIn)     ?   date('H:i:s', strtotime($request->breakIn))    :   '',
+                'clock_out'    =>   !empty($request->clockOut)    ?   date('H:i:s', strtotime($request->clockOut))   :   '',
+            ];
+
+            $employeeId     = !empty($request->employeeId)      ? $request->employeeId      : "";
+            $attendanceId   = !empty($request->attendanceId)    ? $request->attendanceId    : "";
+
+            $dataWillBeUpdate = DB::table('attendances as a')
+                    ->where('a.id', '=', $attendanceId)
+                    ->where('a.employee_id', '=', $employeeId)
+                    ->whereDate('attendance_date', '=', $request->attendanceDate)
+                    ->get([$data]);
+
+            dd($dataWillBeUpdate);
+        } catch (QueryException $e) {
+            $errorMessage = $e->getMessage();
+            return response()->json(['message' => $errorMessage], 500);
+        }
+        dd($request->all());
     }
 
     /**

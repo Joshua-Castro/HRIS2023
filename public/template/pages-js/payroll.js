@@ -16,6 +16,8 @@ function payroll() {
         attendanceDetailsLoading            :   false,
         totalHours                          :   '',
         employeeName                        :   '',
+        dateFrom                            :   '#payroll-date-from',
+        dateTo                              :   '#payroll-date-to',
 
         // METHOD
         init () {
@@ -24,14 +26,14 @@ function payroll() {
             var fromDate = new Date();
             fromDate.setDate(today.getDate() - 14);
 
-            $('#payroll-date-from').datepicker({
+            $(this.dateFrom).datepicker({
                 format: "yyyy-mm-dd",
                 autoclose: true,
                 todayHighlight: true,
                 clearBtn: true,
             }).attr("readonly", "readonly").datepicker("setDate", fromDate);
 
-            $('#payroll-date-to').datepicker({
+            $(this.dateTo).datepicker({
                 format: "yyyy-mm-dd",
                 autoclose: true,
                 todayHighlight: true,
@@ -114,6 +116,7 @@ function payroll() {
                 this.employeePayrollData    = users;
                 this.loadingPayroll         = false;
                 console.log(this.employeePayrollData);
+                console.log(this.employeeName);
             }).catch((error) => {
 
             })
@@ -150,7 +153,7 @@ function payroll() {
         },
 
         // GENERATE PAYROLL
-        generatePayroll : function (employeeId, index) {
+        generatePayroll : function (employeeId, index, index) {
             $('.payroll-row').removeClass('d-none');
             this.employeeName = this.employeePayrollData[index] ? this.employeePayrollData[index].first_name + ' ' + (this.employeePayrollData[index].middle_name ? this.employeePayrollData[index].middle_name + ' ' : ' ') + this.employeePayrollData[index].last_name : "";
             if (this.employeeId != employeeId) {
@@ -159,7 +162,7 @@ function payroll() {
                 // SCROLL TO THE BOTTOM
                 $('html, body').animate({
                     scrollTop: $(document).height()
-                }, 1000); // ADJUST THE ANIMATION SPEED HERE
+                }, 500); // ADJUST THE ANIMATION SPEED HERE
             }
         },
 
@@ -218,7 +221,6 @@ function payroll() {
                         component.totalHours = 0;
                     }
                     this.attendanceDetailsLoading   =   false;
-                    console.log(component.totalHours);
             }).catch((error) => {
                 if (error.responseJSON && error.responseJSON.errors) {
 

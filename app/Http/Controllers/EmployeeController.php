@@ -285,7 +285,9 @@ class EmployeeController extends Controller
     }
 
     /**
-     * Display the specified resource.
+     * Display employee data on
+     * HR or ADMIN SIDE. Used in employee
+     * and payroll side
      */
     public function show(Request $request, Employee $employee)
     {

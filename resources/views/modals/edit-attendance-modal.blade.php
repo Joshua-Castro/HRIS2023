@@ -2,6 +2,8 @@
     <div class="modal-dialog modal-sm-dialog" role="document">
         <div class="modal-content">
             <div class="modal-body">
+                <h4 class="header-title text-center text-uppercase fw-bold" x-text="attendanceEmployeeName"></h4>
+                <h6 class="header-title mb-4 text-center text-uppercase fw-light" style="font-size: 14px;">ATTENDANCE DETAILS</h6>
                 <div class="row my-2 gx-1">
                     <div class="col-md-6">
                         <div class="form-floating">
@@ -33,7 +35,7 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-sm btn-outline-danger" data-bs-dismiss="modal" style="border-radius: 5px;">Cancel</button>
-                <button type="button" class="btn btn-sm btn-outline-primary" style="border-radius: 5px;">Update Attendance</button>
+                <button type="button" class="btn btn-sm btn-outline-primary" style="border-radius: 5px;" @click="updateEmployeeAttendance">Update</button>
             </div>
         </div>
     </div>

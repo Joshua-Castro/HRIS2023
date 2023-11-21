@@ -4,6 +4,7 @@ function attendance() {
     return {
         attendanceData      :       [],
         currentAttendanceData : {
+            employeeId          :   '',
             attendanceId        :   '',
             attendanceDate      :   '',
             clockIn             :   '',
@@ -12,6 +13,7 @@ function attendance() {
             clockOut            :   '',
         },
 
+        attendanceEmployeeName          :   '',
         currentSearchName               :   '',
         currentPagination               :   5,
         currentPage                     :   1,
@@ -21,9 +23,7 @@ function attendance() {
         attendanceFilterFrom            :   '',
         attendanceFilterTo              :   '',
         attendanceLoading               :   false,
-
-
-
+        csrfToken                       :   $('meta[name="csrf-token"]').attr('content'),
 
         // METHOD
         init () {
@@ -208,29 +208,69 @@ function attendance() {
             return formattedTime;
         },
 
-        // EDIT ATTENDANCE OF SPECIFIC EMPLOYEE
+        // CONVERT 12 HOUR FORMAT TO 24 HOUR FORMAT
+        attendanceConvert12hrTo24hr: function (time) {
+            // THE TIMEDATA MUST BE IN THE FORMAT OF: "hh:mm:ss AM/PM"
+            const [timePart, period] = time.split(' ');
+            const [hours, minutes, seconds] = timePart.split(':').map(Number);
+
+            // CONVERT TO 24-HOUR FORMAT
+            let convertedHours = hours % 12;
+            convertedHours = period === 'PM' ? convertedHours + 12 : convertedHours;
+
+            // ADD LEADING ZEROS IF NEEDED
+            const formattedTime = `${convertedHours.toString().padStart(2, '0')}:${minutes}:${seconds}`;
+
+            return formattedTime;
+        },
+
+        // EDIT ATTENDANCE OF SPECIFIC EMPLOYEE,
+        // OPEN MODAL AND INITIATE THE VALUE BASED ON THE SELECTED EMPLOYEE'S ATTENDANCE
         editEmployeeAttendance : function (index) {
             $(this.editAttendanceModal).modal({
                 backdrop: 'static',
                 keyboard: false
             });
 
+            this.attendanceEmployeeName = this.attendanceData[index] ? this.attendanceData[index].first_name + ' ' + (this.attendanceData[index].middle_name ? this.attendanceData[index].middle_name + ' ' : ' ') + this.attendanceData[index].last_name : "";
+
             this.currentAttendanceData = {
-                attendanceId        :   this.attendanceData[index].attendance_id        ?   this.attendanceData[index].attendance_id       :   '',
-                attendanceDate      :   this.attendanceData[index].attendance_date      ?   this.attendanceData[index].attendance_date     :   '',
+                employeeId          :   this.attendanceData[index].employee_id          ?   this.attendanceData[index].employee_id          :   '',
+                attendanceId        :   this.attendanceData[index].attendance_id        ?   this.attendanceData[index].attendance_id        :   '',
+                attendanceDate      :   this.attendanceData[index].attendance_date      ?   this.attendanceData[index].attendance_date      :   '',
                 clockIn             :   this.attendanceData[index].clock_in             ?   moment(this.attendanceData[index].clock_in      ,'h:mm:ss A').format('hh:mm:ss A')  :   '----:----:----',
                 breakOut            :   this.attendanceData[index].break_out            ?   moment(this.attendanceData[index].break_out     ,'h:mm:ss A').format('hh:mm:ss A')  :   '----:----:----',
                 breakIn             :   this.attendanceData[index].break_in             ?   moment(this.attendanceData[index].break_in      ,'h:mm:ss A').format('hh:mm:ss A')  :   '----:----:----',
                 clockOut            :   this.attendanceData[index].clock_out            ?   moment(this.attendanceData[index].clock_out     ,'h:mm:ss A').format('hh:mm:ss A')  :   '----:----:----',
             };
 
-            $('input[name="edit-clock-in"]').val(this.currentAttendanceData.clockIn);
-            $('input[name="edit-break-out"]').val(this.currentAttendanceData.breakOut);
-            $('input[name="edit-break-in"]').val(this.currentAttendanceData.breakIn);
-            $('input[name="edit-clock-out"]').val(this.currentAttendanceData.clockOut);
-            console.log(this.currentAttendanceData);
+            $('input[name="edit-clock-in"]'     ).val(this.currentAttendanceData.clockIn);
+            $('input[name="edit-break-out"]'    ).val(this.currentAttendanceData.breakOut);
+            $('input[name="edit-break-in"]'     ).val(this.currentAttendanceData.breakIn);
+            $('input[name="edit-clock-out"]'    ).val(this.currentAttendanceData.clockOut);
 
             $(this.editAttendanceModal).modal('show');
+        },
+
+        // SEND THE UPDATED VALUE TO THE BACKEND
+        updateEmployeeAttendance : function () {
+            this.currentAttendanceData.clockIn      =   this.attendanceConvert12hrTo24hr($('input[name="edit-clock-in"]'  ).val());
+            this.currentAttendanceData.breakOut     =   this.attendanceConvert12hrTo24hr($('input[name="edit-break-out"]' ).val());
+            this.currentAttendanceData.breakIn      =   this.attendanceConvert12hrTo24hr($('input[name="edit-break-in"]'  ).val());
+            this.currentAttendanceData.clockOut     =   this.attendanceConvert12hrTo24hr($('input[name="edit-clock-out"]' ).val());
+
+            $.ajax({
+                type : "POST",
+                url : route("attendance.update"),
+                data : this.currentAttendanceData,
+                headers     : {
+                    'X-CSRF-TOKEN' : this.csrfToken
+                },
+            }).then((response) => {
+
+            }).catch((error) => {
+
+            });
         },
 
     }

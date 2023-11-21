@@ -104,6 +104,7 @@ class LeaveController extends Controller
                             'l.day_type',
                             'l.status',
                             'l.reason',
+                            'l.decline_reason',
 
                             'lt.description as leave_type',
                             )
