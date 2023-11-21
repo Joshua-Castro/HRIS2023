@@ -81,7 +81,7 @@
                                                 <td><p class="dark-text fs-14" x-text="rows.employment_status"></p></td>
                                                 <td><p class="dark-text fs-14" x-text="rows.position"></p></td>
                                                 <td class="text-center">
-                                                    <div class="badge badge-outline-primary btn btn-sm btn-outline-primary" style="border-radius: 5px;" @click="generatePayroll(rows.employee_id)">
+                                                    <div class="badge badge-outline-primary btn btn-sm btn-outline-primary" style="border-radius: 5px;" @click="generatePayroll(rows.employee_id, indexData)">
                                                         <i class="ti-write btn-icon-prepend me-2"></i>
                                                         Generate
                                                     </div>
@@ -109,7 +109,7 @@
                 </div>
             </div>
         </div>
-        <div class="row" x-show="hideRow">
+        <div class="row d-none payroll-row">
             <div class="col-lg-8 d-flex flex-column">
                 <div class="row flex-grow">
                     <div class="col-12 col-lg-4 col-lg-12 grid-margin stretch-card">
@@ -117,7 +117,7 @@
                             <div class="card-body">
                                 <div class="row">
                                     <div class="col-md-6">
-                                        <h4 class="card-title card-title-dash">Employee Attendance Details</h4>
+                                        <h4 class="card-title card-title-dash" x-text="employeeName + ' Attendance Details'"></h4>
                                         <p class="text-small modern-color-999">Choose the attendance of the employee to generate payroll...</p>
                                     </div>
                                     <div class="col-md-6 d-flex justify-content-end">

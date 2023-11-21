@@ -14,8 +14,8 @@ function payroll() {
         attendancePage                      :   1,
         loadingPayroll                      :   false,
         attendanceDetailsLoading            :   false,
-        hideRow                             :   false,
         totalHours                          :   '',
+        employeeName                        :   '',
 
         // METHOD
         init () {
@@ -39,7 +39,6 @@ function payroll() {
             }).attr("readonly", "readonly").datepicker("setDate", today);
 
             this.getEmployeeDataPayroll();
-            // this.getAttendanceDetails();
             this.paginationPage();
             this.paginationPageAttendance();
         },
@@ -151,9 +150,10 @@ function payroll() {
         },
 
         // GENERATE PAYROLL
-        generatePayroll : function (employeeId) {
+        generatePayroll : function (employeeId, index) {
+            $('.payroll-row').removeClass('d-none');
+            this.employeeName = this.employeePayrollData[index] ? this.employeePayrollData[index].first_name + ' ' + (this.employeePayrollData[index].middle_name ? this.employeePayrollData[index].middle_name + ' ' : ' ') + this.employeePayrollData[index].last_name : "";
             if (this.employeeId != employeeId) {
-                this.hideRow = true;
                 this.getAttendanceDetails(employeeId);
 
                 // SCROLL TO THE BOTTOM
@@ -180,9 +180,10 @@ function payroll() {
                 url         :   route("payroll.employee.attendance"),
                 data        :   $('#payroll-attendance-form').serializeArray(),
             }).then((response) => {
-                var data                =   response.attendance;
-                var attendanceData      =   data['data'],
-                    navlinks            =   data['links'];
+                const attendanceDataKey     =   Object.keys(response)[0];
+                var data                    =   response[attendanceDataKey] ? JSON.parse(atob(response[attendanceDataKey])) : "";
+                var attendanceData          =   data['data'],
+                    navlinks                =   data['links'];
 
                     if (data['total']) {
                         // PAGINATION LINKS

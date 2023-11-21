@@ -3,12 +3,21 @@
 function attendance() {
     return {
         attendanceData      :       [],
+        currentAttendanceData : {
+            attendanceId        :   '',
+            attendanceDate      :   '',
+            clockIn             :   '',
+            breakOut            :   '',
+            breakIn             :   '',
+            clockOut            :   '',
+        },
 
         currentSearchName               :   '',
         currentPagination               :   5,
         currentPage                     :   1,
         attendanceInputTimer            :   null,
         attendanceModal                 :   '#attendance-filter-modal',
+        editAttendanceModal             :   '#edit-attendance-modal',
         attendanceFilterFrom            :   '',
         attendanceFilterTo              :   '',
         attendanceLoading               :   false,
@@ -31,6 +40,12 @@ function attendance() {
                 todayHighlight: true,
                 clearBtn: true,
             }).attr("readonly", "readonly");
+
+            // EDIT TIME TIME START AND END INITIALIZATION
+            $('.attendance-time').datetimepicker({
+                useCurrent: false,
+                format: "hh:mm:ss A"
+            });
 
             this.attendancePaginationPage();
             this.getAllAttendance();
@@ -128,12 +143,13 @@ function attendance() {
                     this.attendanceLoading      = false;
                     this.attendanceData    = attendanceData;
                     $.each(this.attendanceData, function (i, row) {
-                        component.attendanceData[i].clock_in    = component.attendanceData[i].clock_in  ? component.attendanceConvert24hrTo12hr(component.attendanceData[i].clock_in)   : '';
-                        component.attendanceData[i].break_out   = component.attendanceData[i].break_out ? component.attendanceConvert24hrTo12hr(component.attendanceData[i].break_out)  : '';
-                        component.attendanceData[i].break_in    = component.attendanceData[i].break_in  ? component.attendanceConvert24hrTo12hr(component.attendanceData[i].break_in)   : '';
-                        component.attendanceData[i].clock_out   = component.attendanceData[i].clock_out ? component.attendanceConvert24hrTo12hr(component.attendanceData[i].clock_out)  : '';
+                        component.attendanceData[i].clock_in    = component.attendanceData[i].clock_in  ? component.attendanceConvert24hrTo12hr(component.attendanceData[i].clock_in)   : '----:----:----';
+                        component.attendanceData[i].break_out   = component.attendanceData[i].break_out ? component.attendanceConvert24hrTo12hr(component.attendanceData[i].break_out)  : '----:----:----';
+                        component.attendanceData[i].break_in    = component.attendanceData[i].break_in  ? component.attendanceConvert24hrTo12hr(component.attendanceData[i].break_in)   : '----:----:----';
+                        component.attendanceData[i].clock_out   = component.attendanceData[i].clock_out ? component.attendanceConvert24hrTo12hr(component.attendanceData[i].clock_out)  : '----:----:----';
                     });
                     $(component.attendanceModal).modal('hide');
+                    console.log(this.attendanceData);
             }).catch((error) => {
                 console.log(error);
                 if (error.responseJSON && error.responseJSON.errors) {
@@ -172,16 +188,16 @@ function attendance() {
 
         // CONVERT 24 HOUR FORMAT TO 12 HOUR FORMAT
         attendanceConvert24hrTo12hr : function(time) {
-            // Assuming timeData is in the format "HH:mm:ss"
+            // THE TIMEDATA MUST IN THE FORMAT OF : "HH:mm:ss"
             const [hours, minutes, seconds] = time.split(':').map(Number);
 
-            // Create a Date object and set hours, minutes, and seconds
+            // CREATE A DATE OBJECT AND SET HOURS, MINS AND SECS
             const date = new Date();
             date.setHours(hours);
             date.setMinutes(minutes);
             date.setSeconds(seconds);
 
-            // Format as 12-hour time with AM/PM
+            // FORMAT AS 12HOUR TIME WITH AM/PM
             const formattedTime = date.toLocaleString('en-US', {
                 hour: 'numeric',
                 minute: 'numeric',
@@ -191,5 +207,31 @@ function attendance() {
 
             return formattedTime;
         },
+
+        // EDIT ATTENDANCE OF SPECIFIC EMPLOYEE
+        editEmployeeAttendance : function (index) {
+            $(this.editAttendanceModal).modal({
+                backdrop: 'static',
+                keyboard: false
+            });
+
+            this.currentAttendanceData = {
+                attendanceId        :   this.attendanceData[index].attendance_id        ?   this.attendanceData[index].attendance_id       :   '',
+                attendanceDate      :   this.attendanceData[index].attendance_date      ?   this.attendanceData[index].attendance_date     :   '',
+                clockIn             :   this.attendanceData[index].clock_in             ?   moment(this.attendanceData[index].clock_in      ,'h:mm:ss A').format('hh:mm:ss A')  :   '----:----:----',
+                breakOut            :   this.attendanceData[index].break_out            ?   moment(this.attendanceData[index].break_out     ,'h:mm:ss A').format('hh:mm:ss A')  :   '----:----:----',
+                breakIn             :   this.attendanceData[index].break_in             ?   moment(this.attendanceData[index].break_in      ,'h:mm:ss A').format('hh:mm:ss A')  :   '----:----:----',
+                clockOut            :   this.attendanceData[index].clock_out            ?   moment(this.attendanceData[index].clock_out     ,'h:mm:ss A').format('hh:mm:ss A')  :   '----:----:----',
+            };
+
+            $('input[name="edit-clock-in"]').val(this.currentAttendanceData.clockIn);
+            $('input[name="edit-break-out"]').val(this.currentAttendanceData.breakOut);
+            $('input[name="edit-break-in"]').val(this.currentAttendanceData.breakIn);
+            $('input[name="edit-clock-out"]').val(this.currentAttendanceData.clockOut);
+            console.log(this.currentAttendanceData);
+
+            $(this.editAttendanceModal).modal('show');
+        },
+
     }
 }

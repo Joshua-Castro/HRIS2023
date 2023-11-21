@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Payroll;
+use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
@@ -117,7 +118,9 @@ class PayrollController extends Controller
                                     ->orderBy('attendance_date', 'ASC')
                                     ->paginate(5);
 
-            return response()->json(['attendance' => $attendanceData]);
+            $indication     =   Str::random(16);
+
+            return response()->json([$indication => base64_encode(json_encode($attendanceData))]);
         } catch (QueryException $e) {
             $errorMessage = $e->getMessage();
             return response()->json(['error' => $errorMessage], 500);

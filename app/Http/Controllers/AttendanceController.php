@@ -190,15 +190,9 @@ class AttendanceController extends Controller
     }
 
     /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Attendance $attendance)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
+     * Update or correct
+     * the employee attendance in
+     * HR / Admin side.
      */
     public function update(Request $request, Attendance $attendance)
     {
@@ -309,6 +303,7 @@ class AttendanceController extends Controller
                         'employees.position',
                         'employees.employee_no',
 
+                        'attendances.id as attendance_id',
                         'attendances.clock_in',
                         'attendances.clock_out',
                         'attendances.break_in',

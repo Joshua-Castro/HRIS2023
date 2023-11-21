@@ -41,6 +41,7 @@
                                 <th>Break Out</th>
                                 <th>Break In</th>
                                 <th>Clock Out</th>
+                                <th class="text-center">Action</th>
                                 {{-- <th class="text-center">Action</th> --}}
                             </tr>
                         </thead>
@@ -78,6 +79,22 @@
                                             <td x-text="rows.break_out"></td>
                                             <td x-text="rows.break_in"></td>
                                             <td x-text="rows.clock_out"></td>
+                                            <td class="text-center">
+                                                <a href="javascript:void(0);" class="text-reset text-decoration-none" id="dropdownMenuSplitButton1" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                    <i class="fa fa-lg fa-ellipsis-v"></i>
+                                                </a>
+                                                <div class="dropdown-menu" aria-labelledby="dropdownMenuSplitButton1">
+                                                    <a class="dropdown-item align-items-center text-reset text-decoration-none" href="javascript:void(0);" @click="editEmployeeAttendance(indexData)">
+                                                        <i class="ti-pencil btn-icon-prepend me-2"></i>
+                                                        Edit
+                                                    </a>
+                                                    <div class="dropdown-divider"></div>
+                                                    <a class="dropdown-item text-reset text-decoration-none" href="javascript:void(0);">
+                                                        <i class="ti-eye btn-icon-prepend me-2"></i>
+                                                        View
+                                                    </a>
+                                                </div>
+                                            </td>
                                         </tr>
                                     </template>
                                 </template>
@@ -90,7 +107,7 @@
                         </div>
                         <div class="col-md-6">
                             <nav>
-                                <ul class="pagination pagination-rounded float-md-end mt-2 mb-0">
+                                <ul class="pagination pagination-sm float-md-end mt-2 mb-0">
                                     {{-- PAGINATION --}}
                                 </ul>
                             </nav>
@@ -101,6 +118,7 @@
         </div>
     </div>
     @include('modals.attendance-filter-modal')
+    @include('modals.edit-attendance-modal')
 </div>
 @endsection
 @push('scripts')
