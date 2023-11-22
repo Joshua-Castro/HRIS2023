@@ -127,8 +127,8 @@
                                             <input type="hidden" name="dateFrom">
                                             <input type="hidden" name="dateTo">
                                         </form>
-                                        <input type="text" id="payroll-date-from" name="payroll-date-from" class="form-control form-control-sm bg-white me-2" placeholder="Date From :">
-                                        <input type="text" id="payroll-date-to" name="payroll-date-to" class="form-control form-control-sm bg-white" placeholder="Date To :">
+                                        <input type="text" id="payroll-date-from" name="payroll-date-from" class="form-control form-control-sm bg-white me-2" placeholder="Date From :" x-model="dateFromVal" x-bind:value="dateFromVal" x-on:date-from-changed="filterAttendanceDetails">
+                                        <input type="text" id="payroll-date-to" name="payroll-date-to" class="form-control form-control-sm bg-white" placeholder="Date To :" x-model="dateToVal" x-model="dateToVal" x-bind:value="dateToVal" x-on:date-to-changed="filterAttendanceDetails">
                                     </div>
                                 </div>
                                 <div class="table-sm table-responsive mt-1">
@@ -137,8 +137,8 @@
                                         <tr>
                                             <th>Date</th>
                                             <th class="text-center">Clock In</th>
-                                            <th class="text-center">Break Out</th>
-                                            <th class="text-center">Break In</th>
+                                            {{-- <th class="text-center">Break Out</th> --}}
+                                            {{-- <th class="text-center">Break In</th> --}}
                                             <th class="text-center">Clock Out</th>
                                             <th class="text-center">Notes</th>
                                             <th class="text-center">Total Working Hours</th>
@@ -168,8 +168,8 @@
                                                     <tr class="p-0">
                                                         <td x-text="rows.attendance_date"></td>
                                                         <td class="text-center py-0" x-text="(rows.clock_in  ? rows.clock_in  : '-')"></td>
-                                                        <td class="text-center py-0" x-text="(rows.break_out ? rows.break_out : '-')"></td>
-                                                        <td class="text-center py-0" x-text="(rows.break_in  ? rows.break_in  : '-')"></td>
+                                                        {{-- <td class="text-center py-0" x-text="(rows.break_out ? rows.break_out : '-')"></td> --}}
+                                                        {{-- <td class="text-center py-0" x-text="(rows.break_in  ? rows.break_in  : '-')"></td> --}}
                                                         <td class="text-center py-0" x-text="(rows.clock_out ? rows.clock_out : '-')"></td>
                                                         <td class="text-center py-0 text-wrap" x-text="(rows.notes ? rows.notes : '-')"></td>
                                                         <td class="text-center py-0" x-text="(rows.total_hours ? rows.total_hours : '-')"></td>
@@ -181,14 +181,14 @@
                                     </template>
                                     <thead x-show="(attendancePayrollData ?? []).length > 0">
                                         <tr>
-                                            <th colspan="6"></th>
+                                            <th colspan="4"></th>
                                             <th class="text-center py-0">Total Hours</th>
                                             <th class="text-center py-0">Total OT Hours</th>
                                         </tr>
                                     </thead>
                                     <tbody x-show="(attendancePayrollData ?? []).length > 0">
                                         <tr>
-                                            <td colspan="6"></td>
+                                            <td colspan="4"></td>
                                             <td class="text-center py-0" x-text="totalHours ? totalHours : '-'"></td>
                                             <td class="text-center py-0">SAMPLE DATA</td>
                                         </tr>

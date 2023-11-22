@@ -14,6 +14,7 @@ function attendance() {
         },
 
         attendanceEmployeeName          :   '',
+        employeeAttendanceDate          :   '',
         currentSearchName               :   '',
         currentPagination               :   5,
         currentPage                     :   1,
@@ -233,6 +234,7 @@ function attendance() {
             });
 
             this.attendanceEmployeeName = this.attendanceData[index] ? this.attendanceData[index].first_name + ' ' + (this.attendanceData[index].middle_name ? this.attendanceData[index].middle_name + ' ' : ' ') + this.attendanceData[index].last_name : "";
+            this.employeeAttendanceDate = this.attendanceData[index] ? this.attendanceData[index].attendance_date : '';
 
             this.currentAttendanceData = {
                 employeeId          :   this.attendanceData[index].employee_id          ?   this.attendanceData[index].employee_id          :   '',
@@ -254,10 +256,10 @@ function attendance() {
 
         // SEND THE UPDATED VALUE TO THE BACKEND
         updateEmployeeAttendance : function () {
-            this.currentAttendanceData.clockIn      =   this.attendanceConvert12hrTo24hr($('input[name="edit-clock-in"]'  ).val());
-            this.currentAttendanceData.breakOut     =   this.attendanceConvert12hrTo24hr($('input[name="edit-break-out"]' ).val());
-            this.currentAttendanceData.breakIn      =   this.attendanceConvert12hrTo24hr($('input[name="edit-break-in"]'  ).val());
-            this.currentAttendanceData.clockOut     =   this.attendanceConvert12hrTo24hr($('input[name="edit-clock-out"]' ).val());
+            this.currentAttendanceData.clockIn      =   $('input[name="edit-clock-in"]'  ).val() ? this.attendanceConvert12hrTo24hr($('input[name="edit-clock-in"]'  ).val()) : '';
+            this.currentAttendanceData.breakOut     =   $('input[name="edit-break-out"]' ).val() ? this.attendanceConvert12hrTo24hr($('input[name="edit-break-out"]' ).val()) : '';
+            this.currentAttendanceData.breakIn      =   $('input[name="edit-break-in"]'  ).val() ? this.attendanceConvert12hrTo24hr($('input[name="edit-break-in"]'  ).val()) : '';
+            this.currentAttendanceData.clockOut     =   $('input[name="edit-clock-out"]' ).val() ? this.attendanceConvert12hrTo24hr($('input[name="edit-clock-out"]' ).val()) : '';
 
             $.ajax({
                 type : "POST",
@@ -267,7 +269,15 @@ function attendance() {
                     'X-CSRF-TOKEN' : this.csrfToken
                 },
             }).then((response) => {
-
+                $(this.editAttendanceModal).modal('hide');
+                Swal.fire({
+                    title               : response.message,
+                    icon                : 'success',
+                    timer               : 1000,
+                    showConfirmButton   : false,
+                });
+                console.log(response);
+                this.getAllAttendance();
             }).catch((error) => {
 
             });

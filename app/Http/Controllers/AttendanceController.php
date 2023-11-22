@@ -197,29 +197,50 @@ class AttendanceController extends Controller
     public function update(Request $request, Attendance $attendance)
     {
         try {
-            // dd(date('H:i:s', strtotime($request->clockIn)), date('H:i:s', strtotime($request->breakOut)), date('H:i:s', strtotime($request->breakIn)), date('H:i:s', strtotime($request->clockOut)));
+            $employeeId     = !empty($request->employeeId) ? $request->employeeId : "";
+            $attendanceId   = !empty($request->attendanceId) ? $request->attendanceId : "";
+
+            $attendance = Attendance::find($attendanceId);
+
+            $oldData = $attendance->toArray(); // Get the old data as an array
+
             $data = [
-                'clock_in'     =>   !empty($request->clockIn)     ?   date('H:i:s', strtotime($request->clockIn))    :   '',
-                'break_out'    =>   !empty($request->breakOut)    ?   date('H:i:s', strtotime($request->breakOut))   :   '',
-                'break_in'     =>   !empty($request->breakIn)     ?   date('H:i:s', strtotime($request->breakIn))    :   '',
-                'clock_out'    =>   !empty($request->clockOut)    ?   date('H:i:s', strtotime($request->clockOut))   :   '',
+                'clock_in'     => !empty($request->clockIn) ? date('H:i:s', strtotime($request->clockIn)) : '',
+                'clock_out'    => !empty($request->clockOut) ? date('H:i:s', strtotime($request->clockOut)) : '',
+                'break_in'     => !empty($request->breakIn) ? date('H:i:s', strtotime($request->breakIn)) : '',
+                'break_out'    => !empty($request->breakOut) ? date('H:i:s', strtotime($request->breakOut)) : '',
+                'updated_at'   => now(),
+                'updated_by'   => Auth::id(),
             ];
 
-            $employeeId     = !empty($request->employeeId)      ? $request->employeeId      : "";
-            $attendanceId   = !empty($request->attendanceId)    ? $request->attendanceId    : "";
+            $attendance->update($data);
+            $updatedColumns = array_diff_assoc($data, $oldData);
+            if (array_key_exists("clock_out", $updatedColumns)) {
+                // SOLVE THE TOTAL HOURS AND SAVE TO THE DATABASE
+                $clockInData = DB::table('attendances')
+                                            ->select('*')
+                                            ->where('id', $attendanceId)
+                                            ->first();
 
-            $dataWillBeUpdate = DB::table('attendances as a')
-                    ->where('a.id', '=', $attendanceId)
-                    ->where('a.employee_id', '=', $employeeId)
-                    ->whereDate('attendance_date', '=', $request->attendanceDate)
-                    ->get([$data]);
 
-            dd($dataWillBeUpdate);
+                $diffInMinutes = Carbon::parse($data['clock_out'])->diffInMinutes(Carbon::parse($clockInData->clock_in));
+                $totalWorkingHours = number_format($diffInMinutes / 60, 2);
+                $data['total_hours']     =  $totalWorkingHours;
+
+                DB::table('attendances')
+                    ->where('id', $attendanceId)
+                    ->update($data);
+
+            } else {
+                // dd('LOGICAL ERROR || OR CLOCK OUT DIDNT UPDATE', $updatedColumns);
+            }
+
+
+            return response()->json(['message' => 'Attendance successfully Updated!', 'updated_columns' => $updatedColumns]);
         } catch (QueryException $e) {
             $errorMessage = $e->getMessage();
             return response()->json(['message' => $errorMessage], 500);
         }
-        dd($request->all());
     }
 
     /**

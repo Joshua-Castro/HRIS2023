@@ -3,7 +3,7 @@
         <div class="modal-content">
             <div class="modal-body">
                 <h4 class="header-title text-center text-uppercase fw-bold" x-text="attendanceEmployeeName"></h4>
-                <h6 class="header-title mb-4 text-center text-uppercase fw-light" style="font-size: 14px;">ATTENDANCE DETAILS</h6>
+                <h6 class="header-title mb-4 text-center text-uppercase fw-light" style="font-size: 14px;" x-text="employeeAttendanceDate"></h6>
                 <div class="row my-2 gx-1">
                     <div class="col-md-6">
                         <div class="form-floating">

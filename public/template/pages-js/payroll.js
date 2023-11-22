@@ -18,6 +18,8 @@ function payroll() {
         employeeName                        :   '',
         dateFrom                            :   '#payroll-date-from',
         dateTo                              :   '#payroll-date-to',
+        dateFromVal                         :   '',
+        dateToVal                           :   '',
 
         // METHOD
         init () {
@@ -39,6 +41,38 @@ function payroll() {
                 todayHighlight: true,
                 clearBtn: true,
             }).attr("readonly", "readonly").datepicker("setDate", today);
+
+            this.dateFromVal    = $(this.dateFrom).val();
+            this.dateToVal      = $(this.dateTo).val();
+
+            let here = this;
+            // WHEN THE HR OR ADMIN CHANGE THE DATE FOR ATTENDANCE DETAILS CREATE A CUSTOM EVENT AND INITIALIZE THE METHOD
+            // TO RE-FETCH THE ATTENDANCE DETAILS BASE ON THE NEW VALUE OF DATE FROM AND DATE TO
+            $(this.dateFrom).on('change', function() {
+                // GET THE CHANGED OR NEW DATE VALUE FROM THE DATE TIME PICKER
+                const dateFrom = $(this).val();
+                here.dateFromVal      = dateFrom;
+
+                // TRIGGER THE CUSTOM EVENT WITH THE NEW VALUE
+                this.dispatchEvent(new CustomEvent('date-from-changed',
+                    {
+                        bubbles : true
+                    }
+                ));
+            });
+
+            $(this.dateTo).on('change', function() {
+                // GET THE CHANGED OR NEW DATE VALUE FROM THE DATE TIME PICKER
+                const dateTo = $(this).val();
+                here.dateToVal      = dateTo;
+
+                // TRIGGER THE CUSTOM EVENT WITH THE NEW VALUE
+                this.dispatchEvent(new CustomEvent('date-to-changed',
+                    {
+                        bubbles : true
+                    }
+                ));
+            });
 
             this.getEmployeeDataPayroll();
             this.paginationPage();
@@ -153,10 +187,11 @@ function payroll() {
         },
 
         // GENERATE PAYROLL
-        generatePayroll : function (employeeId, index, index) {
+        generatePayroll : function (employeeId, index) {
             $('.payroll-row').removeClass('d-none');
             this.employeeName = this.employeePayrollData[index] ? this.employeePayrollData[index].first_name + ' ' + (this.employeePayrollData[index].middle_name ? this.employeePayrollData[index].middle_name + ' ' : ' ') + this.employeePayrollData[index].last_name : "";
             if (this.employeeId != employeeId) {
+                this.totalHours = '';
                 this.getAttendanceDetails(employeeId);
 
                 // SCROLL TO THE BOTTOM
@@ -174,8 +209,8 @@ function payroll() {
             var component = this;
 
             $('input[name="attendance-page"]'           ).val(this.attendancePage);
-            $('input[name="dateFrom"]'                  ).val($('#payroll-date-from').val());
-            $('input[name="dateTo"]'                    ).val($('#payroll-date-to').val());
+            $('input[name="dateFrom"]'                  ).val($(this.dateFrom).val());
+            $('input[name="dateTo"]'                    ).val($(this.dateTo).val());
             $('input[name="employeeId"]'                ).val(employeeId);
 
             $.ajax({
@@ -229,6 +264,12 @@ function payroll() {
                     // ...
                 }
             });
+        },
+
+        // WHEN USER CHANGED THE ATTENDANCE DATE RE-FETCH THE
+        filterAttendanceDetails : function () {
+            this.getAttendanceDetails(this.employeeId);
+
         },
 
     }
