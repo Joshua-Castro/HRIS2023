@@ -361,13 +361,19 @@ class EmployeeController extends Controller
                         )
                     ->paginate($pagination);
 
+            $salaryGrade    =   DB::table('salary_grades')
+                                    ->select('*')
+                                    ->get();
+
             $indication     =   Str::random(16);
             $indication2    =   Str::random(16);
             $indication3    =   Str::random(16);
+            $indication4    =   Str::random(16);
             return response()->json([
                 $indication         =>  base64_encode(json_encode($users)),
                 $indication2        =>  $totalEmployeesCount,
-                $indication3        =>  $newEmployees
+                $indication3        =>  $newEmployees,
+                $indication4        =>  base64_encode(json_encode($salaryGrade))
             ]);
         } catch (QueryException $e) {
             $errorMessage = $e->getMessage();

@@ -330,8 +330,8 @@ class AttendanceController extends Controller
 
             if (!empty($dateFrom) && !empty($dateTo)) {
                 $attendanceQuery->where(function ($query) use ($dateFrom, $dateTo) {
-                    $query->whereDate('attendances.created_at', '>=', $dateFrom)
-                        ->whereDate('attendances.created_at', '<=', $dateTo);
+                    $query->whereDate('attendances.attendance_date', '>=', $dateFrom)
+                        ->whereDate('attendances.attendance_date', '<=', $dateTo);
                 });
             }
 

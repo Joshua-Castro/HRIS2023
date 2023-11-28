@@ -238,36 +238,11 @@
                                         <div class="form-floating">
                                             <select class="form-select" id="salary-grade" name="salary_grade" x-model="current.salaryGrade" required>
                                                 <option value="">Salary Grade</option>
-                                                <option value="Grade1">Grade 1</option>
-                                                <option value="Grade2">Grade 2</option>
-                                                <option value="Grade3">Grade 3</option>
-                                                <option value="Grade4">Grade 4</option>
-                                                <option value="Grade5">Grade 5</option>
-                                                <option value="Grade6">Grade 6</option>
-                                                <option value="Grade7">Grade 7</option>
-                                                <option value="Grade8">Grade 8</option>
-                                                <option value="Grade9">Grade 9</option>
-                                                <option value="Grade10">Grade 10</option>
-                                                <option value="Grade11">Grade 11</option>
-                                                <option value="Grade12">Grade 12</option>
-                                                <option value="Grade13">Grade 13</option>
-                                                <option value="Grade14">Grade 14</option>
-                                                <option value="Grade15">Grade 15</option>
-                                                <option value="Grade16">Grade 16</option>
-                                                <option value="Grade17">Grade 17</option>
-                                                <option value="Grade18">Grade 18</option>
-                                                <option value="Grade19">Grade 19</option>
-                                                <option value="Grade20">Grade 20</option>
-                                                <option value="Grade21">Grade 21</option>
-                                                <option value="Grade22">Grade 22</option>
-                                                <option value="Grade23">Grade 23</option>
-                                                <option value="Grade24">Grade 24</option>
-                                                <option value="Grade25">Grade 25</option>
-                                                <option value="Grade26">Grade 26</option>
-                                                <option value="Grade27">Grade 27</option>
-                                                <option value="Grade28">Grade 28</option>
-                                                <option value="Grade29">Grade 29</option>
-                                                <option value="Grade30">Grade 30</option>
+                                                <template x-if="(salaryGrade ?? []).length > 0">
+                                                    <template x-for="salary in salaryGrade">
+                                                        <option :value="salary.description" x-text="salary.description"></option>
+                                                    </template>
+                                                </template>
                                             </select>
                                             <label for="salary_grade">Salary Grade/Step<span class="text-danger"> *</span></label>
                                             <div class="invalid-feedback">

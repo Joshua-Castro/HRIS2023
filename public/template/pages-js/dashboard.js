@@ -64,6 +64,7 @@ function adminDashboard(userRole) {
         ],
 
         leaveData               :   [],
+        salaryGrade             :   [],
         employeeFiles           :   [],
         fetchAttendance         :   [],
         currentLeave            :   {
@@ -602,8 +603,11 @@ function adminDashboard(userRole) {
                 url         :   route("employee.show"),
                 data        :   $('#users-search-form').serializeArray(),
             }).then((response) => {
-                const usersData     =   Object.keys(response)[0];
-                var data = response[usersData] ? JSON.parse(atob(response[usersData])) : "";
+                const usersData       =   Object.keys(response)[0];
+                const salaryGrade     =   Object.keys(response)[3];
+                var data              =   response[usersData]       ?   JSON.parse(atob(response[usersData]))       :   "";
+                this.salaryGrade      =   response[salaryGrade]     ?   JSON.parse(atob(response[salaryGrade]))     :   "";
+
                 var users = data['data'],
                     navlinks = data['links'];
 
