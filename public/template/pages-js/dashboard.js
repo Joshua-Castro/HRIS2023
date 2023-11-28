@@ -638,6 +638,7 @@ function adminDashboard(userRole) {
                 this.isLoading      = false;
                 this.isDisabled     = false;
                 this.employeeData   = users;
+                console.log(this.employeeData);
             }).catch((error) => {
 
             })

@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Model;
 class Attendance extends Model
 {
     use HasFactory, SoftDeletes;
+    protected $table = 'attendances';
     protected $fillable = [
         'notes',
         'status',

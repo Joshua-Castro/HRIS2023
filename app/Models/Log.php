@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 class Log extends Model
 {
     use HasFactory, SoftDeletes;
+    protected $table = 'logs';
     protected $fillable = [
         'activity',
         'description',

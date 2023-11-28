@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 class Employee extends Model
 {
     use HasFactory, SoftDeletes;
+    protected $table = 'employees';
     protected $fillable = [
         'employee_token',
         'last_name',

@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Model;
 class FileUpload extends Model
 {
     use HasFactory, SoftDeletes;
+    protected $table = 'file_uploads';
     protected $fillable = [
         'file_path',
         'file_name',

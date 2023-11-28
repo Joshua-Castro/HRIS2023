@@ -29,7 +29,8 @@ class PayrollController extends Controller
     }
 
     /**
-     * Store a newly created resource in storage.
+     * Store a payroll data based on final payroll
+     * created or will create by the HR / ADMIN
      */
     public function store(Request $request)
     {
@@ -37,33 +38,32 @@ class PayrollController extends Controller
     }
 
     /**
-     * Display the specified resource.
+     * Display the payroll data of a employee
+     * based on their salay grade.
      */
-    public function show(Request $request, Payroll $payroll)
+    public function show(Request $request)
     {
         try {
-            $validatedData = $request->validate([
-                'dateFrom' => 'required|date_format:Y-m-d',
-                'dateTo' => 'required|date_format:Y-m-d',
-            ]);
+            $employeeId = !empty($request->employeeId) ? $request->employeeId : "";
 
-            $employeeId     =   !empty($request->employeeId)            ?   $request->employeeId            :   "";
-            $dateFrom       =   !empty($validatedData['dateFrom'])      ?   Carbon::parse($validatedData['dateFrom'])      :   "";
-            $dateTo         =   !empty($validatedData['dateTo'])        ?   Carbon::parse($validatedData['dateTo'])        :   "";
+            $payrollData = DB::table('employees as e')
+                            ->select(
+                                'e.id as employee_id',
+                                'e.position',
+                                'e.station_code',
+                                'e.employee_no',
+                                'e.employment_status',
+                                'e.date_hired',
+                                'e.sss',
+                                'e.pag_ibig',
+                                'e.phil_health',
+                                'e.salary_grade as salary_grade',
 
-            $employeeAttendance = DB::table('attendances as a')
-                                ->select(
-                                    'a.clock_in',
-                                    'a.clock_out',
-                                    'a.break_in',
-                                    'a.break_out',
-                                    'a.total_hours',
-                                    'a.attendance_date',
-                                )
-                                ->where('a.employee_id', '=', $employeeId)
-                                ->whereDate('a.attendance_date', '>=', $dateFrom)
-                                ->whereDate('a.attendance_date', '<=', $dateTo)
-                                ->get();
+                                'sg.value as basic_salary',
+                            )
+                            ->leftJoin('salary_grades as sg', 'sg.id', '=', 'e.salary_grade')
+                            ->where('e.id', '=', $employeeId)
+                            ->get();
 
         } catch (QueryException $e) {
             $errorMessage = $e->getMessage();

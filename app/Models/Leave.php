@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 class Leave extends Model
 {
     use HasFactory, SoftDeletes;
+    protected $table = 'leaves';
     protected $fillable = [
         'reason',
         'user_id',

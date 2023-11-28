@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class Image extends Model
 {
     use HasFactory, SoftDeletes;
+    protected $table = 'images';
     protected $fillable = [
         'user_id',
         'file_name',

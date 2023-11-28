@@ -250,8 +250,10 @@ function payroll() {
                     if (this.attendancePayrollData.length > 0) {
                         component.totalHours = 0;
                         this.attendancePayrollData.forEach(function (employee) {
-                            component.totalHours += parseFloat(employee.total_hours) || 0; // Ensure the value is a number
+                            component.totalHours += parseFloat(employee.total_hours) || 0; // ENSURE THE VALUE IS A NUMBER
                         });
+
+                        component.totalHours = parseFloat(component.totalHours.toFixed(2));
                     } else {
                         component.totalHours = 0;
                     }

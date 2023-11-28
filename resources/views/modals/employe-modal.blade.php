@@ -240,7 +240,7 @@
                                                 <option value="">Salary Grade</option>
                                                 <template x-if="(salaryGrade ?? []).length > 0">
                                                     <template x-for="salary in salaryGrade">
-                                                        <option :value="salary.description" x-text="salary.description"></option>
+                                                        <option :value="salary.id" x-text="salary.description" x-bind:selected="current.salaryGrade === salary.description"></option>
                                                     </template>
                                                 </template>
                                             </select>

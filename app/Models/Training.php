@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 class Training extends Model
 {
     use HasFactory, SoftDeletes;
+    protected $table = 'trainings';
     protected $fillable = [
         'cost',
         'title',

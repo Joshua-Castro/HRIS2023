@@ -327,6 +327,7 @@ class EmployeeController extends Controller
             $users = $usersQuery
                     ->leftJoin('users', 'employees.user_id', '=', 'users.id')
                     ->leftJoin('images', 'images.user_id', '=', 'users.id')
+                    ->leftJoin('salary_grades as sg', 'sg.id', '=', 'employees.salary_grade')
                     ->select(
                         'employees.id as employee_id',
                         'employees.last_name',
@@ -342,7 +343,6 @@ class EmployeeController extends Controller
                         'employees.school_code',
                         'employees.item_number',
                         'employees.employment_status',
-                        'employees.salary_grade',
                         'employees.date_hired',
                         'employees.sss',
                         'employees.pag_ibig',
@@ -358,6 +358,8 @@ class EmployeeController extends Controller
 
                         'images.file_path as image_filepath',
                         'images.file_name as image_filename',
+
+                        'sg.description as salary_grade',
                         )
                     ->paginate($pagination);
 

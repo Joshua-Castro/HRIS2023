@@ -221,6 +221,16 @@
                                     <h4 class="card-title card-title-dash">Payroll Computation</h4>
                                     <p class="text-small modern-color-999">Estimated computation base on the employee attendance...</p>
                                 </div>
+                                <div class="row my-2">
+                                    <div class="col-md-12 text-center">
+                                        <button class="btn btn-primary fw-bold" style="font-size: 14px; background-color: #0030ff;" disabled>BASIC SALARY : 30,000.00</button>
+                                        {{-- <div class="badge badge-opacity-danger fw-bold" style="font-size: 22px;">BASIC SALARY : 30,000.00</div> --}}
+                                        {{-- <h3 class="fw-bold">BASIC SALARY : 30,000.00</h3> --}}
+                                    </div>
+                                </div>
+                                <div class="row mt-2">
+
+                                </div>
                             </div>
                         </div>
                     </div>
