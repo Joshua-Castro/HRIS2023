@@ -19,6 +19,7 @@ return new class extends Migration
             $table->time('clock_out')->nullable();
             $table->time('break_in')->nullable();
             $table->time('break_out')->nullable();
+            $table->integer('regular_hours')->nullable()->default(8);
             $table->decimal('total_hours', 5, 2)->nullable();
             $table->decimal('total_overtime_hours', 5, 2)->nullable();
             $table->string('status')->nullable();

@@ -9,7 +9,7 @@
                     <div class="card-body">
                         <div class="row">
                             <div class="col-md-6">
-                                <h4 class="card-title card-title-dash">Generate Payroll</h4>
+                                <h4 class="card-title card-title-dash">Setup Payroll</h4>
                                 <p class="text-small modern-color-999">You can generate your employee's payroll here...</p>
                             </div>
                             <div class="col-md-6 d-flex justify-content-end">
@@ -48,7 +48,7 @@
                                     <th>Salary Grade</th>
                                     <th>Employment Status</th>
                                     <th>Position</th>
-                                    <th class="text-center">Payslip</th>
+                                    <th class="text-center">Setup</th>
                                 </tr>
                             </thead>
                             <template x-if="loadingPayroll">
@@ -83,7 +83,7 @@
                                                 <td class="text-center">
                                                     <div class="badge badge-outline-primary btn btn-sm btn-outline-primary" style="border-radius: 5px;" @click="generatePayroll(rows.employee_id, indexData)">
                                                         <i class="ti-write btn-icon-prepend me-2"></i>
-                                                        Generate
+                                                        Setup Payroll
                                                     </div>
                                                 </td>
                                             </tr>
@@ -110,7 +110,7 @@
             </div>
         </div>
         <div class="row d-none payroll-row">
-            <div class="col-lg-8 d-flex flex-column">
+            <div class="col-lg-12 d-flex flex-column">
                 <div class="row flex-grow">
                     <div class="col-12 col-lg-4 col-lg-12 grid-margin stretch-card">
                         <div class="card">
@@ -127,8 +127,16 @@
                                             <input type="hidden" name="dateFrom">
                                             <input type="hidden" name="dateTo">
                                         </form>
-                                        <input type="text" id="payroll-date-from" name="payroll-date-from" class="form-control form-control-sm bg-white me-2" placeholder="Date From :" x-model="dateFromVal" x-bind:value="dateFromVal" x-on:date-from-changed="filterAttendanceDetails">
-                                        <input type="text" id="payroll-date-to" name="payroll-date-to" class="form-control form-control-sm bg-white" placeholder="Date To :" x-model="dateToVal" x-model="dateToVal" x-bind:value="dateToVal" x-on:date-to-changed="filterAttendanceDetails">
+                                        <input type="text" id="payroll-date-from" name="payroll-date-from" class="form-control form-control-sm bg-white me-1 text-center fw-bold" placeholder="Date From :" x-model="dateFromVal" x-bind:value="dateFromVal" x-on:date-from-changed="filterAttendanceDetails" style="width: 200px;">
+                                        <input type="text" id="payroll-date-to" name="payroll-date-to" class="form-control form-control-sm bg-white text-center fw-bold me-1" placeholder="Date To :" x-model="dateToVal" x-model="dateToVal" x-bind:value="dateToVal" x-on:date-to-changed="filterAttendanceDetails" style="width: 200px;">
+                                        <button class="btn btn-sm btn-outline-success form-control form-control-sm btn-icon fw-bold me-1" type="button" style="border-radius: 5px; width: 150px;">
+                                            <i class="ti ti-sm ti-cloud-down me-2" style="font-size: 14px;"></i>
+                                            CSV / PDF
+                                        </button>
+                                        <button class="btn btn-sm btn-outline-primary form-control form-control-sm btn-icon fw-bold me-1" type="button" style="border-radius: 5px; width: 150px;">
+                                            <i class="ti ti-sm ti-cloud-up me-2" style="font-size: 14px;"></i>
+                                            Generate
+                                        </button>
                                     </div>
                                 </div>
                                 <div class="table-sm table-responsive mt-1">
@@ -136,13 +144,14 @@
                                     <thead>
                                         <tr>
                                             <th>Date</th>
-                                            <th class="text-center">Clock In</th>
+                                            <th class="text-center">CLOCK IN</th>
                                             {{-- <th class="text-center">Break Out</th> --}}
                                             {{-- <th class="text-center">Break In</th> --}}
-                                            <th class="text-center">Clock Out</th>
-                                            <th class="text-center">Notes</th>
-                                            <th class="text-center">Total Working Hours</th>
-                                            <th class="text-center">OT Hours</th>
+                                            <th class="text-center">CLOCK OUT</th>
+                                            <th class="text-center">NOTES</th>
+                                            <th class="text-center">WH</th>
+                                            <th class="text-center">RWH</th>
+                                            <th class="text-center">OTH</th>
                                         </tr>
                                     </thead>
                                     <template x-if="attendanceDetailsLoading">
@@ -168,11 +177,10 @@
                                                     <tr class="p-0">
                                                         <td x-text="rows.attendance_date"></td>
                                                         <td class="text-center py-0" x-text="(rows.clock_in  ? rows.clock_in  : '-')"></td>
-                                                        {{-- <td class="text-center py-0" x-text="(rows.break_out ? rows.break_out : '-')"></td> --}}
-                                                        {{-- <td class="text-center py-0" x-text="(rows.break_in  ? rows.break_in  : '-')"></td> --}}
                                                         <td class="text-center py-0" x-text="(rows.clock_out ? rows.clock_out : '-')"></td>
                                                         <td class="text-center py-0 text-wrap" x-text="(rows.notes ? rows.notes : '-')"></td>
                                                         <td class="text-center py-0" x-text="(rows.total_hours ? rows.total_hours : '-')"></td>
+                                                        <td class="text-center py-0" x-text="(rows.regular_hours ? rows.regular_hours : '-')"></td>
                                                         <td class="text-center py-0" x-text="(rows.total_overtime_hours ? rows.total_overtime_hours : '-')"></td>
                                                     </tr>
                                                 </template>
@@ -181,16 +189,15 @@
                                     </template>
                                     <thead x-show="(attendancePayrollData ?? []).length > 0">
                                         <tr>
-                                            <th colspan="4"></th>
-                                            <th class="text-center py-0">Total Hours</th>
-                                            <th class="text-center py-0">Total OT Hours</th>
+                                            <th colspan="7" class="text-center fw-bold" style="letter-spacing: 5px; font-size: 16px;">TOTAL</th>
                                         </tr>
                                     </thead>
                                     <tbody x-show="(attendancePayrollData ?? []).length > 0">
                                         <tr>
                                             <td colspan="4"></td>
-                                            <td class="text-center py-0" x-text="totalHours ? totalHours : '-'"></td>
-                                            <td class="text-center py-0">SAMPLE DATA</td>
+                                            <td class="text-center" x-text="totalHours ? totalHours : '-'"></td>
+                                            <td class="text-center" x-text="regularHours ? regularHours : '-'"></td>
+                                            <td class="text-center">SAMPLE DATA</td>
                                         </tr>
                                     </tbody>
                                     </table>
@@ -212,7 +219,7 @@
                     </div>
                 </div>
             </div>
-            <div class="col-lg-4 d-flex flex-column">
+            {{-- <div class="col-lg-4 d-flex flex-column">
                 <div class="row flex-grow">
                     <div class="col-12 col-lg-4 col-lg-12 grid-margin stretch-card">
                         <div class="card">
@@ -224,8 +231,6 @@
                                 <div class="row my-2">
                                     <div class="col-md-12 text-center">
                                         <button class="btn btn-primary fw-bold" style="font-size: 14px; background-color: #0030ff;" disabled>BASIC SALARY : 30,000.00</button>
-                                        {{-- <div class="badge badge-opacity-danger fw-bold" style="font-size: 22px;">BASIC SALARY : 30,000.00</div> --}}
-                                        {{-- <h3 class="fw-bold">BASIC SALARY : 30,000.00</h3> --}}
                                     </div>
                                 </div>
                                 <div class="row mt-2">
@@ -235,7 +240,7 @@
                         </div>
                     </div>
                 </div>
-            </div>
+            </div> --}}
         </div>
     </div>
 </div>

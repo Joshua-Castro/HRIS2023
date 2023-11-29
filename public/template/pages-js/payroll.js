@@ -14,7 +14,8 @@ function payroll() {
         attendancePage                      :   1,
         loadingPayroll                      :   false,
         attendanceDetailsLoading            :   false,
-        totalHours                          :   '',
+        totalHours                          :   0,
+        regularHours                        :   0,
         employeeName                        :   '',
         dateFrom                            :   '#payroll-date-from',
         dateTo                              :   '#payroll-date-to',
@@ -248,14 +249,17 @@ function payroll() {
 
                     this.attendancePayrollData      =   attendanceData;
                     if (this.attendancePayrollData.length > 0) {
-                        component.totalHours = 0;
+                        component.totalHours    = 0;
+                        component.regularHours  = 0;
                         this.attendancePayrollData.forEach(function (employee) {
                             component.totalHours += parseFloat(employee.total_hours) || 0; // ENSURE THE VALUE IS A NUMBER
+                            component.regularHours += employee.regular_hours || 0;
                         });
 
-                        component.totalHours = parseFloat(component.totalHours.toFixed(2));
+                        component.totalHours    = parseFloat(component.totalHours.toFixed(2));
                     } else {
-                        component.totalHours = 0;
+                        component.totalHours    = 0;
+                        component.regularHours  = 0;
                     }
                     this.attendanceDetailsLoading   =   false;
             }).catch((error) => {
