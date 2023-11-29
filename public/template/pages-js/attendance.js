@@ -256,10 +256,10 @@ function attendance() {
 
         // SEND THE UPDATED VALUE TO THE BACKEND
         updateEmployeeAttendance : function () {
-            this.currentAttendanceData.clockIn      =   $('input[name="edit-clock-in"]'  ).val() ? this.attendanceConvert12hrTo24hr($('input[name="edit-clock-in"]'  ).val()) : '';
-            this.currentAttendanceData.breakOut     =   $('input[name="edit-break-out"]' ).val() ? this.attendanceConvert12hrTo24hr($('input[name="edit-break-out"]' ).val()) : '12:00:00';
-            this.currentAttendanceData.breakIn      =   $('input[name="edit-break-in"]'  ).val() ? this.attendanceConvert12hrTo24hr($('input[name="edit-break-in"]'  ).val()) : '13:00:00';
-            this.currentAttendanceData.clockOut     =   $('input[name="edit-clock-out"]' ).val() ? this.attendanceConvert12hrTo24hr($('input[name="edit-clock-out"]' ).val()) : '';
+            this.currentAttendanceData.clockIn      =   $('input[name="edit-clock-in"]'   ).val() ? this.attendanceConvert12hrTo24hr($('input[name="edit-clock-in"]'  ).val()) : '';
+            this.currentAttendanceData.breakOut     =   !$('input[name="edit-break-out"]' ).val() === '0h:mm:ss AM' ? this.attendanceConvert12hrTo24hr($('input[name="edit-break-out"]' ).val()) : '12:00:00';
+            this.currentAttendanceData.breakIn      =   !$('input[name="edit-break-in"]'  ).val() === '0h:mm:ss AM' ? this.attendanceConvert12hrTo24hr($('input[name="edit-break-in"]'  ).val()) : '13:00:00';
+            this.currentAttendanceData.clockOut     =   $('input[name="edit-clock-out"]'  ).val() ? this.attendanceConvert12hrTo24hr($('input[name="edit-clock-out"]' ).val()) : '';
 
             $.ajax({
                 type : "POST",
