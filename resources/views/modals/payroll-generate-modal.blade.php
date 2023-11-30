@@ -38,7 +38,7 @@
                     <tbody x-show="(attendancePayrollData ?? []).length > 0">
                         <tr>
                             <td colspan="4"></td>
-                            <td class="text-center">SAMPLE DATA</td>
+                            <td class="text-center">SAMPLE DATA CHANGE</td>
                             <td class="text-center">SAMPLE DATA</td>
                             <td class="text-center">SAMPLE DATA</td>
                         </tr>
