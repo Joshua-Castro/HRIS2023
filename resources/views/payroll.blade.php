@@ -133,7 +133,7 @@
                                             <i class="ti ti-sm ti-cloud-down me-2" style="font-size: 14px;"></i>
                                             CSV / PDF
                                         </button>
-                                        <button class="btn btn-sm btn-outline-primary form-control form-control-sm btn-icon fw-bold me-1" type="button" style="border-radius: 5px; width: 150px;">
+                                        <button class="btn btn-sm btn-outline-primary form-control form-control-sm btn-icon fw-bold me-1" type="button" style="border-radius: 5px; width: 150px;" @click="showPayrollComputation">
                                             <i class="ti ti-sm ti-cloud-up me-2" style="font-size: 14px;"></i>
                                             Generate
                                         </button>
@@ -243,6 +243,7 @@
             </div> --}}
         </div>
     </div>
+    @include('modals.payroll-generate-modal')
 </div>
 @endsection
 @push('scripts')

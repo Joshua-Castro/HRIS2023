@@ -19,6 +19,7 @@ function payroll() {
         employeeName                        :   '',
         dateFrom                            :   '#payroll-date-from',
         dateTo                              :   '#payroll-date-to',
+        generatePayrollModal                :   '#generate-payroll-modal',
         dateFromVal                         :   '',
         dateToVal                           :   '',
 
@@ -276,6 +277,16 @@ function payroll() {
         filterAttendanceDetails : function () {
             this.getAttendanceDetails(this.employeeId);
 
+        },
+
+        // CLICK THE GENERATE AND WILL SHOW THE GENERATE MODAL AS WELL AS THE SAMPLE COMPUTATION FOR THAT PAYROLL
+        showPayrollComputation : function () {
+            $(this.generatePayrollModal).modal({
+                backdrop: 'static',
+                keyboard: false
+            });
+
+            $(this.generatePayrollModal).modal('show');
         },
 
     }
