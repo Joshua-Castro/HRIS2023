@@ -360,6 +360,7 @@ class EmployeeController extends Controller
                         'images.file_name as image_filename',
 
                         'sg.description as salary_grade',
+                        'sg.value as salary',
                         )
                     ->paginate($pagination);
 

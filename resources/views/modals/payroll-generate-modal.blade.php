@@ -15,22 +15,22 @@
                         </thead>
                         <tbody>
                             <tr>
-                                <td class="py-2 fw-bold" style="max-width: 500px; width: 90px;">Name :</td>
-                                <td class="py-2">Joshua Dugaduga Castro</td>
-                                <td class="py-2 fw-bold" style="max-width: 500px; width: 90px;">Employee No :</td>
-                                <td class="py-2">012345678999</td>
+                                <td class="py-2 fw-bold text-end" style="max-width: 500px; width: 90px;">Name :</td>
+                                <td class="py-2" x-text="employeeName"></td>
+                                <td class="py-2 fw-bold text-end" style="max-width: 500px; width: 90px;">Status :</td>
+                                <td class="py-2" x-text="employeeStatus"></td>
                             </tr>
                             <tr>
-                                <td class="py-2 fw-bold" style="max-width: 500px; width: 90px;">Basic salary :</td>
-                                <td class="py-2">30,458.10</td>
-                                <td class="py-2 fw-bold" style="max-width: 500px; width: 90px;">Department :</td>
-                                <td class="py-2">Information Technology</td>
+                                <td class="py-2 fw-bold text-end" style="max-width: 500px; width: 90px;">Basic salary :</td>
+                                <td class="py-2" x-text="employeeSalary"></td>
+                                <td class="py-2 fw-bold text-end" style="max-width: 500px; width: 90px;">Employee No :</td>
+                                <td class="py-2" x-text="employeeNo"></td>
                             </tr>
                             <tr>
-                                <td class="py-2 fw-bold" style="max-width: 500px; width: 90px;">Date Hired :</td>
-                                <td class="py-2">2023-09-18</td>
-                                <td class="py-2 fw-bold" style="max-width: 500px; width: 90px;">Status :</td>
-                                <td class="py-2">Regular</td>
+                                <td class="py-2 fw-bold text-end" style="max-width: 500px; width: 90px;">Date Hired :</td>
+                                <td class="py-2" x-text="employeeDateHired"></td>
+                                <td class="py-2 fw-bold text-end" style="max-width: 500px; width: 90px;">Position :</td>
+                                <td class="py-2" x-text="employeePosition"></td>
                             </tr>
                         </tbody>
                     </table>

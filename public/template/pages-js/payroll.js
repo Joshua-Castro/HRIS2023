@@ -17,6 +17,11 @@ function payroll() {
         totalHours                          :   0,
         regularHours                        :   0,
         employeeName                        :   '',
+        employeeNo                          :   '',
+        employeeSalary                      :   '',
+        employeeDateHired                   :   '',
+        employeePosition                    :   '',
+        employeeStatus                      :   '',
         dateFrom                            :   '#payroll-date-from',
         dateTo                              :   '#payroll-date-to',
         generatePayrollModal                :   '#generate-payroll-modal',
@@ -191,7 +196,17 @@ function payroll() {
         // GENERATE PAYROLL
         generatePayroll : function (employeeId, index) {
             $('.payroll-row').removeClass('d-none');
-            this.employeeName = this.employeePayrollData[index] ? this.employeePayrollData[index].first_name + ' ' + (this.employeePayrollData[index].middle_name ? this.employeePayrollData[index].middle_name + ' ' : ' ') + this.employeePayrollData[index].last_name : "";
+            this.employeeName          = this.employeePayrollData[index] ? this.employeePayrollData[index].first_name + ' ' + (this.employeePayrollData[index].middle_name ? this.employeePayrollData[index].middle_name + ' ' : ' ') + this.employeePayrollData[index].last_name : "";
+            this.employeeNo            = this.employeePayrollData[index] ? this.employeePayrollData[index].employee_no                :     "";
+            this.employeeDateHired     = this.employeePayrollData[index] ? this.employeePayrollData[index].date_hired                 :     "";
+            this.employeePosition      = this.employeePayrollData[index] ? this.employeePayrollData[index].position                   :     "";
+            this.employeeStatus        = this.employeePayrollData[index] ? this.employeePayrollData[index].employment_status          :     "";
+            var salary = this.employeePayrollData[index] ? parseFloat(this.employeePayrollData[index].salary) : 0;
+            this.employeeSalary = salary.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+            console.log(this.employeeSalary);
+
+
+
             if (this.employeeId != employeeId) {
                 this.totalHours = '';
                 this.getAttendanceDetails(employeeId);
