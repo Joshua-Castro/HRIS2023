@@ -3,9 +3,6 @@
       <div class="modal-content">
         <form action="" method="POST" id="employeeForm" class="needs-validation" enctype="multipart/form-data">
             @csrf
-        {{-- <div class="modal-header justify-content-center">
-            <h4 class="modal-title" id="createEmployeeModalLabel">ADD EMPLOYEE</h4>
-        </div> --}}
             <div class="row mt-2">
                 <div class="col-md-12 col-lg-4 mt-2 align-item-center vertical-align-middle">
                     <div class="profile-card">
@@ -27,7 +24,7 @@
                                 </div>
                             </div>
                             <div class="col-12 col-md-12 mt-2">
-                                <div class="form-group row p-1 m-0" >
+                                <div class="form-group row p-1 m-0">
                                     <div class="col-sm-12 p-0 m-0">
                                         <div class="form-floating">
                                             <input type="text" name="first_name" class="form-control" placeholder="First Name" x-model="current.firstName" required>
@@ -237,7 +234,7 @@
                                     <div class="col-sm-12 p-0 m-0">
                                         <div class="form-floating">
                                             <select class="form-select" id="salary-grade" name="salary_grade" x-model="current.salaryGrade" required>
-                                                <option value="">Salary Grade</option>
+                                                <option>Salary Grade</option>
                                                 <template x-if="(salaryGrade ?? []).length > 0">
                                                     <template x-for="salary in salaryGrade">
                                                         <option :value="salary.id" x-text="salary.description" x-bind:selected="current.salaryGrade === salary.description"></option>

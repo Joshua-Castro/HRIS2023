@@ -15,6 +15,8 @@ return new class extends Migration
             $table->id();
             $table->string('description')->nullable();
             $table->decimal('value', 10, 2)->nullable();
+            $table->decimal('hourly_rate', 10, 2)->nullable();
+            $table->decimal('weekly_rate', 10, 2)->nullable();
             $table->timestamps();
         });
     }
@@ -27,3 +29,5 @@ return new class extends Migration
         Schema::dropIfExists('salary_grades');
     }
 };
+
+

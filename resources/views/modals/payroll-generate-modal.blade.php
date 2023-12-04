@@ -10,7 +10,7 @@
                     <table class="table table-striped table-bordered">
                         <thead>
                             <tr>
-                                <th colspan="4" class="text-center py-2 fw-bold" style="letter-spacing: 5px; font-size: 16px;">EMPLOYEE INFORMATION</th>
+                                <th colspan="4" class="py-2 fw-bold" style="font-size: 16px; background-color: #eee;">EMPLOYEE INFORMATION</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -31,6 +31,31 @@
                                 <td class="py-2" x-text="employeeDateHired"></td>
                                 <td class="py-2 fw-bold text-end" style="max-width: 500px; width: 90px;">Position :</td>
                                 <td class="py-2" x-text="employeePosition"></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="row mt-4">
+                <div class="table-sm table-responsive mt-1">
+                    <table class="table table-striped table-bordered">
+                        <thead>
+                            <tr>
+                                <th colspan="4" class="py-2 fw-bold" style="font-size: 16px; background-color: #eee;">EARNINGS</th>
+                            </tr>
+                            <tr class="text-center">
+                                <th class="py-2 fw-bold">Description</th>
+                                <th class="py-2 fw-bold">Hourly Rate</th>
+                                <th class="py-2 fw-bold">Hours Rendered</th>
+                                <th class="py-2 fw-bold">Total</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr class="text-center">
+                                <td class="py-2">Regular Income</td>
+                                <td class="py-2">7.50</td>
+                                <td class="py-2">SAMPLE DATA</td>
+                                <td class="py-2">SAMPLE DATA</td>
                             </tr>
                         </tbody>
                     </table>
