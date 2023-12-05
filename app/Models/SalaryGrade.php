@@ -12,7 +12,5 @@ class SalaryGrade extends Model
     protected $fillable = [
         'description',
         'value',
-        'hourly_rate',
-        'weekly_rate',
     ];
 }

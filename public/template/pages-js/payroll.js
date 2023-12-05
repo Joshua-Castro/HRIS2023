@@ -16,12 +16,14 @@ function payroll() {
         attendanceDetailsLoading            :   false,
         totalHours                          :   0,
         regularHours                        :   0,
+        hourlyRate                          :   0,
         employeeName                        :   '',
         employeeNo                          :   '',
         employeeSalary                      :   '',
         employeeDateHired                   :   '',
         employeePosition                    :   '',
         employeeStatus                      :   '',
+        totalRegularEarnings                :   0,
         dateFrom                            :   '#payroll-date-from',
         dateTo                              :   '#payroll-date-to',
         generatePayrollModal                :   '#generate-payroll-modal',
@@ -196,14 +198,20 @@ function payroll() {
         // GENERATE PAYROLL
         generatePayroll : function (employeeId, index) {
             $('.payroll-row').removeClass('d-none');
-            this.employeeName          = this.employeePayrollData[index] ? this.employeePayrollData[index].first_name + ' ' + (this.employeePayrollData[index].middle_name ? this.employeePayrollData[index].middle_name + ' ' : ' ') + this.employeePayrollData[index].last_name : "";
-            this.employeeNo            = this.employeePayrollData[index] ? this.employeePayrollData[index].employee_no                :     "";
-            this.employeeDateHired     = this.employeePayrollData[index] ? this.employeePayrollData[index].date_hired                 :     "";
-            this.employeePosition      = this.employeePayrollData[index] ? this.employeePayrollData[index].position                   :     "";
-            this.employeeStatus        = this.employeePayrollData[index] ? this.employeePayrollData[index].employment_status          :     "";
+            this.employeeName               = this.employeePayrollData[index] ? this.employeePayrollData[index].first_name + ' ' + (this.employeePayrollData[index].middle_name ? this.employeePayrollData[index].middle_name + ' ' : ' ') + this.employeePayrollData[index].last_name : "";
+            this.employeeNo                 = this.employeePayrollData[index] ? this.employeePayrollData[index].employee_no                :     "";
+            this.employeeDateHired          = this.employeePayrollData[index] ? this.employeePayrollData[index].date_hired                 :     "";
+            this.employeePosition           = this.employeePayrollData[index] ? this.employeePayrollData[index].position                   :     "";
+            this.employeeStatus             = this.employeePayrollData[index] ? this.employeePayrollData[index].employment_status          :     "";
             var salary = this.employeePayrollData[index] ? parseFloat(this.employeePayrollData[index].salary) : 0;
             this.employeeSalary = salary.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+            const totalWorkingDays = 21;
+            const totalWorkingHours = 8;
+            const totalDivide = totalWorkingDays * totalWorkingHours;
+            this.hourlyRate = salary / totalDivide;
+            console.log(this.regularHours);
             console.log(this.employeeSalary);
+            console.log(this.hourlyRate);
 
 
 
@@ -265,17 +273,20 @@ function payroll() {
 
                     this.attendancePayrollData      =   attendanceData;
                     if (this.attendancePayrollData.length > 0) {
-                        component.totalHours    = 0;
-                        component.regularHours  = 0;
+                        component.totalRegularEarnings      = 0;
+                        component.totalHours                = 0;
+                        component.regularHours              = 0;
                         this.attendancePayrollData.forEach(function (employee) {
                             component.totalHours += parseFloat(employee.total_hours) || 0; // ENSURE THE VALUE IS A NUMBER
                             component.regularHours += employee.regular_hours || 0;
                         });
 
                         component.totalHours    = parseFloat(component.totalHours.toFixed(2));
+                        component.totalRegularEarnings = component.hourlyRate * component.regularHours;
                     } else {
-                        component.totalHours    = 0;
-                        component.regularHours  = 0;
+                        component.totalHours            = 0;
+                        component.regularHours          = 0;
+                        component.totalRegularEarnings  = 0;
                     }
                     this.attendanceDetailsLoading   =   false;
             }).catch((error) => {

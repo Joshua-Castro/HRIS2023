@@ -53,31 +53,9 @@ class SalaryGradeSeeder extends Seeder
         foreach ($salaryValues as $i => $salaryValue) {
             $monthlySalary = (float) $salaryValue;
 
-            // Get the current month
-            $currentMonth = Carbon::now();
-
-            // Calculate the total number of working days in the month
-            $totalWorkingDays = 0;
-            for ($day = 1; $day <= $currentMonth->daysInMonth; $day++) {
-                $currentDate = $currentMonth->copy()->day($day);
-
-                // Check if the current day is a weekday (Monday to Friday)
-                if ($currentDate->isWeekday()) {
-                    $totalWorkingDays++;
-                }
-            }
-
-            // Round the hourly rate for precision
-            $hourlyRate = round($monthlySalary / ($totalWorkingDays * 8), 2);
-
-            // Calculate weekly rate based on the hourly rate and 40 working hours per week
-            $weeklyRate = round($hourlyRate * 40, 2);
-
             SalaryGrade::create([
                 'description' => 'Grade ' . ($i + 1),
                 'value' => $monthlySalary,
-                'hourly_rate' => $hourlyRate,
-                'weekly_rate' => $weeklyRate,
             ]);
         }
     }
