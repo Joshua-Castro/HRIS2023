@@ -24,6 +24,8 @@ function payroll() {
         employeePosition                    :   '',
         employeeStatus                      :   '',
         totalRegularEarnings                :   0,
+        roundedHourlyRate                   :   0,
+        roundedTotal                        :   0,
         dateFrom                            :   '#payroll-date-from',
         dateTo                              :   '#payroll-date-to',
         generatePayrollModal                :   '#generate-payroll-modal',
@@ -199,17 +201,18 @@ function payroll() {
         generatePayroll : function (employeeId, index) {
             $('.payroll-row').removeClass('d-none');
             const currentMonth = new Date().getMonth() + 1;
-            this.employeeName               = this.employeePayrollData[index] ? this.employeePayrollData[index].first_name + ' ' + (this.employeePayrollData[index].middle_name ? this.employeePayrollData[index].middle_name + ' ' : ' ') + this.employeePayrollData[index].last_name : "";
-            this.employeeNo                 = this.employeePayrollData[index] ? this.employeePayrollData[index].employee_no                :     "";
-            this.employeeDateHired          = this.employeePayrollData[index] ? this.employeePayrollData[index].date_hired                 :     "";
-            this.employeePosition           = this.employeePayrollData[index] ? this.employeePayrollData[index].position                   :     "";
-            this.employeeStatus             = this.employeePayrollData[index] ? this.employeePayrollData[index].employment_status          :     "";
-            var salary = this.employeePayrollData[index] ? parseFloat(this.employeePayrollData[index].salary) : 0;
-            this.employeeSalary = salary.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
-            const totalWorkingDays = this.getWorkingDaysInMonth(currentMonth);;
-            const totalWorkingHours = 8;
-            const totalDivide = totalWorkingDays * totalWorkingHours;
-            this.hourlyRate = salary / totalDivide;
+            this.employeeName               =   this.employeePayrollData[index] ? this.employeePayrollData[index].first_name + ' ' + (this.employeePayrollData[index].middle_name ? this.employeePayrollData[index].middle_name + ' ' : ' ') + this.employeePayrollData[index].last_name : "";
+            this.employeeNo                 =   this.employeePayrollData[index] ? this.employeePayrollData[index].employee_no                :     "";
+            this.employeeDateHired          =   this.employeePayrollData[index] ? this.employeePayrollData[index].date_hired                 :     "";
+            this.employeePosition           =   this.employeePayrollData[index] ? this.employeePayrollData[index].position                   :     "";
+            this.employeeStatus             =   this.employeePayrollData[index] ? this.employeePayrollData[index].employment_status          :     "";
+            var salary                      =   this.employeePayrollData[index] ? parseFloat(this.employeePayrollData[index].salary) : 0;
+            this.employeeSalary             =   salary.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+            const totalWorkingDays          =   this.getWorkingDaysInMonth(currentMonth);;
+            const totalWorkingHours         =   8;
+            const totalDivide               =   totalWorkingDays * totalWorkingHours;
+            this.hourlyRate                 =   salary / totalDivide;
+            this.roundedHourlyRate          =   this.hourlyRate.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 
             if (this.employeeId != employeeId) {
                 this.totalHours = '';
@@ -296,10 +299,13 @@ function payroll() {
 
                         component.totalHours    = parseFloat(component.totalHours.toFixed(2));
                         component.totalRegularEarnings = component.hourlyRate * component.regularHours;
+                        component.roundedTotal          = component.totalRegularEarnings.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
                     } else {
                         component.totalHours            = 0;
                         component.regularHours          = 0;
                         component.totalRegularEarnings  = 0;
+                        component.roundedTotal          = 0;
+
                     }
                     this.attendanceDetailsLoading   =   false;
             }).catch((error) => {

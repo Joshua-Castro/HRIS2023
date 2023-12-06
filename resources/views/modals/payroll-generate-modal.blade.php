@@ -53,9 +53,9 @@
                         <tbody>
                             <tr class="text-center">
                                 <td class="py-2">Regular Income</td>
-                                <td class="py-2" x-text="hourlyRate"></td>
+                                <td class="py-2" x-text="roundedHourlyRate"></td>
                                 <td class="py-2" x-text="regularHours"></td>
-                                <td class="py-2" x-text="totalRegularEarnings"></td>
+                                <td class="py-2" x-text="roundedTotal"></td>
                             </tr>
                         </tbody>
                     </table>
