@@ -198,6 +198,7 @@ function payroll() {
         // GENERATE PAYROLL
         generatePayroll : function (employeeId, index) {
             $('.payroll-row').removeClass('d-none');
+            const currentMonth = new Date().getMonth() + 1;
             this.employeeName               = this.employeePayrollData[index] ? this.employeePayrollData[index].first_name + ' ' + (this.employeePayrollData[index].middle_name ? this.employeePayrollData[index].middle_name + ' ' : ' ') + this.employeePayrollData[index].last_name : "";
             this.employeeNo                 = this.employeePayrollData[index] ? this.employeePayrollData[index].employee_no                :     "";
             this.employeeDateHired          = this.employeePayrollData[index] ? this.employeePayrollData[index].date_hired                 :     "";
@@ -205,15 +206,10 @@ function payroll() {
             this.employeeStatus             = this.employeePayrollData[index] ? this.employeePayrollData[index].employment_status          :     "";
             var salary = this.employeePayrollData[index] ? parseFloat(this.employeePayrollData[index].salary) : 0;
             this.employeeSalary = salary.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
-            const totalWorkingDays = 21;
+            const totalWorkingDays = this.getWorkingDaysInMonth(currentMonth);;
             const totalWorkingHours = 8;
             const totalDivide = totalWorkingDays * totalWorkingHours;
             this.hourlyRate = salary / totalDivide;
-            console.log(this.regularHours);
-            console.log(this.employeeSalary);
-            console.log(this.hourlyRate);
-
-
 
             if (this.employeeId != employeeId) {
                 this.totalHours = '';
@@ -224,6 +220,23 @@ function payroll() {
                     scrollTop: $(document).height()
                 }, 500); // ADJUST THE ANIMATION SPEED HERE
             }
+        },
+
+        // GETTING THE WORKING DAYS IN A MONTH
+        getWorkingDaysInMonth : function (month) {
+            const currentDate   =   new Date();
+            const year          =   currentDate.getFullYear();
+            const start         =   new Date(year, month - 1, 1);
+            const end           =   new Date(year, month, 0);
+            let count           =   0;
+
+            for (let day = start; day <= end; day.setDate(day.getDate() + 1)) {
+                if (day.getDay() !== 0 && day.getDay() !== 6) {
+                    count++;
+                }
+            }
+
+            return count;
         },
 
         // GET THE ATTENDANCE OF THE EMPLOYEE TO GENERATE ITS PAYROLL

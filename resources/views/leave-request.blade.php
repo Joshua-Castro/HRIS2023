@@ -5,7 +5,7 @@
     <div class="col-xl-12 col-lg-12 d-flex flex-column">
         <div class="row flex-grow">
             <div class="col-12 grid-margin stretch-card">
-                <div class="card card-rounded">
+                <div class="card card-style-border">
                     <div class="card-body">
                         <div class="d-flex justify-content-between align-items-start">
                             <div>

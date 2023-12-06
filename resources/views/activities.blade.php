@@ -3,7 +3,7 @@
 @section('content')
 <div class="row" x-data="activity()">
     <div class="col-12 grid-margin stretch-card">
-        <div class="card">
+        <div class="card card-style-border">
             <div class="card-body">
                 <template x-if="!logsLoading">
                     <div class="d-flex justify-content-between align-items-start">

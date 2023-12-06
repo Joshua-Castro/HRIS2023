@@ -269,7 +269,7 @@
     <div class="col-lg-12 d-flex flex-column">
         <div class="row flex-grow">
             <div class="col-12 col-lg-4 col-lg-12 grid-margin stretch-card">
-                <div class="card">
+                <div class="card card-style-border">
                     <div class="card-body">
                         <h4 class="card-title card-title-dash">Recruitment Progress</h4>
                         <div class="table-responsive  mt-1">
@@ -383,7 +383,7 @@
     <div class="col-lg-4 d-flex flex-column">
         <div class="row flex-grow">
             <div class="col-12 col-lg-4 col-lg-12 grid-margin stretch-card">
-                <div class="card" style="height: 450px;">
+                <div class="card card-style-border" style="height: 450px;">
                     <div class="card-body d-flex flex-column align-items-center">
                         <h3 class="card-title card-title-dash text-center">Employee Overview</h3>
                         <p class="text-small modern-color-999 text-center">Information about your People</p>
@@ -399,7 +399,7 @@
                 </div>
             </div>
             <div class="col-12 col-lg-4 col-lg-12 grid-margin stretch-card">
-                <div class="card" style="margin-top: -50px;">
+                <div class="card card-style-border" style="margin-top: -50px;">
                     <div class="card-body" >
                         <div>
                             <div class="d-flex justify-content-between align-items-center mb-3">
@@ -518,7 +518,7 @@
     <div class="col-lg-8 d-flex flex-column">
         <div class="row flex-grow">
             <div class="col-12 grid-margin stretch-card">
-                <div class="card">
+                <div class="card card-style-border">
                     <div class="card-body">
                         <h4 class="card-title card-title-dash">Training Calendar</h4>
                         <div class="spinner-container calendar-spinner" hidden>

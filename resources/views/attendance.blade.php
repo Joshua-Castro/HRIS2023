@@ -3,7 +3,7 @@
 @section('content')
 <div class="row" x-data="attendance()">
     <div class="col-12 grid-margin stretch-card">
-        <div class="card card-rounded">
+        <div class="card card-style-border">
             <div class="card-body">
                 <div class="row">
                     <form id="attendance-search-form" class="d-none">

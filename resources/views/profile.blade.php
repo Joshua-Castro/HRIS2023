@@ -5,7 +5,7 @@
     <div class="col-lg-5 d-flex flex-column">
         <div class="row flex-grow">
             <div class="col-12 col-lg-4 col-lg-12 grid-margin stretch-card">
-                <div class="card">
+                <div class="card card-style-border">
                     <div class="card-body">
                         <template x-if="profileLoading">
                             <div>
@@ -107,8 +107,8 @@
     <div class="col-lg-7 d-flex flex-column">
         <div class="row flex-grow">
         <div class="col-md-6 col-lg-12 grid-margin stretch-card">
-            <div class="card">
-                <div class="card-body ">
+            <div class="card card-style-border">
+                <div class="card-body">
                     <template x-if="profileLoading">
                         {{-- <div class="spinner-container">
                             <div class="spinner"></div>
@@ -232,7 +232,7 @@
             </div>
         </div>
         <div class="col-md-6 col-lg-12 grid-margin stretch-card">
-            <div class="card">
+            <div class="card card-style-border">
                 <div class="card-body">
                     <template x-if="profileLoading">
                         <div class="row mt-1 g-0">

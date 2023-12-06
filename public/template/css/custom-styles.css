@@ -31,6 +31,11 @@
             spinner-oaa3wk 1.6s infinite linear;
 }
 
+.card-style-border {
+    border-radius: 0.5rem;
+    border-top: 3px solid #007FFF;
+}
+
 @keyframes spinner-bulqg1 {
     0% {
         clip-path: polygon(50% 50%, 0 0, 50% 0%, 50% 0%, 50% 0%, 50% 0%, 50% 0%);

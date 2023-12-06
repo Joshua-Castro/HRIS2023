@@ -10,7 +10,7 @@
     <div class="col-xl-12 col-lg-12 d-flex flex-column">
         <div class="row flex-grow">
             <div class="col-12 grid-margin stretch-card">
-                <div class="card card-rounded">
+                <div class="card card-style-border">
                     <div class="card-body">
                         <div class="row">
                             <div class="col-lg-3 col-xl-6 order-2 order-md-1 my-auto">
