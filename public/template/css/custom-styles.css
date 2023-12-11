@@ -36,6 +36,21 @@
     border-top: 3px solid #007FFF;
 }
 
+.select2-container--bootstrap-5 .select2-selection--single:focus,
+.select2:focus,
+.form-control:focus,
+.form-select:focus {
+    border-bottom: 2px solid #007FFF;
+    border-top: 1px solid gray;
+    border-left: 1px solid gray;
+    border-right: 1px solid gray;
+}
+
+.select2-container--bootstrap-5 .select2-selection--single:focus,
+.form-select:focus {
+    box-shadow: none;
+}
+
 @keyframes spinner-bulqg1 {
     0% {
         clip-path: polygon(50% 50%, 0 0, 50% 0%, 50% 0%, 50% 0%, 50% 0%, 50% 0%);

@@ -6,6 +6,7 @@ use App\Models\Leave;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Services\LogService;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 
@@ -163,6 +164,10 @@ class LeaveController extends Controller
             $status     =   $request->status;
             $reason     =   $request->reason;
             $userId     =   Auth::id();
+            $clockIn    =   null;
+            $clockOut   =   null;
+            $breakOut   =   null;
+            $breakIn    =   null;
 
             $data       = DB::table('leaves')
                             ->where('id', '=', $id)
@@ -188,11 +193,27 @@ class LeaveController extends Controller
                                 ->where('l.id', '=', $id)
                                 ->first();
 
+            if ($leaveData->day_type == 'Whole Day') {
+                $clockIn    =   Carbon::parse('07:00:00');
+                $clockOut   =   Carbon::parse('16:00:00');
+                $breakOut   =   Carbon::parse('12:00:00');
+                $breakIn    =   Carbon::parse('13:00:00');
+            } else {
+                $clockIn    =   Carbon::parse('07:00:00');
+                $clockOut   =   Carbon::parse('12:00:00');
+                $breakOut   =   null;
+                $breakIn    =   null;
+            }
+
                 $attendanceData = [
-                    'attendance_date'   =>  !empty($leaveData->leave_date)      ?   $leaveData->leave_date      :   "",
+                    'attendance_date'   =>  !empty($leaveData->leave_date)     ?   $leaveData->leave_date      :   null,
+                    'clock_in'          =>  !empty($clockIn)                   ?   $clockIn                    :   null,
+                    'clock_out'         =>  !empty($clockOut)                  ?   $clockOut                   :   null,
+                    'break_out'         =>  !empty($breakOut)                  ?   $breakOut                   :   null,
+                    'break_in'          =>  !empty($breakIn)                   ?   $breakIn                    :   null,
                     'created_at'        =>  now(),
-                    'user_id'           =>  !empty($leaveData->user_id)         ?   $leaveData->user_id         :   "",
-                    'employee_id'       =>  !empty($leaveData->employee_id)     ?   $leaveData->employee_id     :   "",
+                    'user_id'           =>  !empty($leaveData->user_id)        ?   $leaveData->user_id         :   null,
+                    'employee_id'       =>  !empty($leaveData->employee_id)    ?   $leaveData->employee_id     :   null,
                     'notes'             =>  "File a $leaveData->leave_type on $leaveData->leave_date. ($leaveData->day_type)",
                 ];
 
@@ -205,7 +226,6 @@ class LeaveController extends Controller
             $errorMessage = $e->getMessage();
             return response()->json(['error' => $errorMessage], 500);
         }
-
     }
 
     /**

@@ -169,7 +169,7 @@
                                             <p class="text-small modern-color-999">See all of your Leave Request here...</p>
                                     </div>
                                     <div class="col-md-6 d-flex justify-content-end">
-                                        <button class="btn btn-sm btn-outline-primary form-control form-control-sm fw-bold" style="border-radius: 5px; width: 100px;" @click="createRequest">Request</button>
+                                        <button class="btn btn-sm btn-outline-primary fw-bold" style="border-radius: 5px; width: 100px;" @click="createRequest">Request</button>
                                     </div>
                                 </div>
                                 <div class="row">
