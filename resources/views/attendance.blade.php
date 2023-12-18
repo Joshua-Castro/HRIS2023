@@ -41,6 +41,7 @@
                                 <th>Break Out</th>
                                 <th>Break In</th>
                                 <th>Clock Out</th>
+                                <th class="text-center">Notes</th>
                                 <th class="text-center">Action</th>
                                 {{-- <th class="text-center">Action</th> --}}
                             </tr>
@@ -79,6 +80,7 @@
                                             <td x-text="rows.break_out"></td>
                                             <td x-text="rows.break_in"></td>
                                             <td x-text="rows.clock_out"></td>
+                                            <td class="text-center py-0 text-wrap" x-text="(rows.notes ?? '-')"></td>
                                             <td class="text-center">
                                                 <a href="javascript:void(0);" class="text-reset text-decoration-none" id="dropdownMenuSplitButton1" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                                     <i class="fa fa-lg fa-ellipsis-v"></i>

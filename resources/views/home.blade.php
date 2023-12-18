@@ -85,7 +85,7 @@
                 <div class="statistics-details mb-0">
                     <div class="row">
                         <div class="col-sm-3 grid-margin">
-                            <div class="card card-style-border">
+                            <div class="card card-style-border" style="max-height: 111px; height: 111px;">
                                 <div class="card-body">
                                     <p class="card-title card-title-dash font-weight-medium">Current Time</p>
                                     <div class="row">
@@ -93,7 +93,7 @@
                                             <template x-if="timeLoading">
                                                     <div class="spinner" style="width: 26px; height: 26px"></div>
                                             </template>
-                                            <h3 class="rate-percentage text-primary" style="font-size: 20px;" x-text="currentTime"></h3>
+                                            <h3 class="rate-percentage text-primary" style="font-size: 18px;" x-text="currentTime"></h3>
                                         </div>
                                         <template x-if="!timeLoading">
                                             <div class="col-lg-6 col-md-12 d-flex justify-content-end">
@@ -169,7 +169,7 @@
                                             <p class="text-small modern-color-999">See all of your Leave Request here...</p>
                                     </div>
                                     <div class="col-md-6 d-flex justify-content-end">
-                                        <button class="btn btn-sm btn-outline-primary fw-bold" style="border-radius: 5px; width: 100px;" @click="createRequest">Request</button>
+                                        <button class="form-control btn btn-sm btn-outline-primary fw-bold" style="border-radius: 5px; width: 100px;" @click="createRequest">Request</button>
                                     </div>
                                 </div>
                                 <div class="row">

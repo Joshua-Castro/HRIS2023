@@ -32,7 +32,7 @@
                     </template>
                 </template>
                 <template x-if="!logsLoading">
-                    <div style="max-height: 250px; overflow-y: auto;">
+                    <div style="max-height: 550px; overflow-y: auto;">
                         <ul class="bullet-line-list">
                             <template x-for="(rows, index) in logsData">
                                 <li class="my-2">

@@ -193,17 +193,17 @@ class LeaveController extends Controller
                                 ->where('l.id', '=', $id)
                                 ->first();
 
-            if ($leaveData->day_type == 'Whole Day') {
-                $clockIn    =   Carbon::parse('07:00:00');
-                $clockOut   =   Carbon::parse('16:00:00');
-                $breakOut   =   Carbon::parse('12:00:00');
-                $breakIn    =   Carbon::parse('13:00:00');
-            } else {
-                $clockIn    =   Carbon::parse('07:00:00');
-                $clockOut   =   Carbon::parse('12:00:00');
-                $breakOut   =   null;
-                $breakIn    =   null;
-            }
+                if ($leaveData->day_type == 'Whole Day') {
+                    $clockIn    =   Carbon::parse('07:00:00');
+                    $clockOut   =   Carbon::parse('16:00:00');
+                    $breakOut   =   Carbon::parse('12:00:00');
+                    $breakIn    =   Carbon::parse('13:00:00');
+                } else {
+                    $clockIn    =   Carbon::parse('07:00:00');
+                    $clockOut   =   Carbon::parse('12:00:00');
+                    $breakOut   =   null;
+                    $breakIn    =   null;
+                }
 
                 $attendanceData = [
                     'attendance_date'   =>  !empty($leaveData->leave_date)     ?   $leaveData->leave_date      :   null,

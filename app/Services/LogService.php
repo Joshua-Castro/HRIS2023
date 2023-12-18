@@ -16,6 +16,9 @@ class LogService
      */
     public function logGenerate($request, $method, $module, $path = null, $leaveId = null)
     {
+        // TAKE NOTE THAT THE 'user_id' AND 'employee_id'
+        // DATA IN THE LOGS TABLE ARE FROM THE DATA THAT HAS TAKEN AN ACTION EITHER (UPDATED, DELETED OR CREATED).
+        // NOT THE CREATOR OF THE DATA IN LOGS TABLE.
         try {
             DB::beginTransaction();
                 $logByiD = Auth::id();
@@ -157,7 +160,7 @@ class LogService
                                         ->first();
                         $action         =   !empty($method) ? $method : "";
                         $employeeId     =   !empty($request) ? $request['employee_id'] : "";
-                        $message        =   "Successfully " . $action . " at: " . Carbon::parse($request['time'])->format('h:i:s A') . " on " . Carbon::parse($attendance->created_at)->format('m/d/Y');
+                        $message        =   "successfully " . $action . " at: " . Carbon::parse($request['time'])->format('h:i:s A') . " on " . Carbon::parse($attendance->attendance_date)->format('m/d/Y');
 
                         $userData = DB::table('employees as e')
                                         ->select(
@@ -187,7 +190,46 @@ class LogService
                         DB::table('logs')->insert($data);
                     break;
 
+                    case 'attendance_update' :
+                        $action             =   !empty($method)                 ?   $method                                                     :   "";
+                        $employeeId         =   !empty($request)                ?   $request['employee_id']                                     :   "";
+                        $column             =   !empty($request)                ?   $request['updated_columns']                                 :   "";
+                        $clockIn            =   !empty($column['clock_in'])     ?   Carbon::parse($column['clock_in'])->format('h:i:s A')       :   "";
+                        $clockOut           =   !empty($column['clock_out'])    ?   Carbon::parse($column['clock_out'])->format('h:i:s A')      :   "";
+                        $updatedColumn      =   $clockIn ? $clockIn : $clockOut;
+                        $messageDesc        =   $clockIn ? "clock in" : "clock out";
+                        if (!empty($clockIn && $clockOut)) {
+                            $updatedColumn  =   $clockIn . " and " . $clockOut;
+                            $messageDesc    =   "clock in and clock out";
+                        }
+                        // dd($action, $employeeId, $column);
+                        $userData = DB::table('employees as e')
+                                        ->select(
+                                            'e.id as employee_id',
+                                            'e.employee_no',
+                                            'e.user_id',
+                                            'u.id as user_id'
+                                        )
+                                        ->leftJoin('users as u', 'u.id', '=', 'e.user_id')
+                                        ->where('e.id', '=', $employeeId)
+                                        ->first();
+                        $message        =   "successfully " . $action . " the " . $messageDesc . " to " . $updatedColumn . " of this employee no. : " . $userData->employee_no;
 
+                        $description = " " . $message;
+                        $data = [
+                            'activity'      =>  $action,
+                            'description'   =>  $description,
+                            'message'       =>  $message,
+                            'creator_name'  =>  $fullName,
+                            'action'        =>  $action,
+                            'user_id'       =>  optional($userData)->user_id,
+                            'employee_id'   =>  optional($userData)->employee_id,
+                            'created_by'    =>  $logByiD,
+                            'created_at'    =>  now(),
+                        ];
+
+                        DB::table('logs')->insert($data);
+                    break;
                 }
             DB::commit();
         } catch (QueryException $e) {

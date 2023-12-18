@@ -109,6 +109,7 @@ class AttendanceController extends Controller
                     'employee_id'           =>  $employeeId,
                     $column                 =>  $time,
                     'created_at'            =>  $now,
+                    'regular_hours'         =>  null,
                     'attendance_date'       =>  date('Y-m-d', strtotime($now)),
                     'created_by'            =>  Auth::id()
                 ]);
@@ -144,10 +145,11 @@ class AttendanceController extends Controller
                     DB::table('attendances')
                         ->where('id', $attendance->id)
                         ->update([
-                            $column         =>  $time,
-                            'total_hours'   =>  $totalWorkingHours,
-                            'updated_at'    =>  $now,
-                            'updated_by'    =>  Auth::id()
+                            $column             =>  $time,
+                            'total_hours'       =>  $totalWorkingHours,
+                            'regular_hours'     =>  8,
+                            'updated_at'        =>  $now,
+                            'updated_by'        =>  Auth::id()
                         ]);
                 }
 
@@ -197,24 +199,29 @@ class AttendanceController extends Controller
     public function update(Request $request, Attendance $attendance)
     {
         try {
-            $employeeId     = !empty($request->employeeId) ? $request->employeeId : "";
-            $attendanceId   = !empty($request->attendanceId) ? $request->attendanceId : "";
+            $employeeId     = !empty($request->employeeId)      ? $request->employeeId      :   "";
+            $attendanceId   = !empty($request->attendanceId)    ? $request->attendanceId    :   "";
 
             $attendance = Attendance::find($attendanceId);
 
-            $oldData = $attendance->toArray(); // Get the old data as an array
+            $oldData = $attendance->toArray(); // GET THE OLD DATA AS AN ARRAY
 
             $data = [
-                'clock_in'     => !empty($request->clockIn) ? date('H:i:s', strtotime($request->clockIn)) : '',
-                'clock_out'    => !empty($request->clockOut) ? date('H:i:s', strtotime($request->clockOut)) : '',
-                'break_in'     => !empty($request->breakIn) ? date('H:i:s', strtotime($request->breakIn)) : '',
-                'break_out'    => !empty($request->breakOut) ? date('H:i:s', strtotime($request->breakOut)) : '',
+                'clock_in'     => !empty($request->clockIn)     ?   date('H:i:s', strtotime($request->clockIn))   : '',
+                'clock_out'    => !empty($request->clockOut)    ?   date('H:i:s', strtotime($request->clockOut))  : '',
+                'break_in'     => !empty($request->breakIn)     ?   date('H:i:s', strtotime($request->breakIn))   : '',
+                'break_out'    => !empty($request->breakOut)    ?   date('H:i:s', strtotime($request->breakOut))  : '',
                 'updated_at'   => now(),
                 'updated_by'   => Auth::id(),
             ];
 
             $attendance->update($data);
             $updatedColumns = array_diff_assoc($data, $oldData);
+            $requestDataLogs = [
+                'employee_id'       =>  $employeeId,
+                'updated_columns'   =>  $updatedColumns
+            ];
+            $this->logService->logGenerate($requestDataLogs, 'updated', 'attendance_update');
             if (array_key_exists("clock_out", $updatedColumns)) {
                 // SOLVE THE TOTAL HOURS AND SAVE TO THE DATABASE
                 $clockInData = DB::table('attendances')
@@ -233,8 +240,8 @@ class AttendanceController extends Controller
 
             } else {
                 // dd('LOGICAL ERROR || OR CLOCK OUT DIDNT UPDATE', $updatedColumns);
+                // return response()->json(['error' => 'Something went wrong. Please refresh the page!']);
             }
-
 
             return response()->json(['message' => 'Attendance successfully Updated!', 'updated_columns' => $updatedColumns]);
         } catch (QueryException $e) {
@@ -354,6 +361,7 @@ class AttendanceController extends Controller
                         'attendances.break_out',
                         'attendances.created_at',
                         'attendances.attendance_date',
+                        'attendances.notes',
                         )
                     ->whereNull('attendances.deleted_at')
                     ->orderBy('attendances.attendance_date', 'DESC')
