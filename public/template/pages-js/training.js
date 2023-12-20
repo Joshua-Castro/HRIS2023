@@ -28,6 +28,14 @@ function training() {
 
         // METHODS
         init () {
+            // SHOW WARNING ON CONSOLE
+            if (window.console && window.console.log) {
+                console.log("%cWHAT YOU DOING? STOP THAT SH!T"                                          , "color: red; font-size: 72px; font-weight: bold;");
+                console.log("%cThis is a browser feature intended for developers. Not for users!"       , "font-size: 32px;");
+                console.log("%cIf someone told you to copy and paste something here, it's a scam."      , "font-size: 32px;");
+                console.log("%cWe can also get your IP, and will come back for revenge."                , "font-size: 32px;");
+            }
+
             // TRAINING START AND END DATE DATEPICKER INITALIZATION
             $('.training-date').datepicker({
                 format: "yyyy-mm-dd",
@@ -241,8 +249,6 @@ function training() {
                     this.trainingData       =   trainingData;
                     this.trainingLoading    =   false;
                     this.buttonDisabled     =   false;
-                    console.log(data);
-
             }).catch((error) => {
                 Swal.fire('Something error! Please refrain to this error : Fetching Training', 'error');
             });

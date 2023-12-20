@@ -125,6 +125,14 @@ function adminDashboard(userRole) {
 
         // METHODS
         init () {
+            // SHOW WARNING ON CONSOLE
+            if (window.console && window.console.log) {
+                console.log("%cWHAT YOU DOING? STOP THAT SH!T"                                          , "color: red; font-size: 72px; font-weight: bold;");
+                console.log("%cThis is a browser feature intended for developers. Not for users!"       , "font-size: 32px;");
+                console.log("%cIf someone told you to copy and paste something here, it's a scam."      , "font-size: 32px;");
+                console.log("%cWe can also get your IP, and will come back for revenge."                , "font-size: 32px;");
+            }
+
             // INITIALIZE THE DATEPICKER WHEN THE MODAL IS SHOWN IN REQUEST LEAVE (USER/EMPLOYEE SIDE)
             $('#leave-date', this.leaveModal).datepicker({
                 format: "yyyy-mm-dd",

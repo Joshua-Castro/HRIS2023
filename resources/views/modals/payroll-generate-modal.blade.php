@@ -3,7 +3,7 @@
       <div class="modal-content">
         <div class="modal-body">
             <div class="row mt-2">
-                <span class="fw-bold text-center" style="font-size: 26px;">PAYROLL FOR 11/01/2023 - 11/15/2023</span>
+                <span class="text-center" style="font-size: 26px;" x-text="'PAYROLL DATE FROM ' + dateFromVal + ' TO ' + dateToVal"></span>
             </div>
             <div class="row mt-4">
                 <div class="table-sm table-responsive mt-1">
