@@ -23,7 +23,7 @@ Route::get('/', function () {
 
 Auth::routes();
 
-Route::middleware('web')->group(function () {
+Route::middleware(['web', 'auth'])->group(function () {
     // HOME CONTROLLER ROUTES
     require base_path('routes/module_routes/home-routes.php');
 

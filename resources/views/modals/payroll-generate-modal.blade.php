@@ -55,7 +55,50 @@
                                 <td class="py-2">Regular Income</td>
                                 <td class="py-2" x-text="hourlyRate"></td>
                                 <td class="py-2" x-text="regularHours"></td>
-                                <td class="py-2" x-text="totalRegularEarnings"></td>
+                                <td class="py-2 text-danger fw-bold" x-text="totalRegularEarnings"></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="row mt-4">
+                <div class="table-sm table-responsive mt-1">
+                    <table class="table table-striped table-bordered">
+                        <thead>
+                            <tr>
+                                <th colspan="4" class="py-2 fw-bold" style="font-size: 16px; background-color: #eee;">DEDUCTIONS</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td class="py-2 fw-bold text-end" style="max-width: 500px; width: 90px;">SSS :</td>
+                                <td class="p-0 text-center">
+                                    <input id="sss" name="sss" class="p-0 text-center form-control deduction-input" type="text" data-inputmask="'alias': 'currency', 'prefix': '₱', 'autoUnmask': true">
+                                </td>
+                                <td class="py-2 fw-bold text-end" style="max-width: 500px; width: 90px;">PAGIBIG :</td>
+                                <td class="p-0 text-center">
+                                    <input id="pagIbig" name="pagibig" class="p-0 text-center form-control deduction-input" type="text" data-inputmask="'alias': 'currency', 'prefix': '₱', 'autoUnmask': true">
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="py-2 fw-bold text-end" style="max-width: 500px; width: 90px;">ABSENCES :</td>
+                                <td class="p-0 text-center">
+                                    <input id="absences" name="absences" class="p-0 text-center form-control deduction-input" type="text" data-inputmask="'alias': 'currency', 'prefix': '₱', 'autoUnmask': true">
+                                </td>
+                                <td class="py-2 fw-bold text-end" style="max-width: 500px; width: 90px;">PHILHEALTH :</td>
+                                <td class="p-0 text-center">
+                                    <input id="withHoldingTax" name="with-holding-tax" class="p-0 text-center form-control deduction-input" type="text" data-inputmask="'alias': 'currency', 'prefix': '₱', 'autoUnmask': true">
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="py-2 fw-bold text-end" style="max-width: 500px; width: 90px;">WITHHOLDING TAX :</td>
+                                <td class="p-0 text-center">
+                                    <input id="philHealth" name="philhealth" class="p-0 text-center form-control deduction-input" type="text" data-inputmask="'alias': 'currency', 'prefix': '₱', 'autoUnmask': true">
+                                </td>
+                                <td class="py-2 fw-bold text-end" style="max-width: 500px; width: 90px;">TOTAL DEDUCTIONS :</td>
+                                <td class="p-0 text-center">
+                                    <input id="total-deduction" name="total-deduction" class="p-0 text-center form-control bg-white text-danger fw-bold" type="text" data-inputmask="'alias': 'currency', 'prefix': '₱', 'autoUnmask': true" disabled x-model="totalDeduction">
+                                </td>
                             </tr>
                         </tbody>
                     </table>

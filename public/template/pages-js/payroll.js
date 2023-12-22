@@ -31,6 +31,14 @@ function payroll() {
         generatePayrollModal                :   '#generate-payroll-modal',
         dateFromVal                         :   '',
         dateToVal                           :   '',
+        deductions                          :   {
+            sss                   :    0,
+            pagIbig               :    0,
+            philHealth            :    0,
+            withHoldingTax        :    0,
+            absences              :    0
+        },
+        totalDeduction                      :   0,
 
         // METHOD
         init () {
@@ -96,6 +104,16 @@ function payroll() {
             this.getEmployeeDataPayroll();
             this.paginationPage();
             this.paginationPageAttendance();
+
+            // FOR DEDUCTIONS SOLVING
+            var component = this;
+            $('.deduction-input').on('input', function () {
+                var inputId = $(this).attr('id');
+                component.deductions[inputId] = $(this).val();
+
+                component.updateTotalDeduction();
+            });
+
         },
 
         // SEARCH SPECIFIC NAME OF EMPLOYEE ON EMPLOYEE TABLE
@@ -336,8 +354,29 @@ function payroll() {
                 backdrop: 'static',
                 keyboard: false
             });
+            $('.deduction-input').val('');
+            this.totalDeduction     =   0;
+            this.deductions         =   {
+                sss                   :    0,
+                pagIbig               :    0,
+                philHealth            :    0,
+                withHoldingTax        :    0,
+                absences              :    0
+            };
 
             $(this.generatePayrollModal).modal('show');
+        },
+
+        // FUNCTION TO UPDATE THE TOTAL DEDUCTION
+        updateTotalDeduction : function () {
+            this.totalDeduction = 0;
+
+            // LOOP THROUGH EACH DEDUCTION AND ADD IT TO THE TOTAL
+            for (var key in this.deductions) {
+                if (this.deductions.hasOwnProperty(key)) {
+                    this.totalDeduction += parseFloat(this.deductions[key]) || 0;
+                }
+            }
         },
 
     }

@@ -143,7 +143,7 @@
                                     <table class="table table-striped table-bordered">
                                     <thead>
                                         <tr>
-                                            <th>Date</th>
+                                            <th>DATE</th>
                                             <th class="text-center">CLOCK IN</th>
                                             {{-- <th class="text-center">Break Out</th> --}}
                                             {{-- <th class="text-center">Break In</th> --}}
