@@ -379,5 +379,13 @@ function payroll() {
             }
         },
 
+        // SUBMIT THE GENERATED PAYROLL
+        submitGeneratedPayroll : function () {
+            console.log(this.employeeId);
+            console.log(this.deductions);
+            console.log(this.totalDeduction.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }));
+            console.log('SUBMITTING');
+        },
+
     }
 }
