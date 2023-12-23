@@ -110,20 +110,20 @@
                             <span class="menu-title">Dashboard</span>
                         </a>
                     </li>
-                    <li class="nav-item">
-                        <a class="nav-link" data-bs-toggle="collapse" href="#payroll" aria-expanded="false" aria-controls="payroll">
-                            <i class="ti ti-wallet ms-3 me-4" style="font-size: 20px;"></i>
-                            <span class="menu-title">Payroll</span>
-                            <i class="menu-arrow"></i>
-                        </a>
-                    </li>
-                    <div class="collapse" id="payroll">
-                        <ul class="nav flex-column sub-menu">
-                            <li class="nav-item ms-4"> <a class="nav-link" href="{{ route('payroll') }}">Setup</a></li>
-                            <li class="nav-item ms-4"> <a class="nav-link" href="javascript:void(0);">Generated</a></li>
-                        </ul>
-                    </div>
                     @if (auth()->user()->role == 1 or auth()->user()->role == 2)
+                        <li class="nav-item">
+                            <a class="nav-link" data-bs-toggle="collapse" href="#payroll" aria-expanded="false" aria-controls="payroll">
+                                <i class="ti ti-wallet ms-3 me-4" style="font-size: 20px;"></i>
+                                <span class="menu-title">Payroll</span>
+                                <i class="menu-arrow"></i>
+                            </a>
+                        </li>
+                        <div class="collapse" id="payroll">
+                            <ul class="nav flex-column sub-menu">
+                                <li class="nav-item ms-4"> <a class="nav-link" href="{{ route('payroll') }}">Setup</a></li>
+                                <li class="nav-item ms-4"> <a class="nav-link" href="javascript:void(0);">Generated</a></li>
+                            </ul>
+                        </div>
                         <li class="nav-item">
                             <a class="nav-link" data-bs-toggle="collapse" href="#requests" aria-expanded="false" aria-controls="requests">
                                 <i class="ti ti-agenda ms-3 me-4" style="font-size: 20px;"></i>

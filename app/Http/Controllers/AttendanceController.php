@@ -207,12 +207,13 @@ class AttendanceController extends Controller
             $oldData = $attendance->toArray(); // GET THE OLD DATA AS AN ARRAY
 
             $data = [
-                'clock_in'     => !empty($request->clockIn)     ?   date('H:i:s', strtotime($request->clockIn))   : '',
-                'clock_out'    => !empty($request->clockOut)    ?   date('H:i:s', strtotime($request->clockOut))  : '',
-                'break_in'     => !empty($request->breakIn)     ?   date('H:i:s', strtotime($request->breakIn))   : '',
-                'break_out'    => !empty($request->breakOut)    ?   date('H:i:s', strtotime($request->breakOut))  : '',
-                'updated_at'   => now(),
-                'updated_by'   => Auth::id(),
+                'clock_in'          => !empty($request->clockIn)     ?   date('H:i:s', strtotime($request->clockIn))   : '',
+                'clock_out'         => !empty($request->clockOut)    ?   date('H:i:s', strtotime($request->clockOut))  : '',
+                'break_in'          => !empty($request->breakIn)     ?   date('H:i:s', strtotime($request->breakIn))   : '',
+                'break_out'         => !empty($request->breakOut)    ?   date('H:i:s', strtotime($request->breakOut))  : '',
+                'regular_hours'     =>  8,
+                'updated_at'        => now(),
+                'updated_by'        => Auth::id(),
             ];
 
             $attendance->update($data);
@@ -230,8 +231,8 @@ class AttendanceController extends Controller
                                             ->first();
 
 
-                $diffInMinutes = Carbon::parse($data['clock_out'])->diffInMinutes(Carbon::parse($clockInData->clock_in));
-                $totalWorkingHours = number_format($diffInMinutes / 60, 2);
+                $diffInMinutes           =  Carbon::parse($data['clock_out'])->diffInMinutes(Carbon::parse($clockInData->clock_in));
+                $totalWorkingHours       =  number_format($diffInMinutes / 60, 2);
                 $data['total_hours']     =  $totalWorkingHours;
 
                 DB::table('attendances')
