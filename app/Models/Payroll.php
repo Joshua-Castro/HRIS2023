@@ -11,15 +11,19 @@ class Payroll extends Model
     use HasFactory, SoftDeletes;
     protected $table = 'payrolls';
     protected $fillable = [
-        'user_id',
         'employee_id',
         'basic_salary',
         'overtime_hours',
         'bonuses',
-        'deductions',
+        'total_deductions',
+        'sss',
+        'pagibig',
+        'philhealth',
+        'absences',
+        'tax',
         'allowances',
         'net_salary',
         'payment_date',
-        'payment_method',
+        'payment_method'
     ];
 }
