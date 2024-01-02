@@ -232,7 +232,7 @@ function payroll() {
             this.employeeStatus             =   this.employeePayrollData[index] ? this.employeePayrollData[index].employment_status          :     "";
             var salary                      =   this.employeePayrollData[index] ? parseFloat(this.employeePayrollData[index].salary) : 0;
             this.employeeSalary             =   salary.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
-            const totalWorkingDays          =   this.getWorkingDaysInMonth(currentMonth);;
+            const totalWorkingDays          =   this.getWorkingDaysInMonth(currentMonth);
             const totalWorkingHours         =   8;
             const totalDivide               =   totalWorkingDays * totalWorkingHours;
             this.hourlyRate                 =   salary / totalDivide;
