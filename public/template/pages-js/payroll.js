@@ -367,7 +367,7 @@ function payroll() {
             $(this.generatePayrollModal).modal('show');
         },
 
-        // FUNCTION TO UPDATE THE TOTAL DEDUCTION
+        // FUNCTION TO AUTOMATICALLY UPDATE THE TOTAL DEDUCTION
         updateTotalDeduction : function () {
             this.totalDeduction = 0;
 
