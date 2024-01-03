@@ -218,8 +218,10 @@ class LeaveController extends Controller
                 ];
 
                 DB::table('attendances')->insert($attendanceData);
+                $this->logService->logGenerate(Auth::id(), 'accepted', 'leave-status', null, $id);
                 return response()->json(['message' => 'Successfully Accepted']);
             } else if ($status === 'Declined') {
+                $this->logService->logGenerate(Auth::id(), 'declined', 'leave-status', null, $id);
                 return response()->json(['message' => 'Successfully Declined']);
             }
         } catch (QueryException $e) {
@@ -258,34 +260,27 @@ class LeaveController extends Controller
     public function showAll(Request $request)
     {
         try {
-            $data = DB::table('leaves as l')
-                    ->select(
-                        'l.id',
-                        'l.user_id',
-                        'l.leave_date',
-                        'l.leave_type as lt_id',
-                        'l.day_type',
-                        'l.status',
-                        'l.reason',
-
-                        'lt.description as leave_type',
-
-                        'e.last_name',
-                        'e.first_name',
-                        'e.middle_name',
-                        'e.gender',
-                        'e.position',
-                        'e.employee_no',
-                        'e.deleted_at',
-                        'e.deleted_by',
-                        'e.salary_grade',
-                        )
-                    ->leftJoin('employees as e', 'e.user_id', '=', 'l.user_id')
-                    ->leftJoin('leave_types as lt', 'lt.id', '=', 'l.leave_type')
-                    ->whereNull('e.deleted_at')
-                    ->orderBy('l.created_at', 'desc')
-                    ->get();
-
+            $data = Leave::join('employees as e', 'e.user_id', '=', 'leaves.user_id')
+                        ->join('leave_types as lt', 'lt.id', '=', 'leaves.leave_type')
+                        ->whereNull('e.deleted_at')
+                        ->orderByDesc('leaves.created_at')
+                        ->get([
+                            'leaves.id',
+                            'leaves.user_id',
+                            'leaves.leave_date',
+                            'leaves.leave_type as lt_id',
+                            'leaves.day_type',
+                            'leaves.status',
+                            'leaves.reason',
+                            'e.last_name',
+                            'e.first_name',
+                            'e.middle_name',
+                            'e.gender',
+                            'e.position',
+                            'e.employee_no',
+                            'e.salary_grade',
+                            'lt.description as leave_type',
+                        ]);
             $count = $data->count();
 
             $indication     =   Str::random(16);

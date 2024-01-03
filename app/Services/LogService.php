@@ -121,10 +121,17 @@ class LogService
                     case 'leaves' :
                         $action     =   !empty($method) ? $method : "";
                         $userId     =   !empty($request) ? $request : "";
-                        $leave = DB::table('leaves')
-                                        ->where('id', '=', $leaveId)
+                        $leave = DB::table('leaves as l')
+                                        ->select(
+                                            'l.leave_type',
+                                            'l.day_type',
+
+                                            'lt.description as description'
+                                            )
+                                        ->leftJoin('leave_types as lt', 'lt.id', '=', 'l.leave_type')
+                                        ->where('l.id', '=', $leaveId)
                                         ->first();
-                        $message    =   $action === 'created' ? 'file a leave request.' : ($action === 'deleted' ? ($leave->status === 'Pending' ? 'cancelled a leave request.' : 'deleted a leave request.') : 'updated a leave request.');
+                        $message    =   $action === 'created' ? 'file a ' . $leave->description . ' request.' : ($action === 'deleted' ? ($leave->status === 'Pending' ? 'cancelled a ' . $leave->description . ' request.' : 'deleted a ' . $leave->description . ' request.') : 'updated a ' . $leave->description . ' leave request.');
 
                         $userData = DB::table('employees as e')
                                         ->select(
@@ -220,6 +227,49 @@ class LogService
                             'activity'      =>  $action,
                             'description'   =>  $description,
                             'message'       =>  $message,
+                            'creator_name'  =>  $fullName,
+                            'action'        =>  $action,
+                            'user_id'       =>  optional($userData)->user_id,
+                            'employee_id'   =>  optional($userData)->employee_id,
+                            'created_by'    =>  $logByiD,
+                            'created_at'    =>  now(),
+                        ];
+
+                        DB::table('logs')->insert($data);
+                    break;
+
+                    case 'leave-status' :
+                        $action     =   !empty($method)     ? $method   : "";
+                        $userId     =   !empty($request)    ? $request  : "";
+                        $leave = DB::table('leaves as l')
+                                        ->select(
+                                            'l.leave_type',
+                                            'l.day_type',
+
+                                            'lt.description as description'
+                                            )
+                                        ->leftJoin('leave_types as lt', 'lt.id', '=', 'l.leave_type')
+                                        ->where('l.id', '=', $leaveId)
+                                        ->first();
+                        $message    =   $action === 'accepted' ? 'Accept the ' . $leave->description . ' request.' : 'Decline the ' . $leave->description . ' request.';
+
+                        $userData = DB::table('employees as e')
+                                        ->select(
+                                            'e.id as employee_id',
+                                            'e.employee_no',
+                                            'e.user_id',
+                                            'u.id as user_id'
+                                        )
+                                        ->leftJoin('users as u', 'u.id', '=', 'e.user_id')
+                                        ->where('u.id', '=', $userId)
+                                        ->first();
+
+                        $description = " " . $message . " Leave request ID is: " . $leaveId;
+
+                        $data = [
+                            'activity'      =>  $action,
+                            'description'   =>  $description,
+                            'message'       =>  $message . " Leave request ID is: " . $leaveId,
                             'creator_name'  =>  $fullName,
                             'action'        =>  $action,
                             'user_id'       =>  optional($userData)->user_id,
