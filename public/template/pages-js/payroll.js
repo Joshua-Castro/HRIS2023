@@ -206,7 +206,7 @@ function payroll() {
             });
         },
 
-        // PAGINATION PAGE ON THE TABLE EMPLOYEE DATA
+        // PAGINATION PAGE ON THE TABLE ATTENDANCE DATA
         paginationPageAttendance : function () {
             var component = this;
 
@@ -381,6 +381,12 @@ function payroll() {
 
         // SUBMIT THE GENERATED PAYROLL
         submitGeneratedPayroll : function () {
+            const isDeductionsEmpty = Object.values(this.deductions).every(value => value === 0 || value === '0.00' || value === '');
+
+            if (isDeductionsEmpty) {
+                alert('Are you sure this employee doesn\'t have any deductions?');
+            }
+            console.log(this.roundedHourlyRate);
             console.log(this.employeeId);
             console.log(this.deductions);
             console.log(this.totalDeduction.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }));

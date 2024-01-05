@@ -7,12 +7,44 @@
             <div class="col-12 grid-margin stretch-card">
                 <div class="card card-style-border">
                     <div class="card-body">
-                        <div class="d-flex justify-content-between align-items-start">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <h4 class="card-title card-title-dash">Leave Requests</h4>
+                                <p class="text-small modern-color-999">See all of your employees Leave Request here...</p>
+                            </div>
+                            <div class="col-md-6 d-flex justify-content-end">
+                                <form id="users-search-form" class="d-none">
+                                    <input type="hidden" name="name" x-ref="employeeInput">
+                                    <input type="hidden" name="status">
+                                    <input type="hidden" name="pagination">
+                                    <input type="hidden" name="page">
+                                </form>
+                                <div class="input-group me-2" style="width: 280px;">
+                                    <input id="users-search-keyword" type="text" class="form-control form-control-sm" name="search-keyword" placeholder="Employee Number / Name" x-model="searchEmployee" @keydown="employeeSearchPayroll">
+                                    <div class="input-group-append">
+                                        <button id="users-search" x-ref="usersSearchButton" class="btn input-group-text btn-secondary border waves-effect form-control form-control-sm text-dark" @click="getEmployeeDataPayroll" type="button" style="border-end-start-radius: 0px; border-start-start-radius: 0px;">Search</button>
+                                    </div>
+                                </div>
+                                <select id="payroll-filter" class="form-select form-select-sm bg-soft-secondary fw-bold me-2" x-model="filter" style="border-radius: 5px; width: 150px; height: 31.6px;" @change="getEmployeeDataPayroll">
+                                    <option value="all">All Employees</option>
+                                    <option value="Male">Male</option>
+                                    <option value="Female">Female</option>
+                                </select>
+                                <select id="payroll-pagination" class="form-select form-select-sm bg-soft-secondary fw-bold" x-model="pagination" style="border-radius: 5px; width: 80px; height: 31.6px;" @change="getEmployeeDataPayroll">
+                                    <option value="5">5</option>
+                                    <option value="10">10</option>
+                                    <option value="15">15</option>
+                                    <option value="20">20</option>
+                                    <option value="50">50</option>
+                                </select>
+                            </div>
+                        </div>
+                        {{-- <div class="d-flex justify-content-between align-items-start">
                             <div>
                                 <h4 class="card-title card-title-dash">Leave Requests</h4>
                                 <p class="text-small modern-color-999">See all of your employees Leave Request here...</p>
                             </div>
-                        </div>
+                        </div> --}}
                         <div class="table-sm table-responsive mt-1">
                             <table class="table table-striped table-bordered">
                                 <thead>

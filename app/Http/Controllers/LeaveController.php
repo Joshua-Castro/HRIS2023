@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Leave;
+use App\Models\LeaveType;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Services\LogService;
@@ -91,42 +92,31 @@ class LeaveController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Leave $leave)
+    public function show()
     {
         try {
             $userId = Auth::id();
 
-            $data = DB::table('leaves as l')
-                        ->select(
-                            'l.id',
-                            'l.user_id',
-                            'l.leave_date',
-                            'l.leave_type as lt_id',
-                            'l.day_type',
-                            'l.status',
-                            'l.reason',
-                            'l.decline_reason',
+            $data = Leave::join('leave_types as lt', 'lt.id', '=', 'leaves.leave_type')
+                ->where('leaves.user_id', '=', $userId)
+                ->whereNull('leaves.deleted_at')
+                ->orderByDesc('leaves.created_at')
+                ->select([
+                    'leaves.id',
+                    'leaves.user_id',
+                    'leaves.leave_date',
+                    'leaves.leave_type as lt_id',
+                    'leaves.day_type',
+                    'leaves.status',
+                    'leaves.reason',
+                    'leaves.decline_reason',
+                    'lt.description as leave_type',
+                ])
+                ->paginate(5);
 
-                            'lt.description as leave_type',
-                            )
-                        ->leftJoin('leave_types as lt', 'lt.id', '=', 'l.leave_type')
-                        ->where('user_id', '=', $userId)
-                        ->whereNull('l.deleted_at')
-                        ->orderBy('l.created_at', 'desc')
-                        ->paginate(5);
-
-            $overAllCount = DB::table('leaves')
-                            ->select('*')
-                            ->whereNull('deleted_at')
-                            ->count();
-
-            $count = DB::table('leaves')
-                    ->where('user_id', '=', $userId)
-                    ->count();
-
-            $leaveType = DB::table('leave_types')
-                            ->select('*')
-                            ->get();
+            $count = Leave::where('user_id', $userId)->count();
+            $overAllCount = Leave::whereNull('deleted_at')->count();
+            $leaveType = LeaveType::all();
 
             $indication     =   Str::random(16);
             $indication2    =   Str::random(16);
@@ -134,16 +124,15 @@ class LeaveController extends Controller
             $indication4    =   Str::random(16);
 
             return response()->json([
-                $indication     =>  base64_encode(json_encode($data)),
-                $indication2    =>  $count,
-                $indication3    =>  $overAllCount,
-                $indication4    =>  base64_encode(json_encode($leaveType))
+                $indication => base64_encode(json_encode($data)),
+                $indication2 => $count,
+                $indication3 => $overAllCount,
+                $indication4 => base64_encode(json_encode($leaveType)),
             ]);
         } catch (QueryException $e) {
             $errorMessage = $e->getMessage();
             return response()->json(['error' => $errorMessage], 500);
         }
-
     }
 
     /**
