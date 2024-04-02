@@ -219,28 +219,6 @@
                     </div>
                 </div>
             </div>
-            {{-- <div class="col-lg-4 d-flex flex-column">
-                <div class="row flex-grow">
-                    <div class="col-12 col-lg-4 col-lg-12 grid-margin stretch-card">
-                        <div class="card">
-                            <div class="card-body">
-                                <div class="col-md-12">
-                                    <h4 class="card-title card-title-dash">Payroll Computation</h4>
-                                    <p class="text-small modern-color-999">Estimated computation base on the employee attendance...</p>
-                                </div>
-                                <div class="row my-2">
-                                    <div class="col-md-12 text-center">
-                                        <button class="btn btn-primary fw-bold" style="font-size: 14px; background-color: #0030ff;" disabled>BASIC SALARY : 30,000.00</button>
-                                    </div>
-                                </div>
-                                <div class="row mt-2">
-
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div> --}}
         </div>
     </div>
     @include('modals.payroll-generate-modal')
