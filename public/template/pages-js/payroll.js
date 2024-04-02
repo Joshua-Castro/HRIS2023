@@ -224,7 +224,7 @@ function payroll() {
         // GENERATE PAYROLL
         generatePayroll : function (employeeId, index) {
             $('.payroll-row').removeClass('d-none');
-            const currentMonth = new Date().getMonth() + 1;
+            const currentMonth              =   new Date().getMonth() + 1;
             this.employeeName               =   this.employeePayrollData[index] ? this.employeePayrollData[index].first_name + ' ' + (this.employeePayrollData[index].middle_name ? this.employeePayrollData[index].middle_name + ' ' : ' ') + this.employeePayrollData[index].last_name : "";
             this.employeeNo                 =   this.employeePayrollData[index] ? this.employeePayrollData[index].employee_no                :     "";
             this.employeeDateHired          =   this.employeePayrollData[index] ? this.employeePayrollData[index].date_hired                 :     "";
@@ -321,8 +321,8 @@ function payroll() {
                             component.regularHours += employee.regular_hours || 0;
                         });
 
-                        component.totalHours    = parseFloat(component.totalHours.toFixed(2));
-                        component.totalRegularEarnings = component.hourlyRate * component.regularHours;
+                        component.totalHours            = parseFloat(component.totalHours.toFixed(2));
+                        component.totalRegularEarnings  = component.hourlyRate * component.regularHours;
                         component.roundedTotal          = component.totalRegularEarnings.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
                     } else {
                         component.totalHours            = 0;
@@ -345,7 +345,6 @@ function payroll() {
         // WHEN USER CHANGED THE ATTENDANCE DATE RE-FETCH THE
         filterAttendanceDetails : function () {
             this.getAttendanceDetails(this.employeeId);
-
         },
 
         // CLICK THE GENERATE AND WILL SHOW THE GENERATE MODAL AS WELL AS THE SAMPLE COMPUTATION FOR THAT PAYROLL
