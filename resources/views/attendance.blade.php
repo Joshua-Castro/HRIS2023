@@ -61,7 +61,7 @@
                             <tbody>
                                 <template x-if="(attendanceData ?? []).length == 0">
                                     <tr class="text-center">
-                                        <td class="" colspan="7"><i class="fa fa-info-circle"></i> There is no attendance record.</td>
+                                        <td class="" colspan="8"><i class="fa fa-info-circle"></i> There is no attendance record.</td>
                                     </tr>
                                 </template>
                                 <template x-if="(attendanceData ?? []).length > 0">
