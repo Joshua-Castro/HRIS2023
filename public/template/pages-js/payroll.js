@@ -16,6 +16,7 @@ function payroll() {
         attendanceDetailsLoading            :   false,
         totalHours                          :   0,
         regularHours                        :   0,
+        otHours                             :   0,
         hourlyRate                          :   0,
         employeeName                        :   '',
         employeeNo                          :   '',
@@ -24,6 +25,7 @@ function payroll() {
         employeePosition                    :   '',
         employeeStatus                      :   '',
         totalRegularEarnings                :   0,
+        netPay                              :   0,
         roundedHourlyRate                   :   0,
         roundedTotal                        :   0,
         dateFrom                            :   '#payroll-date-from',
@@ -112,6 +114,7 @@ function payroll() {
                 component.deductions[inputId] = $(this).val();
 
                 component.updateTotalDeduction();
+                component.deductionOnchange();
             });
 
         },
@@ -316,9 +319,11 @@ function payroll() {
                         component.totalRegularEarnings      = 0;
                         component.totalHours                = 0;
                         component.regularHours              = 0;
+                        component.otHours                   = 0;
                         this.attendancePayrollData.forEach(function (employee) {
-                            component.totalHours += parseFloat(employee.total_hours) || 0; // ENSURE THE VALUE IS A NUMBER
-                            component.regularHours += employee.regular_hours || 0;
+                            component.totalHours    += parseFloat(employee.total_hours) || 0; // ENSURE THE VALUE IS A NUMBER
+                            component.regularHours  += employee.regular_hours || 0;
+                            component.otHours       += parseFloat(employee.total_overtime_hours) || 0;
                         });
 
                         component.totalHours            = parseFloat(component.totalHours.toFixed(2));
@@ -362,7 +367,8 @@ function payroll() {
                 withHoldingTax        :    0,
                 absences              :    0
             };
-
+            var totalNetPay = this.totalRegularEarnings - this.totalDeduction;
+            this.netPay = totalNetPay.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
             $(this.generatePayrollModal).modal('show');
         },
 
@@ -378,19 +384,63 @@ function payroll() {
             }
         },
 
+        // TOTAL DEDUCTIONS ON CHANGE, NETPAY WILL CHANGE TOO
+        deductionOnchange : function () {
+            var totalNetPay = this.totalRegularEarnings - this.totalDeduction;
+            this.netPay = totalNetPay.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+        },
+
         // SUBMIT THE GENERATED PAYROLL
         submitGeneratedPayroll : function () {
             const isDeductionsEmpty = Object.values(this.deductions).every(value => value === 0 || value === '0.00' || value === '');
 
             if (isDeductionsEmpty) {
-                alert('Are you sure this employee doesn\'t have any deductions?');
+                Swal.fire({
+                    title               :   "Are you sure?",
+                    text                :   "Are you sure this employee doesn\'t have any deductions?",
+                    icon                :   "warning",
+                    showCancelButton    :   !0,
+                    confirmButtonColor  :   "#28bb4b",
+                    cancelButtonColor   :   "#f34e4e",
+                    confirmButtonText   :   "Yes",
+                    customClass: {
+                        icon: 'custom-swal-icon'
+                      }
+                  }).then(result => {
+                        if(result.isConfirmed){
+                            var items = [
+                                this.roundedHourlyRate,
+                                this.employeeId,
+                                this.deductions,
+                                this.totalDeduction.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }),
+                                this.netPay,
+                                'SUBMITTING'
+                            ];
+                            $.each(items, function(index, value) {
+                                console.log(index + ": " + value);
+                                if (typeof value === "string") {
+                                    console.log(index + ": " + value);
+                                } else if (typeof element === "object") {
+                                    console.log(index + ": " + JSON.stringify(value));
+                                }
+                            });
+                            Swal.fire({
+                                title               : 'Successfully Published!',
+                                icon                : 'success',
+                                timer               : 1000,
+                                showConfirmButton   : false,
+                            });
+                        }
+                  });
+            } else {
+                Swal.fire({
+                    title               : 'Successfully Published!',
+                    icon                : 'success',
+                    timer               : 1000,
+                    showConfirmButton   : false,
+                });
             }
-            console.log(this.roundedHourlyRate);
-            console.log(this.employeeId);
-            console.log(this.deductions);
-            console.log(this.totalDeduction.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }));
-            console.log('SUBMITTING');
+            $('.custom-swal-icon').css('margin-top', '20px');
         },
-
     }
 }

@@ -104,6 +104,20 @@
                     </table>
                 </div>
             </div>
+            <div class="row mt-4">
+                <div class="table-sm mt-1">
+                    <table class="table table-striped table-bordered">
+                        <thead>
+                            <tr>
+                                <th class="py-2 fw-bold w-=55" style="font-size: 16px; background-color: #eee;">NET PAY</th>
+                                <th class="p-0 fw-bold text-end w-25" style="font-size: 16px; background-color: #eee;">
+                                    <input id="withHoldingTax" name="with-holding-tax" class="p-0 text-center form-control bg-white fw-bold" type="text" data-inputmask="'alias': 'currency', 'prefix': '₱', 'autoUnmask': true" disabled x-model="netPay">
+                                </th>
+                            </tr>
+                        </thead>
+                    </table>
+                </div>
+            </div>
         </div>
         <div class="modal-footer">
             <button type="button" class="btn btn-sm btn-outline-danger" data-bs-dismiss="modal" style="border-radius: 5px;">Close</button>

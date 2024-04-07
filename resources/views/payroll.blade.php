@@ -197,7 +197,7 @@
                                             <td colspan="4"></td>
                                             <td class="text-center" x-text="totalHours ? totalHours : '-'"></td>
                                             <td class="text-center" x-text="regularHours ? regularHours : '-'"></td>
-                                            <td class="text-center">SAMPLE DATA</td>
+                                            <td class="text-center" x-text="otHours ? otHours : '-'"></td>
                                         </tr>
                                     </tbody>
                                     </table>
