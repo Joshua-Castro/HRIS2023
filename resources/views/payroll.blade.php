@@ -122,7 +122,7 @@
                                     </div>
                                     <div class="col-md-6 d-flex justify-content-end">
                                         <form id="payroll-attendance-form" class="d-none">
-                                            <input type="hidden" name="attendance-page">
+                                            <input type="hidden" name="page" id="attendancePage">
                                             <input type="hidden" name="employeeId">
                                             <input type="hidden" name="dateFrom">
                                             <input type="hidden" name="dateTo">

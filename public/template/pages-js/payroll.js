@@ -227,19 +227,19 @@ function payroll() {
         // GENERATE PAYROLL
         generatePayroll : function (employeeId, index) {
             $('.payroll-row').removeClass('d-none');
-            const currentMonth              =   new Date().getMonth() + 1;
-            this.employeeName               =   this.employeePayrollData[index] ? this.employeePayrollData[index].first_name + ' ' + (this.employeePayrollData[index].middle_name ? this.employeePayrollData[index].middle_name + ' ' : ' ') + this.employeePayrollData[index].last_name : "";
-            this.employeeNo                 =   this.employeePayrollData[index] ? this.employeePayrollData[index].employee_no                :     "";
-            this.employeeDateHired          =   this.employeePayrollData[index] ? this.employeePayrollData[index].date_hired                 :     "";
-            this.employeePosition           =   this.employeePayrollData[index] ? this.employeePayrollData[index].position                   :     "";
-            this.employeeStatus             =   this.employeePayrollData[index] ? this.employeePayrollData[index].employment_status          :     "";
-            var salary                      =   this.employeePayrollData[index] ? parseFloat(this.employeePayrollData[index].salary) : 0;
-            this.employeeSalary             =   salary.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
-            const totalWorkingDays          =   this.getWorkingDaysInMonth(currentMonth);
-            const totalWorkingHours         =   8;
-            const totalDivide               =   totalWorkingDays * totalWorkingHours;
-            this.hourlyRate                 =   salary / totalDivide;
-            this.roundedHourlyRate          =   this.hourlyRate.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+            const currentMonth          =   new Date().getMonth() + 1;
+            this.employeeName           =   this.employeePayrollData[index] ? this.employeePayrollData[index].first_name + ' ' + (this.employeePayrollData[index].middle_name ? this.employeePayrollData[index].middle_name + ' ' : ' ') + this.employeePayrollData[index].last_name : "";
+            this.employeeNo             =   this.employeePayrollData[index] ? this.employeePayrollData[index].employee_no                :     "";
+            this.employeeDateHired      =   this.employeePayrollData[index] ? this.employeePayrollData[index].date_hired                 :     "";
+            this.employeePosition       =   this.employeePayrollData[index] ? this.employeePayrollData[index].position                   :     "";
+            this.employeeStatus         =   this.employeePayrollData[index] ? this.employeePayrollData[index].employment_status          :     "";
+            var salary                  =   this.employeePayrollData[index] ? parseFloat(this.employeePayrollData[index].salary) : 0;
+            this.employeeSalary         =   salary.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+            const totalWorkingDays      =   this.getWorkingDaysInMonth(currentMonth);
+            const totalWorkingHours     =   8;
+            const totalDivide           =   totalWorkingDays * totalWorkingHours;
+            this.hourlyRate             =   salary / totalDivide;
+            this.roundedHourlyRate      =   this.hourlyRate.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 
             if (this.employeeId != employeeId) {
                 this.totalHours = '';
@@ -276,10 +276,10 @@ function payroll() {
             this.attendanceDetailsLoading = true;
             var component = this;
 
-            $('input[name="attendance-page"]'           ).val(this.attendancePage);
-            $('input[name="dateFrom"]'                  ).val($(this.dateFrom).val());
-            $('input[name="dateTo"]'                    ).val($(this.dateTo).val());
-            $('input[name="employeeId"]'                ).val(employeeId);
+            $('input[id="attendancePage"]'     ).val(this.attendancePage);
+            $('input[name="dateFrom"]'         ).val($(this.dateFrom).val());
+            $('input[name="dateTo"]'           ).val($(this.dateTo).val());
+            $('input[name="employeeId"]'       ).val(employeeId);
 
             $.ajax({
                 type        :   "GET",
