@@ -114,13 +114,17 @@ class PayrollController extends Controller
                                     ->select('*')
                                     ->where('employee_id', '=', $employeeId)
                                     ->whereDate('attendance_date', '>=', $request->dateFrom)
-                                    ->whereDate('attendance_date', '<=', $request->dateTo)
-                                    ->orderBy('attendance_date', 'ASC')
-                                    ->paginate(5);
+                                    ->whereDate('attendance_date', '<=', $request->dateTo);
 
-            $indication     =   Str::random(16);
+            $totalWorkingHours  =   $attendanceData->sum('regular_hours');
+            $attendanceData     =   $attendanceData->orderBy('attendance_date', 'ASC')->paginate(10);
+            $indication         =   Str::random(16);
+            $indication2        =   Str::random(16);
 
-            return response()->json([$indication => base64_encode(json_encode($attendanceData))]);
+            return response()->json([
+                $indication => base64_encode(json_encode($attendanceData)),
+                $indication2 => base64_encode(json_encode($totalWorkingHours))
+            ]);
         } catch (QueryException $e) {
             $errorMessage = $e->getMessage();
             return response()->json(['error' => $errorMessage], 500);
