@@ -54,7 +54,7 @@
                             <tr class="text-center">
                                 <td class="py-2">Regular Income</td>
                                 <td class="py-2" x-text="roundedHourlyRate"></td>
-                                <td class="py-2" x-text="regularHours"></td>
+                                <td class="py-2" x-text="totalRegularHours"></td>
                                 <td class="py-2 text-danger fw-bold" x-text="roundedTotal"></td>
                             </tr>
                         </tbody>
