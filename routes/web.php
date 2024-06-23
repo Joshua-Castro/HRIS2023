@@ -21,6 +21,26 @@ Route::get('/', function () {
     }
 });
 
+Route::get('/optimize-clear', function () {
+    Artisan::call('cache:clear');
+});
+
+Route::get('/foo', function () {
+    Artisan::call('storage:link');
+});
+
+Route::get('/migrate-refresh', function () {
+    Artisan::call('migrate:refresh');
+});
+
+// Route::get('/migrate', function () {
+//     Artisan::call('migrate');
+// });
+
+Route::get('/db-seed', function () {
+    Artisan::call('db:seed');
+});
+
 Auth::routes();
 
 Route::middleware(['web', 'auth'])->group(function () {
@@ -50,5 +70,8 @@ Route::middleware(['web', 'auth'])->group(function () {
 
     // PAYROLL CONTROLLER ROUTES
     require base_path('routes/module_routes/payroll-routes.php');
+
+    // ARTISAN COMMAND CONTROLL
+    // require base_path('routes/module_routes/artisan-routes.php');
 });
 
