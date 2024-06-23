@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\Payroll;
+use App\Models\Employee;
+use App\Models\Attendance;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
@@ -46,24 +48,10 @@ class PayrollController extends Controller
         try {
             $employeeId = !empty($request->employeeId) ? $request->employeeId : "";
 
-            $payrollData = DB::table('employees as e')
-                            ->select(
-                                'e.id as employee_id',
-                                'e.position',
-                                'e.station_code',
-                                'e.employee_no',
-                                'e.employment_status',
-                                'e.date_hired',
-                                'e.sss',
-                                'e.pag_ibig',
-                                'e.phil_health',
-                                'e.salary_grade as salary_grade',
-
-                                'sg.value as basic_salary',
-                            )
-                            ->leftJoin('salary_grades as sg', 'sg.id', '=', 'e.salary_grade')
-                            ->where('e.id', '=', $employeeId)
-                            ->get();
+            $payrollData = Employee::leftJoin('salary_grades as sg', 'sg.id', '=', 'employees.salary_grade')
+                                    ->where('employees.id', '=', $employeeId)
+                                    ->select('employees.*', 'sg.value as basic_salary')
+                                    ->get();
 
         } catch (QueryException $e) {
             $errorMessage = $e->getMessage();
@@ -110,9 +98,7 @@ class PayrollController extends Controller
 
             $employeeId = !empty($request->employeeId) ? $request->employeeId : "";
 
-            $attendanceData = DB::table('attendances')
-                                    ->select('*')
-                                    ->where('employee_id', '=', $employeeId)
+            $attendanceData = Attendance::where('employee_id', '=', $employeeId)
                                     ->whereDate('attendance_date', '>=', $request->dateFrom)
                                     ->whereDate('attendance_date', '<=', $request->dateTo);
 

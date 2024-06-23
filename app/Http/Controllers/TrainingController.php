@@ -80,15 +80,14 @@ class TrainingController extends Controller
                 $data['created_at']     =   now();
                 $data['created_by']     =   Auth::id();
 
-                DB::table('trainings')->insert($data);
-
-                return response()->json(['message' => 'Successfully Added'], 200);
+                Training::create($data);
+                return response()->json(['message' => 'Training set successfully'], 200);
             } else {
                 // UPDATE DATA WHENEVER THE $id IS NOT EMPTY
                 $data['updated_by']     =   Auth::id();
                 $data['updated_at']     =   now();
-                DB::table('trainings')->where('id', '=', $id)->update($data);
 
+                Training::where('id', '=', $id)->update($data);
                 return response()->json(['message' => 'Successfully Updated'], 200);
             }
         } catch (QueryException $e) {
@@ -152,12 +151,11 @@ class TrainingController extends Controller
     public function destroy(Request $request)
     {
         try {
-            $data = DB::table('trainings')
-                ->where('id','=', $request->id)
-                ->update([
-                    'deleted_by' => Auth::id(),
-                    'deleted_at' => now(),
-                ]);
+            Training::where('id', '=', $request->id)
+                    ->update([
+                        'deleted_by' => Auth::id(),
+                        'deleted_at' => now()
+                    ]);
 
             return response()->json(['message' => 'Successfully Deleted']);
         } catch (QueryException $e) {

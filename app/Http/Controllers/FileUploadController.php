@@ -139,28 +139,26 @@ class FileUploadController extends Controller
             $fileId         =   $request->input('file_id')      ? $request->input('file_id')        :   $request->file_id;
             $employeeId     =   $request->input('employee_id')  ? $request->input('employee_id')    :   $request->employee_id;
 
-            $file = DB::table('file_uploads')
-                ->select(
-                    'file_path',
-                    'file_unique_id',
-                    'employee_id'
-                    )
-                ->where('file_unique_id', $fileId)
-                ->where('employee_id', $employeeId)
-                ->first();
+            $file = FileUpload::where('file_unique_id', $fileId)
+                        ->where('employee_id', $employeeId)
+                        ->select(
+                            'file_path',
+                            'file_unique_id',
+                            'employee_id'
+                        )
+                        ->first();
 
             if ($file === null) {
                 return response()->json(['error' => 'File not found'], 404);
             }
 
-            // Delete the file from storage
+            // DELETE THE FILE FROM STORAGE
             Storage::disk('public')->delete($file->file_path);
 
-            // Delete the record from the database
-            DB::table('file_uploads')
-                ->where('file_unique_id', $fileId)
-                ->where('employee_id', $employeeId)
-                ->delete();
+            // DELETE THE RECORD FROM THE DATABASE
+            FileUpload::where('file_unique_id', $fileId)
+                    ->where('employee_id', $employeeId)
+                    ->delete();
 
             $this->logService->logGenerate($employeeId, 'deleted', 'file-uploads', $file->file_path);
             return response()->json(['message' => 'Successfully Removed!']);
@@ -200,9 +198,7 @@ class FileUploadController extends Controller
     public function getAll (Request $request)
     {
         try {
-            $files = DB::table('file_uploads')
-                ->select('*')
-                ->where('employee_id', '=', $request->employeeId)
+            $files = FileUpload::where('employee_id', '=', $request->employeeId)
                 ->whereNull('deleted_at')
                 ->get();
 
