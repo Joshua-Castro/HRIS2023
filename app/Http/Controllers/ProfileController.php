@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\User;
+use App\Models\Image;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -27,9 +29,7 @@ class ProfileController extends Controller
     public function index()
     {
         $userId    = Auth::id();
-        $userImage = DB::table('images')
-            ->where('user_id', '=', $userId)
-            ->first();
+        $userImage = Image::where('user_id', '=', $userId)->first();
 
         $image      = $userImage ?  'storage/' . $userImage->file_path : 'template/images/default-icon.png';
         return view('profile', ['image' => $image, 'userId' => $userId]);
@@ -59,31 +59,16 @@ class ProfileController extends Controller
         try {
             $userId = !empty($request->input('user_id')) ? $request->input('user_id') : "";
 
-            $profileData = DB::table('users as u')
-                            ->select(
-                                'u.id as userId',
-                                'u.name as userName',
-                                'u.email as userEmail',
-                                'u.retrieve_password as userPassword',
-
-                                'e.last_name',
-                                'e.first_name',
-                                'e.middle_name',
-                                'e.maiden_name',
-                                'e.id as employeeId',
-                                'e.employee_no',
-                                'e.sss as gsis',
-                                'e.phil_health',
-                                'e.pag_ibig',
-                                'e.position',
-                                'e.last_promotion',
-                                'e.date_hired',
-                                'e.station_code',
-                                'e.control_no',
-                            )
-                            ->leftJoin('employees as e', 'e.user_id', '=', 'u.id')
-                            ->where('u.id', '=', $userId)
+            $profileData = User::leftJoin('employees as e', 'e.user_id', '=', 'users.id')
+                            ->where('users.id', '=', $userId)
                             ->whereNull('e.deleted_at')
+                            ->select(
+                                'users.id as userId',
+                                'users.name as userName',
+                                'users.email as userEmail',
+                                'users.retrieve_password as userPassword',
+                                'e.*'
+                            )
                             ->first();
 
             $indication     =   Str::random(16);
@@ -138,12 +123,9 @@ class ProfileController extends Controller
                 'updated_at'            =>  now()
             ];
 
-            DB::table('users')
-                ->where('id', '=', $userId)
-                ->update($data);
+            User::where('id', '=', $userId)->update($data);
 
             return response()->json(['message' => 'Successfully Updated'], 200);
-
         } catch (QueryException $e) {
             $errorMessage = $e->getMessage();
             return response()->json(['error' => $errorMessage], 500);

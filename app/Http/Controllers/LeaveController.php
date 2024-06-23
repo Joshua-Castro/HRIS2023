@@ -72,7 +72,7 @@ class LeaveController extends Controller
 
                 $createdLeaveId = DB::table('leaves')->insertGetId($data);
                 $this->logService->logGenerate(Auth::id(), 'created', 'leaves', null, $createdLeaveId);
-                return response()->json(['message' => 'Successfully Added'], 200);
+                return response()->json(['message' => 'Successfully Submitted'], 200);
             } else {
                 // UPDATE DATA
                 $data['updated_by']     =   $userId;

@@ -123,17 +123,13 @@ class EmployeeController extends Controller
 
         // CHECK IF THERE IS AN EXISTING IMAGE FOR THE USER
         if ($userId) {
-            $userImage = DB::table('employees as e')
-                        ->select(
-                            'e.id',
-                            'e.user_id',
-
-                            'i.file_path',
-                            'i.file_name'
-                            )
-                        ->leftJoin('images as i', 'i.user_id' , '=', 'e.user_id')
-                        ->where('e.id', '=', $userId)
-                        ->first();
+            $userImage = Employee::leftJoin('images as i', 'i.user_id', '=', 'employees.user_id')
+                                ->where('employees.id', '=', $userId)
+                                ->select(
+                                    'i.file_path',
+                                    'i.file_name'
+                                )
+                                ->first();
 
             if ($userImage) {
                 Storage::disk('public')->delete($userImage->file_path);
@@ -238,25 +234,20 @@ class EmployeeController extends Controller
         }
     }
 
-    public function updateEmployeeImage($imageData, $userId)
+    /**
+     * Update employee image
+     * when user edit the employee data
+     */
+    public function updateEmployeeImage($imageData, $employeeId)
     {
         try {
             $imageData['updated_by']        =  Auth::id();
             $imageData['updated_at']        =  now();
-            $id = DB::table('employees as e')
-                        ->select(
-                            'e.id as employee_id',
-                            'e.user_id',
+            $id = Employee::leftJoin('images as i', 'i.user_id', '=', 'employees.user_id')
+                            ->where('employees.id', '=', $employeeId)
+                            ->value('i.id');
 
-                            'i.id as image_id',
-                            'i.file_path',
-                            'i.file_name'
-                            )
-                        ->leftJoin('images as i', 'i.user_id' , '=', 'e.user_id')
-                        ->where('e.id', '=', $userId)
-                        ->first();
-
-            DB::table('images')->where('id', '=', $id->image_id)->update($imageData);
+            DB::table('images')->where('id', '=', $id)->update($imageData);
         } catch (QueryException $e) {
             $errorMessage = $e->getMessage();
             return response()->json(['error' => $errorMessage], 500);

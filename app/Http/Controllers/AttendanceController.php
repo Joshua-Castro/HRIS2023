@@ -49,12 +49,11 @@ class AttendanceController extends Controller
             $userId     =   $request->user_id      ?    $request->user_id       :   '';
             $type       =   $request->type         ?    $request->type          :   '';
 
-            $employee   =   DB::table('employees')
-                                ->where('user_id', '=', $userId)
-                                ->first();
+            $employeeId   =   Employee::where('user_id', '=', $userId)->value('id');
+
             $data = [
                 'user_id'                   =>  !empty($userId)         ?   $userId         :   '',
-                'employee_id'               =>  !empty($employee->id)   ?   $employee->id   :   '',
+                'employee_id'               =>  !empty($employeeId)     ?   $employeeId     :   '',
                 'time'                      =>  !empty($time)           ?   $time           :   '',
             ];
 
@@ -92,19 +91,19 @@ class AttendanceController extends Controller
         try {
             $now = Carbon::now('Asia/Manila');
 
-            $action         =   '';
-            $userId         =   !empty($data['user_id'])        ?   $data['user_id']                             :   '';
-            $employeeId     =   !empty($data['employee_id'])    ?   $data['employee_id']                         :   '';
-            $time           =   !empty($data['time'])           ?   date('H:i:s', strtotime($data['time']))      :   '';
-
-            $attendance = DB::table('attendances')
-                ->where('employee_id', $employeeId)
+            $action                 =   '';
+            $userId                 =   !empty($data['user_id'])        ?   $data['user_id']                             :   '';
+            $employeeId             =   !empty($data['employee_id'])    ?   $data['employee_id']                         :   '';
+            $time                   =   !empty($data['time'])           ?   date('H:i:s', strtotime($data['time']))      :   '';
+            $totalWorkingHours      =   null;
+            $regularHours           =   null;
+            $attendance = Attendance::where('employee_id', $employeeId)
                 ->whereNull($column)
                 ->latest()
                 ->first();
 
             if ($attendance === null) {
-                $attendanceId = DB::table('attendances')->insertGetId([
+                $attendanceId = Attendance::create([
                     'user_id'               =>  $userId,
                     'employee_id'           =>  $employeeId,
                     $column                 =>  $time,
@@ -112,7 +111,7 @@ class AttendanceController extends Controller
                     'regular_hours'         =>  null,
                     'attendance_date'       =>  date('Y-m-d', strtotime($now)),
                     'created_by'            =>  Auth::id()
-                ]);
+                ])->id;
 
                 $requestDataLogs = [
                     'employee_id'   => $data['employee_id'],
@@ -122,36 +121,20 @@ class AttendanceController extends Controller
 
                 $action = $column === 'clock_in' ? 'Clock In!' : '';
                 $this->logService->logGenerate($requestDataLogs, 'clocked in', 'attendances');
-                return response()->json(['message' => 'Successfully ' . $action]);
+                return response()->json(['message' => 'Successfully ' . $action], 200);
             } else {
-                DB::table('attendances')
-                    ->where('id', $attendance->id)
-                    ->update([
-                        $column         =>  $time,
-                        'updated_at'    =>  $now,
-                        'updated_by'    =>  Auth::id()
-                    ]);
-
                 if ($column == 'clock_out') {
                     // SOLVE THE TOTAL HOURS AND SAVE TO THE DATABASE
-                    $attendanceClockInData = DB::table('attendances')
-                                                ->select('*')
-                                                ->where('id', $attendance->id)
-                                                ->first();
-
-                    $diffInMinutes = Carbon::parse($time)->diffInMinutes(Carbon::parse($attendanceClockInData->clock_in));
+                    $diffInMinutes = Carbon::parse($time)->diffInMinutes(Carbon::parse($attendance->clock_in));
                     $totalWorkingHours = number_format($diffInMinutes / 60, 2);
-
-                    DB::table('attendances')
-                        ->where('id', $attendance->id)
-                        ->update([
-                            $column             =>  $time,
-                            'total_hours'       =>  $totalWorkingHours,
-                            'regular_hours'     =>  8,
-                            'updated_at'        =>  $now,
-                            'updated_by'        =>  Auth::id()
-                        ]);
+                    $regularHours = 8;
                 }
+                $attendance->$column        =   $time;
+                $attendance->total_hours    =   $totalWorkingHours;
+                $attendance->regular_hours  =   $regularHours;
+                $attendance->updated_at     =   $now;
+                $attendance->updated_by     =   Auth::id();
+                $attendance->save();
 
                 $requestDataLogs = [
                     'employee_id'   => $data['employee_id'],
@@ -207,16 +190,15 @@ class AttendanceController extends Controller
             $oldData = $attendance->toArray(); // GET THE OLD DATA AS AN ARRAY
 
             $data = [
-                'clock_in'          => !empty($request->clockIn)     ?   date('H:i:s', strtotime($request->clockIn))   : '',
-                'clock_out'         => !empty($request->clockOut)    ?   date('H:i:s', strtotime($request->clockOut))  : '',
-                'break_in'          => !empty($request->breakIn)     ?   date('H:i:s', strtotime($request->breakIn))   : '',
-                'break_out'         => !empty($request->breakOut)    ?   date('H:i:s', strtotime($request->breakOut))  : '',
+                'clock_in'          => !empty($request->clockIn)     ?   date('H:i:s', strtotime($request->clockIn))   : null,
+                'clock_out'         => !empty($request->clockOut)    ?   date('H:i:s', strtotime($request->clockOut))  : null,
+                'break_in'          => !empty($request->breakIn)     ?   date('H:i:s', strtotime($request->breakIn))   : null,
+                'break_out'         => !empty($request->breakOut)    ?   date('H:i:s', strtotime($request->breakOut))  : null,
                 'regular_hours'     =>  8,
                 'updated_at'        => now(),
                 'updated_by'        => Auth::id(),
             ];
 
-            $attendance->update($data);
             $updatedColumns = array_diff_assoc($data, $oldData);
             $requestDataLogs = [
                 'employee_id'       =>  $employeeId,
@@ -225,25 +207,12 @@ class AttendanceController extends Controller
             $this->logService->logGenerate($requestDataLogs, 'updated', 'attendance_update');
             if (array_key_exists("clock_out", $updatedColumns)) {
                 // SOLVE THE TOTAL HOURS AND SAVE TO THE DATABASE
-                $clockInData = DB::table('attendances')
-                                            ->select('*')
-                                            ->where('id', $attendanceId)
-                                            ->first();
-
-
-                $diffInMinutes           =  Carbon::parse($data['clock_out'])->diffInMinutes(Carbon::parse($clockInData->clock_in));
+                $diffInMinutes           =  Carbon::parse($data['clock_out'])->diffInMinutes(Carbon::parse($attendance->clock_in));
                 $totalWorkingHours       =  number_format($diffInMinutes / 60, 2);
                 $data['total_hours']     =  $totalWorkingHours;
-
-                DB::table('attendances')
-                    ->where('id', $attendanceId)
-                    ->update($data);
-
-            } else {
-                // dd('LOGICAL ERROR || OR CLOCK OUT DIDNT UPDATE', $updatedColumns);
-                // return response()->json(['error' => 'Something went wrong. Please refresh the page!']);
             }
 
+            $attendance->update($data);
             return response()->json(['message' => 'Attendance successfully Updated!', 'updated_columns' => $updatedColumns]);
         } catch (QueryException $e) {
             $errorMessage = $e->getMessage();
@@ -268,8 +237,7 @@ class AttendanceController extends Controller
             $user   =   Auth::user();
             $today  =   Carbon::now('Asia/Manila');
 
-            $dailyAttendance = DB::table('attendances')
-                    ->where('user_id', $user->id)
+            $dailyAttendance = Attendance::where('user_id', $user->id)
                     ->whereDate('attendance_date', '>=', $today->startOfDay())
                     ->whereDate('attendance_date', '<=', $today->endOfDay())
                     ->first();
@@ -293,8 +261,7 @@ class AttendanceController extends Controller
                 'date' => 'required|date_format:Y-m-d',
             ]);
 
-            $attendance = DB::table('attendances')
-                    ->where('user_id', $user->id)
+            $attendance = Attendance::where('user_id', $user->id)
                     ->whereNull('deleted_at')
                     ->whereDate('attendance_date', 'LIKE', $validatedData['date'] . '%')
                     ->get();
