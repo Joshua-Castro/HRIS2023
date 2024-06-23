@@ -25,7 +25,10 @@ return new class extends Migration
             $table->decimal('tax', 10, 2)->nullable();
             $table->decimal('allowances', 10, 2)->nullable();
             $table->decimal('net_salary', 10, 2)->nullable();
+            $table->date('payroll_date_from')->nullable();
+            $table->date('payroll_date_to')->nullable();
             $table->date('payment_date')->nullable();
+            $table->string('status')->nullable();
             $table->string('payment_method')->nullable();
 
             $table->integer('created_by')->nullable();

@@ -25,9 +25,9 @@ Route::get('/optimize-clear', function () {
     Artisan::call('cache:clear');
 });
 
-Route::get('/foo', function () {
-    Artisan::call('storage:link');
-});
+// Route::get('/foo', function () {
+//     Artisan::call('storage:link');
+// });
 
 Route::get('/migrate-refresh', function () {
     Artisan::call('migrate:refresh');

@@ -34,6 +34,7 @@ function payroll() {
         generatePayrollModal                :   '#generate-payroll-modal',
         dateFromVal                         :   '',
         dateToVal                           :   '',
+        payrollCsrfToken                    :   $('meta[name="csrf-token"]').attr('content'),
         deductions                          :   {
             sss                   :    0,
             pagIbig               :    0,
@@ -406,7 +407,21 @@ function payroll() {
         // SUBMIT THE GENERATED PAYROLL
         submitGeneratedPayroll : function () {
             const isDeductionsEmpty = Object.values(this.deductions).every(value => value === 0 || value === '0.00' || value === '');
-
+            var items = {
+                    hourly_rate         : this.roundedHourlyRate,
+                    employee_id         : this.employeeId,
+                    deductions          : this.deductions,
+                    total_deductions    : this.totalDeduction.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }),
+                    net_pay             : this.netPay
+                };
+            $.each(items, function(index, value) {
+                // console.log(index + ": " + value);
+                if (typeof value === "string") {
+                    console.log(index + ": " + value);
+                } else if (typeof value === "object") {
+                    console.log(index + ": " + JSON.stringify(value));
+                }
+            });
             if (isDeductionsEmpty) {
                 Swal.fire({
                     title               :   "Are you sure?",
@@ -421,39 +436,35 @@ function payroll() {
                       }
                   }).then(result => {
                         if(result.isConfirmed){
-                            var items = [
-                                this.roundedHourlyRate,
-                                this.employeeId,
-                                this.deductions,
-                                this.totalDeduction.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }),
-                                this.netPay,
-                                'SUBMITTING'
-                            ];
-                            $.each(items, function(index, value) {
-                                console.log(index + ": " + value);
-                                if (typeof value === "string") {
-                                    console.log(index + ": " + value);
-                                } else if (typeof element === "object") {
-                                    console.log(index + ": " + JSON.stringify(value));
-                                }
-                            });
-                            Swal.fire({
-                                title               : 'Successfully Published!',
-                                icon                : 'success',
-                                timer               : 1000,
-                                showConfirmButton   : false,
-                            });
+                            this.saveGeneratedPayrollData(items);
                         }
                   });
             } else {
-                Swal.fire({
-                    title               : 'Successfully Published!',
-                    icon                : 'success',
-                    timer               : 1000,
-                    showConfirmButton   : false,
-                });
+                this.saveGeneratedPayrollData(items);
             }
             $('.custom-swal-icon').css('margin-top', '20px');
+        },
+
+        // SAVE GENERATED PAYROLL
+        saveGeneratedPayrollData : function (items) {
+            $.ajax({
+                type        :   "POST",
+                url         :   route("payroll.store"),
+                data        :   {
+                    _token : this.payrollCsrfToken,
+                    items : items
+                },
+            }).then((response) => {
+                console.log(response);
+                //  Swal.fire({
+                //      title               : 'Successfully Published!',
+                //      icon                : 'success',
+                //      timer               : 1000,
+                //      showConfirmButton   : false,
+                //  });
+            }).catch((error) => {
+                Swal.fire('Something error! Please refrain to this error : Submitting Generated Payroll data.', 'error');
+            });
         },
     }
 }

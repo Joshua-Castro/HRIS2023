@@ -158,9 +158,10 @@
                     </li>
                     <div class="collapse" id="settings">
                         <ul class="nav flex-column sub-menu">
-                            <li class="nav-item ms-4"> <a class="nav-link" href="{{ route('profile.index') }}">Profile</a></li>
                             @if (auth()->user()->role == 1)
                                 <li class="nav-item ms-4"> <a class="nav-link" href="{{ route('activities') }}">Activity</a></li>
+                            @else
+                                <li class="nav-item ms-4"> <a class="nav-link" href="{{ route('profile.index') }}">Profile</a></li>
                             @endif
                             <li class="nav-item ms-4"> <a class="nav-link" href="javascript:void(0);">FAQ</a></li>
                             <li class="nav-item ms-4"> <a class="nav-link" href="{{ route('logout') }}" onclick="event.preventDefault();

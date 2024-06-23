@@ -36,7 +36,30 @@ class PayrollController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        try {
+            $payroll = new Payroll();
+            $payroll->employee_id           = $request->items['employee_id'];
+            $payroll->basic_salary          = '';
+            $payroll->overtime_hours        = '';
+            $payroll->bonuses               = '';
+            $payroll->total_deductions      = $request->items['total_deductions'];
+            $payroll->sss                   = $request->items['deductions']['sss'];
+            $payroll->pagibig               = $request->items['deductions']['pagIbig'];
+            $payroll->philhealth            = $request->items['deductions']['philHealth'];
+            $payroll->absences              = $request->items['deductions']['absences'];
+            $payroll->tax                   = $request->items['deductions']['withHoldingTax'];
+            $payroll->allowances            = '';
+            $payroll->net_salary            = $request->items['net_pay'];
+            $payroll->payroll_date_from     = '';
+            $payroll->payroll_date_to       = '';
+            $payroll->payment_date          = '';
+            $payroll->payment_method        = '';
+            dd($request->all(), $payroll, 'PAYROLL CONTROLLER');
+            // $payroll->save();
+        } catch (QueryException $e) {
+            $errorMessage = $e->getMessage();
+            return response()->json(['error' => $errorMessage], 500);
+        }
     }
 
     /**
