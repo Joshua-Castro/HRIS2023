@@ -27,6 +27,7 @@ return new class extends Migration
             $table->decimal('net_salary', 10, 2)->nullable();
             $table->date('payment_date')->nullable();
             $table->string('payment_method')->nullable();
+            $table->string('status')->nullable();
 
             $table->integer('created_by')->nullable();
             $table->integer('updated_by')->nullable();

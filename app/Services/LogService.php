@@ -16,16 +16,10 @@ class LogService
      */
     public function logGenerate($request, $method, $module, $path = null, $leaveId = null)
     {
-        // TAKE NOTE THAT THE 'user_id' AND 'employee_id'
-        // DATA IN THE LOGS TABLE ARE FROM THE DATA THAT HAS TAKEN AN ACTION EITHER (UPDATED, DELETED OR CREATED).
-        // NOT THE CREATOR OF THE DATA IN LOGS TABLE.
         try {
             DB::beginTransaction();
                 $logByiD = Auth::id();
-                $logByUserData = DB::table('employees')
-                    ->select('*')
-                    ->where('user_id', '=', $logByiD)
-                    ->first();
+                $logByUserData = Employee::where('user_id', '=', $logByiD)->first();
 
                 $fullName = !empty($logByUserData)
                     ? $logByUserData->first_name . " " . ($logByUserData->middle_name ? $logByUserData->middle_name : " ") . " " .$logByUserData->last_name
