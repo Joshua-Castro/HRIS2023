@@ -121,7 +121,7 @@
                         <div class="collapse" id="payroll">
                             <ul class="nav flex-column sub-menu">
                                 <li class="nav-item ms-4"> <a class="nav-link" href="{{ route('payroll') }}">Setup</a></li>
-                                <li class="nav-item ms-4"> <a class="nav-link" href="javascript:void(0);">Generated</a></li>
+                                <li class="nav-item ms-4"> <a class="nav-link" href="{{ route('generated-payroll') }}">Generated</a></li>
                             </ul>
                         </div>
                         <li class="nav-item">

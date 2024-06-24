@@ -19,16 +19,20 @@ class PayrollService
     public function storePayroll(array $data)
     {
         $payroll = new Payroll();
-        $payroll->employee_id       =  $data['payroll'][1];
-        $payroll->basic_salary      =  $data['payroll'][0];
-        $payroll->total_deductions  =  $data['payroll'][3];
-        $payroll->sss               =  $data['payroll'][2]['sss']          ??  null;
-        $payroll->pagibig           =  $data['payroll'][2]['pagibig']      ??  null;
-        $payroll->philhealth        =  $data['payroll'][2]['philhealth']   ??  null;
-        $payroll->tax               =  $data['payroll'][2]['tax']          ??  null;
-        $payroll->net_salary        =  $data['payroll'][4];
-        $payroll->status            =  'Pending';
-        $payroll->created_by        =  Auth::id();
+        $payroll->employee_id           =  $data['payroll'][2];
+        $payroll->basic_salary          =  $data['payroll'][0];
+        $payroll->hourly_rate           =  $data['payroll'][1];
+        $payroll->total_deductions      =  $data['payroll'][4];
+        $payroll->sss                   =  $data['payroll'][3]['sss']             ??  null;
+        $payroll->pagibig               =  $data['payroll'][3]['pagIbig']         ??  null;
+        $payroll->philhealth            =  $data['payroll'][3]['philHealth']      ??  null;
+        $payroll->tax                   =  $data['payroll'][3]['withHoldingTax']  ??  null;
+        $payroll->absences              =  $data['payroll'][3]['absences']        ??  null;
+        $payroll->net_salary            =  $data['payroll'][5];
+        $payroll->payroll_date_from     =  $data['payroll'][6];
+        $payroll->payroll_date_to       =  $data['payroll'][7];
+        $payroll->status                =  'Generated';
+        $payroll->created_by            =  Auth::id();
         $payroll->save();
 
         return $payroll;
@@ -58,5 +62,17 @@ class PayrollService
       ];
 
       return $data;
+    }
+
+    /**
+     * Business logic for updating
+     * generated payroll, either update the data
+     * or update the status. [FROM GENERATED->PUBLISHED]
+     * @param array $request
+     * @return void
+     */
+    public function updateGeneratedPayroll(array $request)
+    {
+
     }
 }

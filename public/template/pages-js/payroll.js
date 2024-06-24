@@ -404,11 +404,14 @@ function payroll() {
         initializeGeneratedPayroll : function () {
             const isDeductionsEmpty = Object.values(this.deductions).every(value => value === 0 || value === '0.00' || value === '');
             var items = [
+                this.employeeSalary,
                 this.roundedHourlyRate,
                 this.employeeId,
                 this.deductions,
                 this.totalDeduction.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }),
-                this.netPay
+                this.netPay,
+                this.dateFromVal,
+                this.dateToVal
             ];
             if (isDeductionsEmpty) {
                 Swal.fire({
@@ -465,18 +468,30 @@ function payroll() {
             return parseFloat(str);
         },
 
-        processPayrollData : function(data) {
+        // CONVERT IRETATE TO ALL THE ITEMS AND CONVERT ALL STRING TO INT OR NUMBER
+        processPayrollData: function(data) {
+            // REGEX TO MATCH DATE FORMAT (YYYY-MM-DD)
+            const dateRegex = /^\d{4}-\d{2}-\d{2}$/;
+        
             // ITERATE OVER EACH PROPERTY IN THE OBJECT
             for (let key in data) {
                 if (data.hasOwnProperty(key)) {
                     if (typeof data[key] === 'string') {
-                        data[key] = this.convertToNum(data[key]);
+                        // CHECK IF THE STRING MATCHES THE DATE FORMAT
+                        if (dateRegex.test(data[key])) {
+                            // IF ITS TRUE OR IT IS A DATE THEN DO NOTHING
+                            continue;
+                        } else {
+                            // IF ITS NOT A DATE MEANS ITS A VALUE FROM THE PAYROLL DATA
+                            data[key] = this.convertToNum(data[key]);
+                        }
                     } else if (typeof data[key] === 'object' && !Array.isArray(data[key])) {
-                        this.processPayrollData(data[key]); // RECURSIVELY PROCESS NESTED OBJECTS
+                        // RECURSIVELY PROCESS NESTED OBJECTS
+                        this.processPayrollData(data[key]);
                     }
                 }
             }
             return data;
-        }
+        },
     }
 }

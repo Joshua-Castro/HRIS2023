@@ -12,7 +12,7 @@ use App\Services\PayrollService;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Database\QueryException;
-use App\Http\Requests\StorePayrollRequest;
+use App\Http\Requests\PayrollRequest;
 
 class PayrollController extends Controller
 {
@@ -27,11 +27,11 @@ class PayrollController extends Controller
      * Store a payroll data based on final payroll
      * created by the HR / ADMIN
      */
-    public function store(StorePayrollRequest $request)
+    public function store(PayrollRequest $request)
     {
         try {
-            $payroll = $this->payrollService->storePayroll($request->validated());
-            return response()->json(['message' => 'Payroll successfully generated', 'data' => $payroll], 200);
+            $data = $this->payrollService->storePayroll($request->validated());
+            return response()->json(['message' => 'Payroll successfully generated', 'data' => $data], 200);
         } catch (\Exception $e) {
             return response()->json(['message' => 'An error occurred: ' . $e->getMessage()], 500);
         }
@@ -42,13 +42,26 @@ class PayrollController extends Controller
      * of the employee that will generate the
      * payroll
      */
-    public function getEmployeeAttendance(StorePayrollRequest $request)
+    public function getEmployeeAttendance(PayrollRequest $request)
     {
         try {
             $data = $this->payrollService->employeeAttendance($request->validated());
             return response()->json($data);
         } catch (\Exception $e) {
             return response()->json(['message' => 'An error occurred: ' . $e->getMessage()], 500);
+        }
+    }
+
+    /**
+     * Update specific payroll data
+     * only for HR/ADMIN
+     */
+    public function update(PayrollRequest $request)
+    {
+        try {
+
+        } catch (\Exception $e) {
+            return response()->json(['message' => 'An error occured: ' . $e->getMessage()], 500);
         }
     }
 }

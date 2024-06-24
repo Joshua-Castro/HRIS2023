@@ -25,6 +25,9 @@ class Payroll extends Model
         'net_salary',
         'payment_date',
         'status',
-        'payment_method'
+        'payment_method',
+        'hourly_rate',
+        'payroll_date_from',
+        'payroll_date_to'
     ];
 }
