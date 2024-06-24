@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->integer('employee_id')->nullable();
             $table->decimal('basic_salary', 10, 2)->nullable();
+            $table->decimal('hourly_rate', 10, 2)->nullable();
             $table->decimal('overtime_hours', 5, 2)->nullable();
             $table->decimal('bonuses', 10, 2)->nullable();
             $table->decimal('total_deductions', 10, 2)->nullable();
@@ -28,8 +29,10 @@ return new class extends Migration
             $table->date('payroll_date_from')->nullable();
             $table->date('payroll_date_to')->nullable();
             $table->date('payment_date')->nullable();
-            $table->string('status')->nullable();
+            $table->date('payroll_date_from')->nullable();
+            $table->date('payroll_date_to')->nullable();
             $table->string('payment_method')->nullable();
+            $table->string('status')->nullable();
 
             $table->integer('created_by')->nullable();
             $table->integer('updated_by')->nullable();

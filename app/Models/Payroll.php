@@ -24,9 +24,10 @@ class Payroll extends Model
         'allowances',
         'net_salary',
         'payment_date',
+        'status',
         'payment_method',
+        'hourly_rate',
         'payroll_date_from',
-        'payroll_date_to',
-        'status'
+        'payroll_date_to'
     ];
 }

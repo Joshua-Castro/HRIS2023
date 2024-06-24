@@ -32,6 +32,7 @@ function payroll() {
         dateFrom                            :   '#payroll-date-from',
         dateTo                              :   '#payroll-date-to',
         generatePayrollModal                :   '#generate-payroll-modal',
+        csrfToken                           :   $('meta[name="csrf-token"]').attr('content'),
         dateFromVal                         :   '',
         dateToVal                           :   '',
         payrollCsrfToken                    :   $('meta[name="csrf-token"]').attr('content'),
@@ -241,10 +242,6 @@ function payroll() {
             const totalWorkingHours         =   8;
             const totalDivide               =   totalWorkingDays * totalWorkingHours;
             this.hourlyRate                 =   salary / totalDivide;
-            console.log(totalWorkingDays);
-            console.log(totalWorkingHours);
-            console.log(totalDivide);
-            console.log(this.hourlyRate);
             this.roundedHourlyRate          =   this.hourlyRate.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 
             if (this.employeeId != employeeId) {
@@ -404,24 +401,19 @@ function payroll() {
             this.netPay = totalNetPay.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
         },
 
-        // SUBMIT THE GENERATED PAYROLL
-        submitGeneratedPayroll : function () {
+        // INITIALIZE DATA BEFORE SUBMITTING THE GENERATED PAYROLL (ALERT IF THE TAX DOESNT HAVE VALUE)
+        initializeGeneratedPayroll : function () {
             const isDeductionsEmpty = Object.values(this.deductions).every(value => value === 0 || value === '0.00' || value === '');
-            var items = {
-                    hourly_rate         : this.roundedHourlyRate,
-                    employee_id         : this.employeeId,
-                    deductions          : this.deductions,
-                    total_deductions    : this.totalDeduction.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }),
-                    net_pay             : this.netPay
-                };
-            $.each(items, function(index, value) {
-                // console.log(index + ": " + value);
-                if (typeof value === "string") {
-                    console.log(index + ": " + value);
-                } else if (typeof value === "object") {
-                    console.log(index + ": " + JSON.stringify(value));
-                }
-            });
+            var items = [
+                this.employeeSalary,
+                this.roundedHourlyRate,
+                this.employeeId,
+                this.deductions,
+                this.totalDeduction.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }),
+                this.netPay,
+                this.dateFromVal,
+                this.dateToVal
+            ];
             if (isDeductionsEmpty) {
                 Swal.fire({
                     title               :   "Are you sure?",
@@ -436,35 +428,71 @@ function payroll() {
                       }
                   }).then(result => {
                         if(result.isConfirmed){
-                            this.saveGeneratedPayrollData(items);
+                            this.submitGeneratedPayroll(items);
                         }
                   });
             } else {
-                this.saveGeneratedPayrollData(items);
+               this.submitGeneratedPayroll(items);
             }
             $('.custom-swal-icon').css('margin-top', '20px');
         },
 
-        // SAVE GENERATED PAYROLL
-        saveGeneratedPayrollData : function (items) {
+        // SUBMIT THE GENERATED PAYROLL
+        submitGeneratedPayroll : function (data) {
+            var processedData = this.processPayrollData(data);
+
             $.ajax({
-                type        :   "POST",
-                url         :   route("payroll.store"),
-                data        :   {
-                    _token : this.payrollCsrfToken,
-                    items : items
+                type      :   "POST",
+                url       :   route('payroll.store'),
+                data      :   {
+                    payroll    : processedData,
+                    _token     : this.csrfToken,
                 },
-            }).then((response) => {
-                console.log(response);
-                //  Swal.fire({
-                //      title               : 'Successfully Published!',
-                //      icon                : 'success',
-                //      timer               : 1000,
-                //      showConfirmButton   : false,
-                //  });
-            }).catch((error) => {
-                Swal.fire('Something error! Please refrain to this error : Submitting Generated Payroll data.', 'error');
-            });
+              }).then((response) => {
+                Swal.fire({
+                    title               : response.message,
+                    icon                : 'success',
+                    timer               : 1000,
+                    showConfirmButton   : false,
+                });
+              }).catch(err => {
+                Swal.fire('Delete Failed. Please refresh the page and try again.','error');
+            })
+        },
+
+        // CONVERT TO INT OR NUMBER
+        convertToNum : function (str) {
+             // REMOVE COMMAS
+            str = str.replace(/,/g, '');
+            
+            // CONVERT TO NUMBER BEFORE SENDING TO BACKEND
+            return parseFloat(str);
+        },
+
+        // CONVERT IRETATE TO ALL THE ITEMS AND CONVERT ALL STRING TO INT OR NUMBER
+        processPayrollData: function(data) {
+            // REGEX TO MATCH DATE FORMAT (YYYY-MM-DD)
+            const dateRegex = /^\d{4}-\d{2}-\d{2}$/;
+        
+            // ITERATE OVER EACH PROPERTY IN THE OBJECT
+            for (let key in data) {
+                if (data.hasOwnProperty(key)) {
+                    if (typeof data[key] === 'string') {
+                        // CHECK IF THE STRING MATCHES THE DATE FORMAT
+                        if (dateRegex.test(data[key])) {
+                            // IF ITS TRUE OR IT IS A DATE THEN DO NOTHING
+                            continue;
+                        } else {
+                            // IF ITS NOT A DATE MEANS ITS A VALUE FROM THE PAYROLL DATA
+                            data[key] = this.convertToNum(data[key]);
+                        }
+                    } else if (typeof data[key] === 'object' && !Array.isArray(data[key])) {
+                        // RECURSIVELY PROCESS NESTED OBJECTS
+                        this.processPayrollData(data[key]);
+                    }
+                }
+            }
+            return data;
         },
     }
 }

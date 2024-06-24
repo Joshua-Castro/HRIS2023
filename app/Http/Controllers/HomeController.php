@@ -195,4 +195,23 @@ class HomeController extends Controller
             return response()->json(['error' => $errorMessage], 500);
         }
     }
+
+    /**
+     * Show the generated payroll page
+     */
+    public function generatedPayroll()
+    {
+        try {
+            $userId    = Auth::id();
+            $userImage = DB::table('images')
+                ->where('user_id', '=', $userId)
+                ->first();
+
+            $image      = $userImage ?  'storage/' . $userImage->file_path : 'template/images/default-icon.png';
+            return view('payroll-generated', ['image' => $image]);
+        } catch (QueryException $e) {
+            $errorMessage = $e->getMessage();
+            return response()->json(['error' => $errorMessage], 500);
+        }
+    }
 }

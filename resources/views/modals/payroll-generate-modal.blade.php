@@ -121,7 +121,7 @@
         </div>
         <div class="modal-footer">
             <button type="button" class="btn btn-sm btn-outline-danger" data-bs-dismiss="modal" style="border-radius: 5px;">Close</button>
-            <button type="button" class="btn btn-sm btn-outline-primary submit-btn" style="border-radius: 5px;" @click="submitGeneratedPayroll">Submit</button>
+            <button type="button" class="btn btn-sm btn-outline-primary submit-btn" style="border-radius: 5px;" @click="initializeGeneratedPayroll">Submit</button>
         </div>
       </div>
     </div>
