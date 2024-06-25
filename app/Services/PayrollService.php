@@ -13,8 +13,6 @@ class PayrollService
     /**
      * Business logic for storing
      * data in payroll controller.
-     * @param array $data
-     * @return void
      */
     public function storePayroll(array $data)
     {
@@ -42,8 +40,6 @@ class PayrollService
      * Business logic for showing
      * all the employee attendance based on seleceted
      * date, and initialize payroll data.
-     * @param array $data
-     * @return void
      */
     public function employeeAttendance(array $request)
     {
@@ -68,11 +64,21 @@ class PayrollService
      * Business logic for updating
      * generated payroll, either update the data
      * or update the status. [FROM GENERATED->PUBLISHED]
-     * @param array $request
-     * @return void
      */
     public function updateGeneratedPayroll(array $request)
     {
 
+    }
+
+    /**
+     * Get all the payroll and filter
+     * it based on the user's needs.
+     */
+    public function allPayroll(array $request)
+    {
+      $payrollQuery = Payroll::query();
+      if($request['name']) {
+        
+      }
     }
 }

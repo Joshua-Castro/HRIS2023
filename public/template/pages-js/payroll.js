@@ -448,16 +448,51 @@ function payroll() {
                     payroll    : processedData,
                     _token     : this.csrfToken,
                 },
-              }).then((response) => {
-                Swal.fire({
-                    title               : response.message,
-                    icon                : 'success',
-                    timer               : 1000,
-                    showConfirmButton   : false,
-                });
-              }).catch(err => {
-                Swal.fire('Delete Failed. Please refresh the page and try again.','error');
-            })
+                success : function(response) {
+                    Swal.fire({
+                        title               : response.message,
+                        icon                : 'success',
+                        timer               : 1000,
+                        showConfirmButton   : false,
+                    });
+                },
+                error: function(xhr) {
+                    if (xhr.status === 422) {
+                        let errors = xhr.responseJSON.errors;
+                        let errorMessages = '<ul>';
+
+                        $.each(errors, function(key, value) {
+                            $.each(value, function(index, message) {
+                                errorMessages += '<li class="text-start">' + message + '</li>';
+                            });
+                        });
+
+                        errorMessages += '</ul>';
+
+                        Swal.fire({
+                            title   : 'Invalid data.',
+                            html    : errorMessages,
+                            icon    : 'error',
+                            customClass: {
+                                icon: 'custom-swal-icon'
+                            }
+                        });
+                        $('.custom-swal-icon').css('margin-top', '20px');
+                    } else {
+                        Swal.fire('Something went wrong. Please refresh the page and try again.', 'error');
+                    }
+                }
+              })
+            //   .then((response) => {
+            //     Swal.fire({
+            //         title               : response.message,
+            //         icon                : 'success',
+            //         timer               : 1000,
+            //         showConfirmButton   : false,
+            //     });
+            //   }).catch(err => {
+            //     Swal.fire('Delete Failed. Please refresh the page and try again.','error');
+            // })
         },
 
         // CONVERT TO INT OR NUMBER
