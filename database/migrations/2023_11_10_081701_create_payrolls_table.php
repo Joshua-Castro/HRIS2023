@@ -29,8 +29,6 @@ return new class extends Migration
             $table->date('payroll_date_from')->nullable();
             $table->date('payroll_date_to')->nullable();
             $table->date('payment_date')->nullable();
-            $table->date('payroll_date_from')->nullable();
-            $table->date('payroll_date_to')->nullable();
             $table->string('payment_method')->nullable();
             $table->string('status')->nullable();
 
