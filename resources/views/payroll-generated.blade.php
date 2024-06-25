@@ -1,7 +1,6 @@
 @extends('layouts.main')
 
 @section('content')
-{{-- x-data="payrollGenerated()" --}}
 <div class="row">
     <div class="col-xl-12 col-lg-12 d-flex flex-column">
         <div class="row flex-grow">
@@ -113,5 +112,5 @@
 </div>
 @endsection
 @push('scripts')
-    <script src="{{ asset('template/pages-js/payroll.js') }}"></script>
+    {{-- <script src="{{ asset('template/pages-js/payroll.js') }}"></script> --}}
 @endpush

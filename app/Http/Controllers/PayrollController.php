@@ -38,6 +38,19 @@ class PayrollController extends Controller
     }
 
     /**
+     * Update specific payroll data
+     * only for HR/ADMIN
+     */
+    public function update(PayrollRequest $request)
+    {
+        try {
+
+        } catch (\Exception $e) {
+            return response()->json(['message' => 'An error occured: ' . $e->getMessage()], 500);
+        }
+    }
+
+    /**
      * Get attendance record
      * of the employee that will generate the
      * payroll
@@ -53,13 +66,14 @@ class PayrollController extends Controller
     }
 
     /**
-     * Update specific payroll data
-     * only for HR/ADMIN
+     * Get generated payroll and
+     * display in generate-payroll view
      */
-    public function update(PayrollRequest $request)
+    public function getAllPayroll(PayrollRequest $request)
     {
         try {
-
+            $data = $this->payrollService->allPayroll($request->validated());
+            return response()->json($data);
         } catch (\Exception $e) {
             return response()->json(['message' => 'An error occured: ' . $e->getMessage()], 500);
         }

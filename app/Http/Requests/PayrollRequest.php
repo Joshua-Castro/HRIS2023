@@ -44,6 +44,14 @@ class PayrollRequest extends FormRequest
                     'employeeId'    => 'required',
                 ];
             break;
+            case 'payroll.all-payroll' :
+                $validation = [
+                    'name'          => 'nullable',
+                    'gender'        => 'nullable|in:Male,Female',
+                    'status'        => 'nullable|in:Generated,Published',
+                    'pagination'    => 'nullable',
+                ];
+            break;
         }
 
         return $validation;
@@ -81,6 +89,12 @@ class PayrollRequest extends FormRequest
                     'dateTo.required'       => 'Please select date the attendance ending date.',
                     'dateTo.date_format'    => 'Invalid date format. It must (YYYY-MM-DD).',
                     'employeeId.required'   => 'Error, please select employee.',
+                ];
+            break;
+            case 'payroll.all-payroll':
+                $messages = [
+                    'gender.in' => 'Invalid gender, it must be either Male or Female only.',
+                    'status.in' => 'Invalid status, it must be either Generated or Published only.',
                 ];
             break;
         }
