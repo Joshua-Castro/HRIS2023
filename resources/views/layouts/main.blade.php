@@ -112,16 +112,20 @@
                     </li>
                     @if (auth()->user()->role == 1 or auth()->user()->role == 2)
                         <li class="nav-item">
-                            <a class="nav-link" data-bs-toggle="collapse" href="#payroll" aria-expanded="false" aria-controls="payroll">
+                            <a class="nav-link" data-bs-toggle="collapse" href="#payrolls" aria-expanded="false" aria-controls="payroll">
                                 <i class="ti ti-wallet ms-3 me-4" style="font-size: 20px;"></i>
                                 <span class="menu-title">Payroll</span>
                                 <i class="menu-arrow"></i>
                             </a>
                         </li>
-                        <div class="collapse" id="payroll">
+                        <div class="collapse" id="payrolls">
                             <ul class="nav flex-column sub-menu">
-                                <li class="nav-item ms-4"><a class="nav-link" href="{{ route('payroll-home') }}">Setup</a></li>
-                                <li class="nav-item ms-4"><a class="nav-link" href="{{ route('generated') }}">Generated</a></li>
+                                <li class="nav-item ms-4">
+                                    <a class="nav-link" href="{{ route('payroll') }}">Setup</a>
+                                </li>
+                                <li class="nav-item ms-4">
+                                    <a class="nav-link" href="{{ route('generate') }}">Generated</a>
+                                </li>
                             </ul>
                         </div>
                         <li class="nav-item">

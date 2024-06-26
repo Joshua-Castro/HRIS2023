@@ -31,7 +31,11 @@ class PayrollController extends Controller
     {
         try {
             $data = $this->payrollService->storePayroll($request->validated());
-            return response()->json(['message' => 'Payroll successfully generated', 'data' => $data], 200);
+            if($data['status'] == 'error') {
+                return response()->json(['message' => $data['message'], 'status' => $data['status']], 201);
+            } else {
+                return response()->json(['message' => $data['message'], 'status' => $data['status']], 200);
+            }
         } catch (\Exception $e) {
             return response()->json(['message' => 'An error occurred: ' . $e->getMessage()], 500);
         }

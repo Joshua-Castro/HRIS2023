@@ -1,7 +1,7 @@
 @extends('layouts.main')
 
 @section('content')
-<div class="row">
+<div class="row" x-data="generatedPayroll()">
     <div class="col-xl-12 col-lg-12 d-flex flex-column">
         <div class="row flex-grow">
             <div class="col-12 grid-margin stretch-card">
@@ -14,23 +14,23 @@
                             </div>
                             <div class="col-md-6 d-flex justify-content-end">
                                 <form id="users-search-form" class="d-none">
-                                    <input type="hidden" name="name" x-ref="employeeInput">
+                                    <input type="hidden" name="name">
                                     <input type="hidden" name="status">
                                     <input type="hidden" name="pagination">
                                     <input type="hidden" name="page">
                                 </form>
                                 <div class="input-group me-2" style="width: 280px;">
-                                    <input id="users-search-keyword" type="text" class="form-control form-control-sm" name="search-keyword" placeholder="Employee Number / Name" x-model="searchEmployee" @keydown="employeeSearchPayroll">
+                                    <input id="users-search-keyword" type="text" class="form-control form-control-sm" name="search-keyword" placeholder="Employee Number / Name">
                                     <div class="input-group-append">
-                                        <button id="users-search" x-ref="usersSearchButton" class="btn input-group-text btn-secondary border waves-effect form-control form-control-sm text-dark" @click="getEmployeeDataPayroll" type="button" style="border-end-start-radius: 0px; border-start-start-radius: 0px;">Search</button>
+                                        <button id="users-search" x-ref="usersSearchButton" class="btn input-group-text btn-secondary border waves-effect form-control form-control-sm text-dark" type="button" style="border-end-start-radius: 0px; border-start-start-radius: 0px;">Search</button>
                                     </div>
                                 </div>
-                                <select id="payroll-filter" class="form-select form-select-sm bg-soft-secondary fw-bold me-2" x-model="filter" style="border-radius: 5px; width: 150px; height: 31.6px;" @change="getEmployeeDataPayroll">
+                                <select id="payroll-filter" class="form-select form-select-sm bg-soft-secondary fw-bold me-2" style="border-radius: 5px; width: 150px; height: 31.6px;">
                                     <option value="all">All Employees</option>
                                     <option value="Male">Male</option>
                                     <option value="Female">Female</option>
                                 </select>
-                                <select id="payroll-pagination" class="form-select form-select-sm bg-soft-secondary fw-bold" x-model="pagination" style="border-radius: 5px; width: 80px; height: 31.6px;" @change="getEmployeeDataPayroll">
+                                <select id="payroll-pagination" class="form-select form-select-sm bg-soft-secondary fw-bold" style="border-radius: 5px; width: 80px; height: 31.6px;">
                                     <option value="5">5</option>
                                     <option value="10">10</option>
                                     <option value="15">15</option>
@@ -44,7 +44,6 @@
                             <thead>
                                 <tr>
                                     <th>Employee Name</th>
-                                    <th>Position</th>
                                     <th>Payroll Date From</th>
                                     <th>Payroll Date To</th>
                                     <th>Status</th>
@@ -52,13 +51,30 @@
                                 </tr>
                             </thead>
                               <tbody>
-                                  <tr>
+                                  {{-- <tr>
                                       <td class="text-center" colspan="10">
                                           <div class="spinner-container">
                                               <div class="spinner"></div>
                                           </div>
                                       </td>
-                                  </tr>
+                                  </tr> --}}
+                                  <template x-for="(rows, index) in payrollData">
+                                    <tr>
+                                        <td class="pb-1 pt-2">
+                                            <p class="dark-text fs-14 fw-bold mb-0 pb-0" x-text="rows.full_name"></p>
+                                            <p class="text-muted text-small" x-text="rows.position"></p>
+                                        </td>
+                                        <td><p class="dark-text fs-14" x-text="rows.payroll_date_from"></p></td>
+                                        <td><p class="dark-text fs-14" x-text="rows.payroll_date_to"></p></td>
+                                        <td><p class="dark-text fs-14" x-text="rows.status"></p></td>
+                                        <td class="text-center">
+                                            <div class="badge badge-outline-primary btn btn-sm btn-outline-primary" style="border-radius: 5px;">
+                                                <i class="ti-write btn-icon-prepend me-2"></i>
+                                                Setup Payroll
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </template>
                               </tbody>
                             </template>
                             {{-- <template x-if="!loadingPayroll">
@@ -112,5 +128,5 @@
 </div>
 @endsection
 @push('scripts')
-    {{-- <script src="{{ asset('template/pages-js/payroll.js') }}"></script> --}}
+    <script src="{{ asset('template/pages-js/generated-payroll.js') }}"></script>
 @endpush

@@ -450,9 +450,10 @@ function payroll() {
                 },
                 success : function(response) {
                     Swal.fire({
-                        title               : response.message,
-                        icon                : 'success',
-                        timer               : 1000,
+                        title               : response.status == 'success' ? 'Success' : 'Error',
+                        html                : response.message,
+                        icon                : response.status == 'success' ? 'success' : 'error',
+                        timer               : 9000,
                         showConfirmButton   : false,
                     });
                 },
@@ -482,7 +483,7 @@ function payroll() {
                         Swal.fire('Something went wrong. Please refresh the page and try again.', 'error');
                     }
                 }
-              })
+            })
             //   .then((response) => {
             //     Swal.fire({
             //         title               : response.message,
