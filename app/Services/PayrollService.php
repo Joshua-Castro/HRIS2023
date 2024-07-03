@@ -10,7 +10,6 @@ use Illuminate\Support\Facades\Auth;
 
 class PayrollService
 {
-
     /**
      * Business logic for storing
      * data in payroll controller.

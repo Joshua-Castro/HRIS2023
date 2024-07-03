@@ -578,8 +578,24 @@ function adminDashboard(userRole) {
                     $(this.modal).modal('hide');
                     this.getEmployeeData();
                 }).catch((error) => {
-                    if (error.responseJSON && error.responseJSON.error) {
-                        // var errorMessage = error.responseJSON.error;
+                    if (error.status === 422) { // LARAVEL DEFAULT VALIDATION ERROR STATUS CODE
+                        let validationErrors = error.responseJSON.errors;
+                        let errorMessages = '';
+                
+                        for (let key in validationErrors) {
+                            if (validationErrors.hasOwnProperty(key)) {
+                                errorMessages += `<p>${validationErrors[key][0]}</p>`;
+                            }
+                        }
+                
+                        Swal.fire({
+                            title: 'Validation Error!',
+                            html: errorMessages,
+                            icon: 'error',
+                            timer: 3000,
+                            showConfirmButton: false,
+                        });
+                    } else if (error.responseJSON && error.responseJSON.error) {
                         Swal.fire({
                             title: 'Saving Failed!',
                             html: 'Username: <b>' + email + '</b> already exist.',
@@ -588,9 +604,15 @@ function adminDashboard(userRole) {
                             showConfirmButton: false,
                         });
                     } else {
-                        // Handle other error scenarios
-                        // ...
+                        Swal.fire({
+                            title: 'An error occurred!',
+                            text: 'Please try again later.',
+                            icon: 'error',
+                            timer: 2000,
+                            showConfirmButton: false,
+                        });
                     }
+                    this.isDisabled = false;
                 });
             }
         },

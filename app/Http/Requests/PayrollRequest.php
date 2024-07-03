@@ -57,6 +57,10 @@ class PayrollRequest extends FormRequest
         return $validation;
     }
 
+    /**
+     * Return message depending
+     * on action.
+     */
     public function messages()
     {
         $messages = [];
