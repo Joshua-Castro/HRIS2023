@@ -129,10 +129,6 @@
                                         </form>
                                         <input type="text" id="payroll-date-from" name="payroll-date-from" class="form-control form-control-sm bg-white me-1 text-center fw-bold" placeholder="Date From :" x-model="dateFromVal" x-bind:value="dateFromVal" x-on:date-from-changed="filterAttendanceDetails" style="width: 200px;">
                                         <input type="text" id="payroll-date-to" name="payroll-date-to" class="form-control form-control-sm bg-white text-center fw-bold me-1" placeholder="Date To :" x-model="dateToVal" x-model="dateToVal" x-bind:value="dateToVal" x-on:date-to-changed="filterAttendanceDetails" style="width: 200px;">
-                                        <button class="btn btn-sm btn-outline-success form-control form-control-sm btn-icon fw-bold me-1" type="button" style="border-radius: 5px; width: 150px;">
-                                            <i class="ti ti-sm ti-cloud-down me-2" style="font-size: 14px;"></i>
-                                            CSV / PDF
-                                        </button>
                                         <button class="btn btn-sm btn-outline-primary form-control form-control-sm btn-icon fw-bold me-1" type="button" style="border-radius: 5px; width: 150px;" @click="showPayrollComputation">
                                             <i class="ti ti-sm ti-cloud-up me-2" style="font-size: 14px;"></i>
                                             Generate

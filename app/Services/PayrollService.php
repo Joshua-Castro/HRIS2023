@@ -95,7 +95,8 @@ class PayrollService
      */
     public function allPayroll(array $request)
     {
-      $name = $request['name'] ?? 'Castro';
+      // dd(Auth::user()->role);
+      $name = $request['name'] ?? 'Guevarra';
       $payrollQuery = Payroll::join('employees as e', 'e.id', '=', 'payrolls.employee_id');
 
       if ($name) { // COALESCING to handle null values in middle name
