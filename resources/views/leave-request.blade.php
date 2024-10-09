@@ -39,12 +39,6 @@
                                 </select>
                             </div>
                         </div>
-                        {{-- <div class="d-flex justify-content-between align-items-start">
-                            <div>
-                                <h4 class="card-title card-title-dash">Leave Requests</h4>
-                                <p class="text-small modern-color-999">See all of your employees Leave Request here...</p>
-                            </div>
-                        </div> --}}
                         <div class="table-sm table-responsive mt-1">
                             <table class="table table-striped table-bordered">
                                 <thead>

@@ -1,5 +1,5 @@
 <div class="modal fade" id="request-leave-modal" tabindex="-1" role="dialog" aria-labelledby="createEmployeeModalLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
+    <div class="modal-dialog modal-lg" role="document" style="width: 750px;">
       <div class="modal-content">
         <form action="" method="POST" id="leaveRequestForm" class="needs-validation">
             @csrf
@@ -10,8 +10,52 @@
                         <div class="form-group row p-1 m-0" >
                             <div class="col-sm-12 p-0 m-0">
                                 <div class="form-floating">
-                                    <input type="text" name="leave_date" class="form-control bg-white leave-form-modal" id="leave-date" placeholder="Leave Date" x-model="currentLeave.leaveDate" required data-inputmask-placeholder="YYYY-MM-DD" data-inputmask="'alias': 'datetime'" data-inputmask-inputformat="yyyy-mm-dd">
-                                    <label for="last_name">Leave Date<span class="text-danger"> *</span></label>
+                                    <select class="form-select leave-form-modal" name="leave_day" x-model="currentLeave.leaveDay" required @change="changeDateUi">
+                                        <option value="">Select</option>
+                                        <option value="1">Half Day</option>
+                                        <option value="2">Whole Day</option>
+                                        <option value="3">1 or more day/s</option>
+                                    </select>
+                                    <label for="leave_day">Leave Day/s</label>
+                                    <div class="invalid-feedback">
+                                        This field is required.
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12 col-md-12 d-none" x-ref="dateDiv">
+                        <div class="form-group row p-1 m-0" >
+                            <div class="col-sm-12 p-0 m-0">
+                                <div class="form-floating">
+                                    <input type="text" name="currentLeave[leaveDate]" class="form-control bg-white leave-form-modal leave-dates" id="leave-date" placeholder="Leave Date" x-model="currentLeave.leaveDate" required data-inputmask-placeholder="YYYY-MM-DD" data-inputmask="'alias': 'datetime'" data-inputmask-inputformat="yyyy-mm-dd">
+                                    <label for="currentLeave[leaveDate]">Leave Date<span class="text-danger"> *</span></label>
+                                    <div class="invalid-feedback">
+                                        This field is required.
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12 col-md-6 d-none" x-ref="dateFromDiv">
+                        <div class="form-group row p-1 m-0" >
+                            <div class="col-sm-12 p-0 m-0">
+                                <div class="form-floating">
+                                    <input type="text" name="currentLeave[leaveDateFrom]" class="form-control bg-white leave-form-modal leave-dates" id="leave-from" placeholder="Leave Date From" x-model="currentLeave.leaveDateFrom" required data-inputmask-placeholder="YYYY-MM-DD" data-inputmask="'alias': 'datetime'" data-inputmask-inputformat="yyyy-mm-dd">
+                                    <label for="currentLeave[leaveDateFrom]">Leave Date From<span class="text-danger"> *</span></label>
+                                    <div class="invalid-feedback">
+                                        This field is required.
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12 col-md-6 d-none" x-ref="dateToDiv">
+                        <div class="form-group row p-1 m-0" >
+                            <div class="col-sm-12 p-0 m-0">
+                                <div class="form-floating">
+                                    <input type="text" name="currentLeave[leaveDateTo]" class="form-control bg-white leave-form-modal leave-dates" id="leave-to" placeholder="Leave Date To" x-model="currentLeave.leaveDateTo" required data-inputmask-placeholder="YYYY-MM-DD" data-inputmask="'alias': 'datetime'" data-inputmask-inputformat="yyyy-mm-dd">
+                                    <label for="currentLeave[leaveDateTo]">Leave Date To<span class="text-danger"> *</span></label>
                                     <div class="invalid-feedback">
                                         This field is required.
                                     </div>
@@ -23,7 +67,7 @@
                         <div class="form-group row p-1 m-0" >
                             <div class="col-sm-12 p-0 m-0">
                                 <div class="form-floating">
-                                    <select class="form-select leave-form-modal" name="leave_type" x-model="currentLeave.leaveType" required>
+                                    <select class="form-select leave-form-modal" name="currentLeave[leaveType]" x-model="currentLeave.leaveType" required>
                                         <option value="">Select</option>
                                         <template x-if="(leaveType ?? []).length > 0">
                                             <template x-for="leave in leaveType">
@@ -31,7 +75,7 @@
                                             </template>
                                         </template>
                                     </select>
-                                    <label for="leave_type">Leave Type</label>
+                                    <label for="currentLeave[leaveType]">Leave Type</label>
                                     <div class="invalid-feedback">
                                         This field is required.
                                     </div>
@@ -43,12 +87,12 @@
                         <div class="form-group row p-1 m-0" >
                             <div class="col-sm-12 p-0 m-0">
                                 <div class="form-floating">
-                                    <select class="form-select leave-form-modal" name="day_type" x-model="currentLeave.dayType" required>
+                                    <select class="form-select leave-form-modal" name="currentLeave[dayType]" x-model="currentLeave.dayType" required>
                                         <option value="">Select</option>
                                         <option value="Whole Day">Whole Day</option>
                                         <option value="Half Day">Half Day</option>
                                     </select>
-                                    <label for="day_type">Day Type</label>
+                                    <label for="currentLeave[dayType]">Day Type</label>
                                     <div class="invalid-feedback">
                                         This field is required.
                                     </div>
@@ -60,8 +104,8 @@
                         <div class="form-group row p-1 m-0" >
                             <div class="col-sm-12 p-0 m-0">
                                 <div class="form-floating">
-                                    <textarea name="reason" class="form-control leave-form-modal" placeholder="Reason" required style="height: 100px;" x-model="currentLeave.reason"></textarea>
-                                    <label for="reason">Reason<span class="text-danger"> *</span></label>
+                                    <textarea name="currentLeave[reason]" class="form-control leave-form-modal" placeholder="Reason" required style="height: 100px;" x-model="currentLeave.reason"></textarea>
+                                    <label for="currentLeave[reason]">Reason<span class="text-danger"> *</span></label>
                                     <div class="invalid-feedback">
                                         This field is required.
                                     </div>

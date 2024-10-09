@@ -71,6 +71,9 @@ function adminDashboard(userRole) {
             leaveRecordId   :   0,
             leaveDate       :   '',
             leaveType       :   '',
+            leaveDay        :   '',
+            leaveDateFrom   :   '',
+            leaveDateTo     :   '',
             dayType         :   '',
             reason          :   '',
         },
@@ -134,7 +137,7 @@ function adminDashboard(userRole) {
             }
 
             // INITIALIZE THE DATEPICKER WHEN THE MODAL IS SHOWN IN REQUEST LEAVE (USER/EMPLOYEE SIDE)
-            $('#leave-date', this.leaveModal).datepicker({
+            $('.leave-dates', this.leaveModal).datepicker({
                 format: "yyyy-mm-dd",
                 autoclose: true,
                 todayHighlight: true,
@@ -904,7 +907,7 @@ function adminDashboard(userRole) {
 
         // CREATE LEAVE REQUEST (USER/EMPLOYEE VIEW)
         createRequest : function () {
-            $('#leave-date', this.leaveModal).datepicker({
+            $('.leave-dates', this.leaveModal).datepicker({
                 format: "yyyy-mm-dd",
                 autoclose: true,
                 todayHighlight: true,
@@ -914,9 +917,27 @@ function adminDashboard(userRole) {
             $(this.leaveModal).modal({
                 backdrop: 'static',
                 keyboard: false
-                });
+            });
 
-            $('input[name="leave_date"]', this.leaveModal).addClass('bg-white');
+            this.currentLeave    =   {
+                leaveRecordId   :   '',
+                leaveDate       :   '',
+                leaveDateFrom   :   '',
+                leaveDateTo     :   '',
+                leaveType       :   '',
+                dayType         :   '',
+                reason          :   '',
+            };
+
+            this.$refs.dateDiv.classList.remove('d-none');
+            this.$refs.dateFromDiv.classList.remove('d-none');
+            this.$refs.dateToDiv.classList.remove('d-none');
+
+            this.$refs.dateDiv.classList.add('d-none');
+            this.$refs.dateFromDiv.classList.add('d-none');
+            this.$refs.dateToDiv.classList.add('d-none');
+
+            $('input[name="currentLeave[leaveDate]"]', this.leaveModal).addClass('bg-white');
             $('.hr-note', this.leaveModal).attr('hidden', true);
             $('.submit-btn', this.leaveModal).removeAttr('hidden');
             $(this.leaveReqForm)[0].reset();
@@ -929,14 +950,16 @@ function adminDashboard(userRole) {
             $(this.leaveModal).modal({
                 backdrop: 'static',
                 keyboard: false
-                });
+            });
 
             this.currentLeave    =   {
-                leaveRecordId   :   this.leaveData[index].id            ? this.leaveData[index].id              :   '',
-                leaveDate       :   this.leaveData[index].leave_date    ? this.leaveData[index].leave_date      :   '',
-                leaveType       :   this.leaveData[index].leave_type    ? this.leaveData[index].leave_type      :   '',
-                dayType         :   this.leaveData[index].day_type      ? this.leaveData[index].day_type        :   '',
-                reason          :   this.leaveData[index].reason        ? this.leaveData[index].reason          :   '',
+                leaveRecordId   :   this.leaveData[index].id                ? this.leaveData[index].id                  :   '',
+                leaveDate       :   this.leaveData[index].leave_date        ? this.leaveData[index].leave_date          :   '',
+                leaveDateFrom   :   this.leaveData[index].leave_date_from   ? this.leaveData[index].leave_date_from     :   '',
+                leaveDateTo     :   this.leaveData[index].leave_date_to     ? this.leaveData[index].leave_date_to       :   '',
+                leaveType       :   this.leaveData[index].leave_type        ? this.leaveData[index].leave_type          :   '',
+                dayType         :   this.leaveData[index].day_type          ? this.leaveData[index].day_type            :   '',
+                reason          :   this.leaveData[index].reason            ? this.leaveData[index].reason              :   '',
             };
 
             this.reasonDecline  =   this.leaveData[index].decline_reason ? this.leaveData[index].decline_reason : '';
@@ -950,11 +973,11 @@ function adminDashboard(userRole) {
             if (this.leaveData[index].status != 'Pending') {
                 $('.submit-btn', this.leaveModal).attr('hidden', true);
                 $('.leave-form-modal', this.leaveModal).attr('disabled', true);
-                $('input[name="leave_date"]', this.leaveModal).removeClass('bg-white');
+                $('input[name="currentLeave[leaveDate]"]', this.leaveModal).removeClass('bg-white');
             } else {
                 $('.submit-btn', this.leaveModal).removeAttr('hidden');
                 $('.leave-form-modal', this.leaveModal).removeAttr('disabled');
-                $('input[name="leave_date"]', this.leaveModal).addClass('bg-white');
+                $('input[name="currentLeave[leaveDate]"]', this.leaveModal).addClass('bg-white');
             }
 
             $(this.leaveReqForm, this.leaveModal).removeClass('was-validated');
@@ -1053,19 +1076,42 @@ function adminDashboard(userRole) {
               $('.remove-file-swal-icon').css('margin-top', '20px');
         },
 
+        // CHANGE LEAVE DATE FROM 1 TO 2 IF USER SELECT 1 OR MORE DAYS
+        changeDateUi: function () {
+            const isSingleDayLeave = this.currentLeave.leaveDay == 1 || this.currentLeave.leaveDay == 2;
+            // const isMultipleDayLeave = this.currentLeave.leaveDay == 3;
+
+            this.$refs.dateDiv.classList.toggle('d-none', !isSingleDayLeave);
+            this.$refs.dateFromDiv.classList.toggle('d-none', isSingleDayLeave);
+            this.$refs.dateToDiv.classList.toggle('d-none', isSingleDayLeave);
+            if(isSingleDayLeave) {
+                $('input[name="currentLeave[leaveDateFrom]"]').removeAttr('required');
+                $('input[name="currentLeave[leaveDateTo]"]').removeAttr('required');
+            } else {
+                $('input[name="currentLeave[leaveDateFrom]"]').attr('required', true);
+                $('input[name="currentLeave[leaveDateTo]"]').attr('required', true);
+            }
+        },
+
         // ON SUBMIT FORM LEAVE REQUEST (USER/EMPLOYEE VIEW)
         submitRequest : function () {
-            const leaveRequestForm = $('#leaveRequestForm', this.leaveModal)[0];
+            // $('[name="currentLeave[reason]').addClass('is-invalid');
+            // return false;
+            var leaveRequestForm = $('#leaveRequestForm', this.leaveModal)[0];
             $(leaveRequestForm).removeClass('was-validated').addClass('was-validated');
-            this.currentLeave.leaveDate = $('input[name="leave_date"]').val();
-
+            this.currentLeave.leaveDate = $('input[name="currentLeave[leaveDate]"]').val();
+            this.currentLeave.leaveDateFrom = $('input[name="currentLeave[leaveDateFrom]"]').val();
+            this.currentLeave.leaveDateTo = $('input[name="currentLeave[leaveDateTo]"]').val();
+            $('.invalid-feedback', leaveRequestForm).html('');
             if (leaveRequestForm.checkValidity()) {
                 $.ajax({
                     type: "POST",
                     url: route("leave.store"),
+                    headers: {
+                        'X-CSRF-TOKEN' : this.csrfToken
+                    },
                     data: {
-                        _token: this.csrfToken,
-                        ...this.currentLeave
+                        'currentLeave' : this.currentLeave
                     },
                 }).then((response) => {
                     Swal.fire({
@@ -1075,10 +1121,33 @@ function adminDashboard(userRole) {
                         showConfirmButton: false,
                     });
                     this.getLeaveRequest();
-                    $('#leave-date', this.leaveModal).datepicker("destroy");
+                    $('.leave-dates', this.leaveModal).datepicker("destroy");
                     $(this.leaveModal).modal('hide');
                 }).catch((error) => {
-
+                    console.log("Error object:", error);
+                    if (error.status == 422) {
+                        let errors = error.responseJSON.errors;
+                        $('.invalid-feedback').text('');
+                        $('.form-control', leaveRequestForm).removeClass('is-invalid');
+                        $(leaveRequestForm).removeClass('was-validated');
+                        $.each(errors, function (field, messages) {
+                            let inputField = $('[name="currentLeave[' + field.split('.')[1] + ']"]');
+                            inputField.addClass('is-invalid');
+                            let feedbackElement = inputField.closest('.form-floating').find('.invalid-feedback');
+                            feedbackElement.html(messages[0]);
+                            inputField.offsetHeight;
+                        });
+                    } else {
+                        Swal.fire({
+                            title                   :   'Error',
+                            text: 'An unexpected error occurred. Please try again.',
+                            icon                    :   'error',
+                            timer                   :   1000,
+                            showConfirmButton       :   false,
+                            allowEscapeKey          :   false,
+                            allowOutsideClick       :   false,
+                        });
+                    }
                 });
             }
         },

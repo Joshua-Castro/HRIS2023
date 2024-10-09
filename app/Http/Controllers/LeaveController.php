@@ -41,12 +41,26 @@ class LeaveController extends Controller
      */
     public function store(Request $request)
     {
-        $request->validate([
-            'leaveDate'     =>  'required|date_format:Y-m-d',
-            'leaveType'     =>  'required',
-            'dayType'       =>  'required',
-            'reason'        =>  'required',
+        $validator = \Validator::make($request->all(), [
+            'currentLeave.leaveDate'     => 'nullable|date_format:Y-m-d',
+            'currentLeave.leaveDateFrom' => 'nullable|date_format:Y-m-d',
+            'currentLeave.leaveDateTo'   => 'nullable|date_format:Y-m-d',
+            'currentLeave.leaveType'     => 'required',
+            'currentLeave.dayType'       => 'required',
+            'currentLeave.reason'        => 'required',
+        ], [
+            'currentLeave.leaveType.required'        => 'Please select a leave type.',
+            'currentLeave.dayType.required'          => 'Please select a valid day type.',
+            'currentLeave.reason.required'           => 'Please provide a reason for the leave.',
+            'currentLeave.leaveDateFrom.date_format' => 'The leave start date must be in the format YYYY-MM-DD.',
+            'currentLeave.leaveDateTo.date_format'   => 'The leave end date must be in the format YYYY-MM-DD.',
         ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'errors' => $validator->errors(),
+            ], 422);
+        }
 
         try {
             $id         = !empty($request->leaveRecordId) ? $request->leaveRecordId : 0;
@@ -56,27 +70,29 @@ class LeaveController extends Controller
                             ->value('id');
 
             $data = [
-                'employee_id'            =>      !empty($employeeId)                  ?   $employeeId                     :  '',
-                'leave_date'             =>      !empty($request->leaveDate)          ?   $request->leaveDate             :  '',
-                'leave_type'             =>      !empty($request->leaveType)          ?   $request->leaveType             :  '',
-                'day_type'               =>      !empty($request->dayType)            ?   $request->dayType               :  '',
-                'reason'                 =>      !empty($request->reason)             ?   $request->reason                :  '',
+                'employee_id'      =>  !empty($employeeId)                               ?   $employeeId                                :  '',
+                'leave_date'       =>  !empty($request->currentLeave['leaveDate'])       ?   $request->currentLeave['leaveDate']        :  '',
+                'leave_date_from'  =>  !empty($request->currentLeave['leaveDateFrom'])   ?   $request->currentLeave['leaveDateFrom']    :  '',
+                'leave_date_to'    =>  !empty($request->currentLeave['leaveDateTo'])     ?   $request->currentLeave['leaveDateTo']      :  '',
+                'leave_type'       =>  !empty($request->currentLeave['leaveType'])       ?   $request->currentLeave['leaveType']        :  '',
+                'day_type'         =>  !empty($request->currentLeave['dayType'])         ?   $request->currentLeave['dayType']          :  '',
+                'reason'           =>  !empty($request->currentLeave['reason'])          ?   $request->currentLeave['reason']           :  '',
             ];
 
             if (empty($id)) {
                 // CREATE OR STORE DATA
-                $data['status']                 =   'Pending';
-                $data['created_by']             =   $userId;
-                $data['created_at']             =   now();
-                $data['user_id']                =   $userId;
+                $data['status']      =   'Pending';
+                $data['created_by']  =   $userId;
+                $data['created_at']  =   now();
+                $data['user_id']     =   $userId;
 
                 $createdLeaveId = DB::table('leaves')->insertGetId($data);
                 $this->logService->logGenerate(Auth::id(), 'created', 'leaves', null, $createdLeaveId);
                 return response()->json(['message' => 'Successfully Submitted'], 200);
             } else {
                 // UPDATE DATA
-                $data['updated_by']     =   $userId;
-                $data['updated_at']     =   now();
+                $data['updated_by'] = $userId;
+                $data['updated_at'] = now();
                 DB::table('leaves')->where('id','=',$id)->update($data);
 
                 $this->logService->logGenerate(Auth::id(), 'updated', 'leaves', null, $id);
@@ -133,14 +149,6 @@ class LeaveController extends Controller
             $errorMessage = $e->getMessage();
             return response()->json(['error' => $errorMessage], 500);
         }
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Leave $leave)
-    {
-        //
     }
 
     /**
